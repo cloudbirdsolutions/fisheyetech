@@ -34,6 +34,10 @@ import PeopleIcon from '@mui/icons-material/People';
 
 import ColorSchemeToggle from './ColorSchemeToggle';
 import { closeSidebar } from '../utils';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../Store/store';
+import {useRouter, usePathname, useSelectedLayoutSegment } from "next/navigation";
+import Link from 'next/link';
 
 function Toggler({
   defaultExpanded = false,
@@ -68,6 +72,20 @@ function Toggler({
 }
 
 export default function Sidebar() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const isActive = (href:any) => {
+    return pathname === href ? true : false;
+  };
+  
+
+  const dispatch = useDispatch<AppDispatch>();
+  const handleLogout = () => {           
+    localStorage.removeItem('accessToken');
+    dispatch({type: "USER_LOGOUT"});
+    //setuser('')
+    router.push("/", { scroll: false });        
+  };
   return (
     <Sheet
       className="Sidebar"
@@ -149,7 +167,7 @@ export default function Sidebar() {
           }}
         >
           <ListItem>
-            <ListItemButton href="/dashboard/">
+            <ListItemButton href="/dashboard/" >
               <HomeRoundedIcon />
               <ListItemContent>
                 <Typography level="title-sm">Home</Typography>
@@ -158,21 +176,38 @@ export default function Sidebar() {
           </ListItem>
 
           <ListItem>
-            <ListItemButton href="/dasboard/">
+          <Link href="/dashboards" className={isActive('/dashboards') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}>
               <DashboardRoundedIcon />
               <ListItemContent>
                 <Typography level="title-sm">Dashboard</Typography>
               </ListItemContent>
-            </ListItemButton>
+            </Link>
           </ListItem>
 
           <ListItem>
-            <ListItemButton selected href="/users/">
+            <Link href="/users" className={`${isActive('/users') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}`}>
               <PeopleIcon />
               <ListItemContent>
                 <Typography level="title-sm">Users</Typography>
               </ListItemContent>
-            </ListItemButton>
+            </Link>
+          </ListItem>
+
+          <ListItem>
+            <Link href="/departmentlist" className={`${isActive('/departmentlist') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}`}>
+              <PeopleIcon />
+              <ListItemContent>
+                <Typography level="title-sm">Department List</Typography>
+              </ListItemContent>
+            </Link>
+          </ListItem>
+          <ListItem>
+            <Link href="/rolelist" className={`${isActive('/rolelist') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}`}>
+              <PeopleIcon />
+              <ListItemContent>
+                <Typography level="title-sm">Role List</Typography>
+              </ListItemContent>
+            </Link>
           </ListItem>
 
           <ListItem nested>
@@ -207,11 +242,7 @@ export default function Sidebar() {
           </ListItem>
 
           <ListItem>
-            <ListItemButton
-              role="menuitem"
-              component="a"
-              href="/messages/"
-            >
+              <Link href="/messages" className={isActive('/messages') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}>
               <QuestionAnswerRoundedIcon />
               <ListItemContent>
                 <Typography level="title-sm">Comments</Typography>
@@ -219,7 +250,7 @@ export default function Sidebar() {
               <Chip size="sm" color="primary" variant="solid">
                 4
               </Chip>
-            </ListItemButton>
+            </Link>
           </ListItem>
 
           {/* <ListItem nested>
@@ -294,7 +325,7 @@ export default function Sidebar() {
           <Typography level="body-xs">bharani@opalminds.com</Typography>
         </Box>
         <IconButton size="sm" variant="plain" color="neutral">
-          <LogoutRoundedIcon />
+          <LogoutRoundedIcon onClick={handleLogout}/>
         </IconButton>
       </Box>
     </Sheet>

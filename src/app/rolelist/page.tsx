@@ -14,8 +14,8 @@ import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 import Sidebar from '../components/Sidebar';
-import OrderTable from '../components/OrderTable';
-import OrderList from '../components/OrderList';
+import RoleTable from '../components/RoleTable';
+import RoleLists from '../components/RoleLists';
 import Header from '../components/Header';
 import Stack from '@mui/joy/Stack';
 import Modal from '@mui/joy/Modal';
@@ -24,29 +24,18 @@ import Sheet from '@mui/joy/Sheet';
 import Input from '@mui/joy/Input';
 import { useState } from 'react';
 
-export default function JoyOrderDashboardTemplate() {
+export default function RoleList() {
   const [open, setOpen] = React.useState<boolean>(false);
   
   const [formData, setFormData] = useState({
     id: "",
-    name: "",
-    username: "",
-    email: "",
-    address: "",
-    phone: "",
-    password: "",
-    status: ""
+    departmentname: "",
+   
   });
 
 
   const [idError, setidError] = useState('');
-  const [nameError, setnameError] = useState('');
-   const [phonenoError, setPhonenoError] = useState('');
-  const [username, setusernameError] = useState('');
-  const [addressError, setaddressError] = useState('');
-  const [passwordError, setpasswordError] = useState('');
-  const [statusError, setstatusError] = useState('');
-  const [emailError, setemailError] = useState('');
+  const [departmentnameError, setdepartmentnameError] = useState('');
 
 
   const handleChange = (e:any) => {
@@ -65,23 +54,8 @@ export default function JoyOrderDashboardTemplate() {
       case 'id':
         setidError('');
         break;
-      case 'name':
-        setnameError('');
-        break;
-      case 'username':
-        setusernameError('');
-        break;
-        case 'phone':
-          setPhonenoError('');
-        break;
-      case 'address':
-        setaddressError('');
-        break;
-      case 'password':
-        setpasswordError('');
-        break;
-        case 'status':
-        setstatusError('');
+      case 'departmentname':
+        setdepartmentnameError('');
         break;
       default:
         break;
@@ -92,31 +66,13 @@ export default function JoyOrderDashboardTemplate() {
     e.preventDefault();
 
     // Check if required fields are filled
-    if (!formData.name || !formData.email || !formData.password || !formData.address || !formData.phone || !formData.status || !formData.username) {
+    if (!formData.id || !formData.departmentname) {
       // Display error message for missing fields
-      if (!formData.name) {
-        setnameError('First Name is required');
+      if (!formData.departmentname) {
+        setdepartmentnameError('First Name is required');
       }
       if (!formData.id) {
         setidError('First Name is required');
-      }
-      if (!formData.email) {
-        setemailError('Email is required');
-      }
-      if (!formData.password) {
-        setpasswordError('Pincode is required');
-      }
-      if (!formData.address) {
-        setaddressError('Address is required');
-      }
-      if (!formData.phone) {
-        setPhonenoError('Phone Number is required');
-      }
-      if (!formData.status) {
-        setstatusError('Company Desciption is required');
-      }
-      if (!formData.username) {
-        setusernameError('Company Desciption is required');
       }
       return;
     }
@@ -172,7 +128,7 @@ export default function JoyOrderDashboardTemplate() {
                 Dashboard
               </Link>
               <Typography color="primary" fontWeight={500} fontSize={12}>
-                Users
+                Department List
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -188,7 +144,7 @@ export default function JoyOrderDashboardTemplate() {
             }}
           >
             <Typography level="h2" component="h1">
-              Users
+              Departments
             </Typography>
             <Stack spacing={2} direction="row">
               <Button
@@ -197,20 +153,13 @@ export default function JoyOrderDashboardTemplate() {
                 size="sm"
                 onClick={() => setOpen(true)}
               >
-                Add New User
-              </Button>
-              <Button
-                color="primary"
-                startDecorator={<DownloadRoundedIcon />}
-                size="sm"
-              >
-                Download Excel
+                Add New Department
               </Button>
             </Stack>
 
           </Box>
-          <OrderTable />
-          <OrderList />
+          <RoleTable />
+          <RoleLists />
         </Box>
       </Box>
       <Modal
@@ -246,17 +195,7 @@ export default function JoyOrderDashboardTemplate() {
                                 onChange={handleChange}/>
             {idError && <p className="text-red text-xs mt-1 absolute">{idError}</p>}
 
-            <Input size="sm" placeholder="name" name="name" value={formData.name}
-                                onChange={handleChange}/>
-            <Input size="sm" placeholder="email" name="email" value={formData.email}
-                                onChange={handleChange}/>
-            <Input size="sm" placeholder="username" name="username" value={formData.username}
-                                onChange={handleChange}/>
-            <Input size="sm" placeholder="address" name="address" value={formData.address}
-                                onChange={handleChange}/>
-            <Input size="sm" placeholder="phonenumber" name="phone" value={formData.phone}
-                                onChange={handleChange}/>
-            <Input size="sm" placeholder="status" name="status" value={formData.status}
+            <Input size="sm" placeholder="name" name="departmentname" value={formData.departmentname}
                                 onChange={handleChange}/>
             <Button type="submit">Add User</Button>
             </form>

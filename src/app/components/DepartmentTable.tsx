@@ -101,7 +101,7 @@ function RowMenu() {
 
 
 
-export default function OrderTable() {
+export default function DepartmentTable() {
   const [order, setOrder] = React.useState<Order>('desc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [open, setOpen] = React.useState(false);
@@ -112,7 +112,7 @@ export default function OrderTable() {
     const getData = async () => {
       try {
          
-        const response = await fetch('http://51.79.147.139:3000/users/get', {
+        const response = await fetch('http://51.79.147.139:3000/departments/get', {
           method: 'GET',
           headers: {
             Accept : "application/json",
@@ -274,15 +274,10 @@ export default function OrderTable() {
                     },
                   }}
                 >
-                  S.No
+                  ID
                 </Link>
               </th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Name</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>User Name</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Phone</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Address</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Status</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Password</th>
+              <th style={{ width: 140, padding: '12px 6px' }}>Department</th>
               <th style={{ width: 140, padding: '12px 6px' }}>Action</th>
             </tr>
           </thead>
@@ -293,31 +288,9 @@ export default function OrderTable() {
                   <Typography level="body-xs">{row?.id}</Typography>
                 </td>
                 <td>
-                  <Typography level="body-xs">{row?.name}</Typography>
-                </td>
-                <td>
-                  <Typography level="body-xs">{row.userName}</Typography>
-                </td>
-                <td>
-                  <Typography level="body-xs">{row.phone}</Typography>
-                </td>
-                <td>
-                  <Typography level="body-xs">{row.address}</Typography>
-                </td>
-                <td>
-                  <Chip
-                    variant="soft"
-                    size="sm"
-                    startDecorator={row.status === 'ACTIVE' ? <CheckRoundedIcon /> : row.status === 'PENDING' ? <AutorenewRoundedIcon /> : <BlockIcon />}
-                    color={row.status === 'ACTIVE' ? 'success' : row.status === 'PENDING' ? 'neutral' : 'danger'}
-                  >
-                    {row.status}
-                  </Chip>
+                  <Typography level="body-xs">{row?.departmentName}</Typography>
                 </td>
                 
-                <td>
-                  <Typography level="body-xs">{row.password}</Typography>
-                </td>
                 <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                     

@@ -47,14 +47,14 @@ function RowMenu() {
   );
 }
 
-export default function OrderList() {
+export default function RoleLists() {
   const [listItems, setlistItems] = React.useState();
 
   React.useEffect(() => {
     const getData = async () => {
       try {
          
-        const response = await fetch('http://51.79.147.139:3000/users/get', {
+        const response = await fetch('http://51.79.147.139:3000/roles/get', {
           method: 'GET',
           headers: {
             Accept : "application/json",
@@ -101,28 +101,9 @@ export default function OrderList() {
               </ListItemDecorator>
               <div>
                 <Typography fontWeight={600} gutterBottom>
-                  {listItem.name}
-                </Typography>
-                <Typography gutterBottom>
-                  {listItem.address}
+                  {listItem.roleName}
                 </Typography>
                 
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: 0.5,
-                    mb: 1,
-                  }}
-                >
-                  <Typography level="body-xs">{listItem.phone}</Typography>
-                  <Typography level="body-xs">&bull;</Typography>
-                  <Typography level="body-xs">{listItem.userName}</Typography>
-                  <Typography level="body-xs">&bull;</Typography>
-                  <Typography level="body-xs">{listItem.password}</Typography>
-
-                </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                     <RowMenu />
                 </Box>
@@ -131,10 +112,10 @@ export default function OrderList() {
             <Chip
               variant="soft"
               size="sm"
-              startDecorator={listItem.status === 'ACTIVE' ? <CheckRoundedIcon /> : listItem.status === 'PENDING' ? <AutorenewRoundedIcon /> : <BlockIcon />}
-              color={listItem.status === 'ACTIVE' ? 'success' : listItem.status === 'PENDING' ? 'neutral' : 'danger'}
+              startDecorator={listItem.roleStatus === 'ACTIVE' ? <CheckRoundedIcon /> : listItem.roleStatus === 'PENDING' ? <AutorenewRoundedIcon /> : <BlockIcon />}
+              color={listItem.roleStatus === 'ACTIVE' ? 'success' : listItem.roleStatus === 'PENDING' ? 'neutral' : 'danger'}
             >
-              {listItem.status}
+              {listItem.roleStatus}
             </Chip>
           </ListItem>
           <ListDivider />

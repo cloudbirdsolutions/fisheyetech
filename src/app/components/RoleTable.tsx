@@ -101,7 +101,7 @@ function RowMenu() {
 
 
 
-export default function OrderTable() {
+export default function RoleTable() {
   const [order, setOrder] = React.useState<Order>('desc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [open, setOpen] = React.useState(false);
@@ -112,7 +112,7 @@ export default function OrderTable() {
     const getData = async () => {
       try {
          
-        const response = await fetch('http://51.79.147.139:3000/users/get', {
+        const response = await fetch('http://51.79.147.139:3000/roles/get', {
           method: 'GET',
           headers: {
             Accept : "application/json",
@@ -277,12 +277,9 @@ export default function OrderTable() {
                   S.No
                 </Link>
               </th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Name</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>User Name</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Phone</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Address</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Status</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Password</th>
+              <th style={{ width: 140, padding: '12px 6px' }}>Role Name</th>
+              <th style={{ width: 140, padding: '12px 6px' }}>Role Status</th>
+              <th style={{ width: 140, padding: '12px 6px' }}>permission</th>
               <th style={{ width: 140, padding: '12px 6px' }}>Action</th>
             </tr>
           </thead>
@@ -293,31 +290,22 @@ export default function OrderTable() {
                   <Typography level="body-xs">{row?.id}</Typography>
                 </td>
                 <td>
-                  <Typography level="body-xs">{row?.name}</Typography>
-                </td>
-                <td>
-                  <Typography level="body-xs">{row.userName}</Typography>
-                </td>
-                <td>
-                  <Typography level="body-xs">{row.phone}</Typography>
-                </td>
-                <td>
-                  <Typography level="body-xs">{row.address}</Typography>
+                  <Typography level="body-xs">{row?.roleName}</Typography>
                 </td>
                 <td>
                   <Chip
                     variant="soft"
                     size="sm"
-                    startDecorator={row.status === 'ACTIVE' ? <CheckRoundedIcon /> : row.status === 'PENDING' ? <AutorenewRoundedIcon /> : <BlockIcon />}
-                    color={row.status === 'ACTIVE' ? 'success' : row.status === 'PENDING' ? 'neutral' : 'danger'}
+                    startDecorator={row.roleStatus === 'ACTIVE' ? <CheckRoundedIcon /> : row.roleStatus === 'PENDING' ? <AutorenewRoundedIcon /> : <BlockIcon />}
+                    color={row.roleStatus === 'ACTIVE' ? 'success' : row.roleStatus === 'PENDING' ? 'neutral' : 'danger'}
                   >
-                    {row.status}
+                    {row.roleStatus}
                   </Chip>
                 </td>
-                
                 <td>
-                  <Typography level="body-xs">{row.password}</Typography>
+                  <Typography level="body-xs">{row?.permissionId}</Typography>
                 </td>
+                
                 <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                     
