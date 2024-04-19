@@ -18,6 +18,10 @@ import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import GoogleIcon from './GoogleIcon';
+import { fetchUserData } from './Reducers/UserSlice';
+import {useDispatch} from 'react-redux';
+import { AppDispatch } from './Store/store';
+
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
@@ -53,6 +57,7 @@ function ColorSchemeToggle(props: IconButtonProps) {
 }
 
 export default function JoySignInSideTemplate() {
+  const dispatch = useDispatch<AppDispatch>();
   return (
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
       <CssBaseline />
@@ -168,7 +173,8 @@ export default function JoySignInSideTemplate() {
                     password: formElements.password.value,
                     persistent: formElements.persistent.checked,
                   };
-                  alert(JSON.stringify(data, null, 2));
+                  const userdata1 = JSON.stringify(data, null, 2);
+                  dispatch(fetchUserData(userdata1)); 
                 }}
               >
                 <FormControl required>
