@@ -240,7 +240,7 @@ export default function Sidebar() {
                   <ListItemButton
                     role="menuitem"
                     component="a"
-                    href="profile-dashboard/"
+                    href="/users/profiles"
                   >
                     My profile
                   </ListItemButton>
