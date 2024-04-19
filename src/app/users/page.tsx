@@ -10,11 +10,13 @@ import Typography from '@mui/joy/Typography';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 import Sidebar from '../components/Sidebar';
 import OrderTable from '../components/OrderTable';
 import OrderList from '../components/OrderList';
 import Header from '../components/Header';
+import Stack from '@mui/joy/Stack';
 
 export default function JoyOrderDashboardTemplate() {
   return (
@@ -23,7 +25,7 @@ export default function JoyOrderDashboardTemplate() {
       <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
         <Header />
         <Sidebar />
-        
+
         <Box
           component="main"
           className="MainContent"
@@ -68,7 +70,7 @@ export default function JoyOrderDashboardTemplate() {
                 Dashboard
               </Link>
               <Typography color="primary" fontWeight={500} fontSize={12}>
-                Orders
+                Users
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -84,22 +86,25 @@ export default function JoyOrderDashboardTemplate() {
             }}
           >
             <Typography level="h2" component="h1">
-              Orders
+              Users
             </Typography>
-            <Button
-              color="primary"
-              startDecorator={<DownloadRoundedIcon />}
-              size="sm"
-            >
-              Add New
-            </Button>
-            <Button
-              color="primary"
-              startDecorator={<DownloadRoundedIcon />}
-              size="sm"
-            >
-              Download PDF
-            </Button>
+            <Stack spacing={2} direction="row">
+              <Button
+                color="primary"
+                startDecorator={<PersonAddIcon />}
+                size="sm"
+              >
+                Add New User
+              </Button>
+              <Button
+                color="primary"
+                startDecorator={<DownloadRoundedIcon />}
+                size="sm"
+              >
+                Download Excel
+              </Button>
+            </Stack>
+
           </Box>
           <OrderTable />
           <OrderList />

@@ -36,12 +36,13 @@ import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
+import useSWR from 'swr'
 
 const rows = [
   {
     id: 'INV-1234',
     date: 'Feb 3, 2023',
-    status: 'Refunded',
+    status: 'Inactive',
     customer: {
       initial: 'O',
       name: 'Olivia Ryhe',
@@ -51,7 +52,7 @@ const rows = [
   {
     id: 'INV-1233',
     date: 'Feb 3, 2023',
-    status: 'Paid',
+    status: 'Active',
     customer: {
       initial: 'S',
       name: 'Steve Hampton',
@@ -61,7 +62,7 @@ const rows = [
   {
     id: 'INV-1232',
     date: 'Feb 3, 2023',
-    status: 'Refunded',
+    status: 'Inactive',
     customer: {
       initial: 'C',
       name: 'Ciaran Murray',
@@ -71,7 +72,7 @@ const rows = [
   {
     id: 'INV-1231',
     date: 'Feb 3, 2023',
-    status: 'Refunded',
+    status: 'Inactive',
     customer: {
       initial: 'M',
       name: 'Maria Macdonald',
@@ -81,7 +82,7 @@ const rows = [
   {
     id: 'INV-1230',
     date: 'Feb 3, 2023',
-    status: 'Cancelled',
+    status: 'Inactive',
     customer: {
       initial: 'C',
       name: 'Charles Fulton',
@@ -91,7 +92,7 @@ const rows = [
   {
     id: 'INV-1229',
     date: 'Feb 3, 2023',
-    status: 'Cancelled',
+    status: 'Inactive',
     customer: {
       initial: 'J',
       name: 'Jay Hooper',
@@ -101,7 +102,7 @@ const rows = [
   {
     id: 'INV-1228',
     date: 'Feb 3, 2023',
-    status: 'Refunded',
+    status: 'Inactive',
     customer: {
       initial: 'K',
       name: 'Krystal Stevens',
@@ -111,7 +112,7 @@ const rows = [
   {
     id: 'INV-1227',
     date: 'Feb 3, 2023',
-    status: 'Paid',
+    status: 'Active',
     customer: {
       initial: 'S',
       name: 'Sachin Flynn',
@@ -121,7 +122,7 @@ const rows = [
   {
     id: 'INV-1226',
     date: 'Feb 3, 2023',
-    status: 'Cancelled',
+    status: 'Inactive',
     customer: {
       initial: 'B',
       name: 'Bradley Rosales',
@@ -131,7 +132,7 @@ const rows = [
   {
     id: 'INV-1225',
     date: 'Feb 3, 2023',
-    status: 'Paid',
+    status: 'Active',
     customer: {
       initial: 'O',
       name: 'Olivia Ryhe',
@@ -141,7 +142,7 @@ const rows = [
   {
     id: 'INV-1224',
     date: 'Feb 3, 2023',
-    status: 'Cancelled',
+    status: 'Inactive',
     customer: {
       initial: 'S',
       name: 'Steve Hampton',
@@ -151,7 +152,7 @@ const rows = [
   {
     id: 'INV-1223',
     date: 'Feb 3, 2023',
-    status: 'Paid',
+    status: 'Active',
     customer: {
       initial: 'C',
       name: 'Ciaran Murray',
@@ -161,7 +162,7 @@ const rows = [
   {
     id: 'INV-1221',
     date: 'Feb 3, 2023',
-    status: 'Refunded',
+    status: 'Inactive',
     customer: {
       initial: 'M',
       name: 'Maria Macdonald',
@@ -171,7 +172,7 @@ const rows = [
   {
     id: 'INV-1220',
     date: 'Feb 3, 2023',
-    status: 'Paid',
+    status: 'Active',
     customer: {
       initial: 'C',
       name: 'Charles Fulton',
@@ -181,7 +182,7 @@ const rows = [
   {
     id: 'INV-1219',
     date: 'Feb 3, 2023',
-    status: 'Cancelled',
+    status: 'Inactive',
     customer: {
       initial: 'J',
       name: 'Jay Hooper',
@@ -191,7 +192,7 @@ const rows = [
   {
     id: 'INV-1218',
     date: 'Feb 3, 2023',
-    status: 'Cancelled',
+    status: 'Inactive',
     customer: {
       initial: 'K',
       name: 'Krystal Stevens',
@@ -201,7 +202,7 @@ const rows = [
   {
     id: 'INV-1217',
     date: 'Feb 3, 2023',
-    status: 'Paid',
+    status: 'Active',
     customer: {
       initial: 'S',
       name: 'Sachin Flynn',
@@ -211,7 +212,7 @@ const rows = [
   {
     id: 'INV-1216',
     date: 'Feb 3, 2023',
-    status: 'Cancelled',
+    status: 'Inactive',
     customer: {
       initial: 'B',
       name: 'Bradley Rosales',
@@ -280,10 +281,28 @@ function RowMenu() {
   );
 }
 
+async function getData(){
+  const res = await fetch('http://51.79.147.139:3000/users/get')
+  // The return value is *not* serialized
+  // You can return Date, Map, Set, etc.
+ 
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Failed to fetch data')
+  }
+ 
+  return res.json()
+
+}
+
 export default function OrderTable() {
   const [order, setOrder] = React.useState<Order>('desc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [open, setOpen] = React.useState(false);
+  
+  // const data = await getData()
+  
+
   const renderFilters = () => (
     <React.Fragment>
       <FormControl size="sm">
@@ -293,10 +312,10 @@ export default function OrderTable() {
           placeholder="Filter by status"
           slotProps={{ button: { sx: { whiteSpace: 'nowrap' } } }}
         >
-          <Option value="paid">Paid</Option>
+          <Option value="Active">Active</Option>
           <Option value="pending">Pending</Option>
-          <Option value="refunded">Refunded</Option>
-          <Option value="cancelled">Cancelled</Option>
+          <Option value="Inactive">Inactive</Option>
+          <Option value="Inactive">Inactive</Option>
         </Select>
       </FormControl>
       <FormControl size="sm">
@@ -376,7 +395,7 @@ export default function OrderTable() {
         }}
       >
         <FormControl sx={{ flex: 1 }} size="sm">
-          <FormLabel>Search for order</FormLabel>
+          <FormLabel>Search for user</FormLabel>
           <Input size="sm" placeholder="Search" startDecorator={<SearchIcon />} />
         </FormControl>
         {renderFilters()}
@@ -443,7 +462,7 @@ export default function OrderTable() {
                     },
                   }}
                 >
-                  Invoice
+                  ID
                 </Link>
               </th>
               <th style={{ width: 140, padding: '12px 6px' }}>Date</th>
@@ -483,16 +502,16 @@ export default function OrderTable() {
                     size="sm"
                     startDecorator={
                       {
-                        Paid: <CheckRoundedIcon />,
-                        Refunded: <AutorenewRoundedIcon />,
-                        Cancelled: <BlockIcon />,
+                        Active: <CheckRoundedIcon />,
+                        Inactive: <AutorenewRoundedIcon />,
+                        Inactive: <BlockIcon />,
                       }[row.status]
                     }
                     color={
                       {
-                        Paid: 'success',
-                        Refunded: 'neutral',
-                        Cancelled: 'danger',
+                        Active: 'success',
+                        Inactive: 'neutral',
+                        Inactive: 'danger',
                       }[row.status] as ColorPaletteProp
                     }
                   >

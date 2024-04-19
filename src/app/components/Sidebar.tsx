@@ -30,6 +30,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import BrightnessAutoRoundedIcon from '@mui/icons-material/BrightnessAutoRounded';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import PeopleIcon from '@mui/icons-material/People';
 
 import ColorSchemeToggle from './ColorSchemeToggle';
 import { closeSidebar } from '../utils';
@@ -123,7 +124,7 @@ export default function Sidebar() {
         <IconButton variant="soft" color="primary" size="sm">
           <BrightnessAutoRoundedIcon />
         </IconButton>
-        <Typography level="title-lg">Acme Co.</Typography>
+        <Typography level="title-lg">Fisheyetech.</Typography>
         <ColorSchemeToggle sx={{ ml: 'auto' }} />
       </Box>
       <Input size="sm" startDecorator={<SearchRoundedIcon />} placeholder="Search" />
@@ -148,7 +149,7 @@ export default function Sidebar() {
           }}
         >
           <ListItem>
-            <ListItemButton>
+            <ListItemButton href="/dashboard/">
               <HomeRoundedIcon />
               <ListItemContent>
                 <Typography level="title-sm">Home</Typography>
@@ -157,7 +158,7 @@ export default function Sidebar() {
           </ListItem>
 
           <ListItem>
-            <ListItemButton>
+            <ListItemButton href="/dasboard/">
               <DashboardRoundedIcon />
               <ListItemContent>
                 <Typography level="title-sm">Dashboard</Typography>
@@ -166,10 +167,10 @@ export default function Sidebar() {
           </ListItem>
 
           <ListItem>
-            <ListItemButton selected>
-              <ShoppingCartRoundedIcon />
+            <ListItemButton selected href="/users/">
+              <PeopleIcon />
               <ListItemContent>
-                <Typography level="title-sm">Orders</Typography>
+                <Typography level="title-sm">Users</Typography>
               </ListItemContent>
             </ListItemButton>
           </ListItem>
@@ -180,7 +181,7 @@ export default function Sidebar() {
                 <ListItemButton onClick={() => setOpen(!open)}>
                   <AssignmentRoundedIcon />
                   <ListItemContent>
-                    <Typography level="title-sm">Tasks</Typography>
+                    <Typography level="title-sm">Reviews</Typography>
                   </ListItemContent>
                   <KeyboardArrowDownIcon
                     sx={{ transform: open ? 'rotate(180deg)' : 'none' }}
@@ -190,7 +191,7 @@ export default function Sidebar() {
             >
               <List sx={{ gap: 0.5 }}>
                 <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton>All tasks</ListItemButton>
+                  <ListItemButton>All Reviews</ListItemButton>
                 </ListItem>
                 <ListItem>
                   <ListItemButton>Backlog</ListItemButton>
@@ -213,7 +214,7 @@ export default function Sidebar() {
             >
               <QuestionAnswerRoundedIcon />
               <ListItemContent>
-                <Typography level="title-sm">Messages</Typography>
+                <Typography level="title-sm">Comments</Typography>
               </ListItemContent>
               <Chip size="sm" color="primary" variant="solid">
                 4
@@ -221,7 +222,7 @@ export default function Sidebar() {
             </ListItemButton>
           </ListItem>
 
-          <ListItem nested>
+          {/* <ListItem nested>
             <Toggler
               renderToggle={({ open, setOpen }) => (
                 <ListItemButton onClick={() => setOpen(!open)}>
@@ -253,7 +254,7 @@ export default function Sidebar() {
                 </ListItem>
               </List>
             </Toggler>
-          </ListItem>
+          </ListItem> */}
         </List>
 
         <List
@@ -289,8 +290,8 @@ export default function Sidebar() {
           src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
         />
         <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Typography level="title-sm">Siriwat K.</Typography>
-          <Typography level="body-xs">siriwatk@test.com</Typography>
+          <Typography level="title-sm">Bharani</Typography>
+          <Typography level="body-xs">bharani@opalminds.com</Typography>
         </Box>
         <IconButton size="sm" variant="plain" color="neutral">
           <LogoutRoundedIcon />
