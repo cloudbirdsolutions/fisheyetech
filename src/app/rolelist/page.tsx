@@ -128,7 +128,7 @@ export default function RoleList() {
                 Dashboard
               </Link>
               <Typography color="primary" fontWeight={500} fontSize={12}>
-                Department List
+                Role List
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -144,7 +144,7 @@ export default function RoleList() {
             }}
           >
             <Typography level="h2" component="h1">
-              Departments
+              Role
             </Typography>
             <Stack spacing={2} direction="row">
               <Button
@@ -153,7 +153,7 @@ export default function RoleList() {
                 size="sm"
                 onClick={() => setOpen(true)}
               >
-                Add New Department
+                Add New Role
               </Button>
             </Stack>
 
@@ -197,7 +197,7 @@ export default function RoleList() {
 
             <Input size="sm" placeholder="name" name="departmentname" value={formData.departmentname}
                                 onChange={handleChange}/>
-            <Button type="submit">Add User</Button>
+            <Button type="submit">Add Role</Button>
             </form>
           </Stack>
         </Sheet>
