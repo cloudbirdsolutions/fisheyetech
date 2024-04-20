@@ -9,6 +9,10 @@ import { deleteuser } from '../Reducers/DeleteUserSlice';
 import { useRouter } from 'next/navigation';
 import IconButton from '@mui/joy/IconButton';
 import Divider from '@mui/joy/Divider';
+import { Box, Button } from '@mui/joy';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+
 
 function RowMenu(props:any) {
     const dispatch = useDispatch<AppDispatch>();
@@ -30,21 +34,20 @@ function RowMenu(props:any) {
     }
   
     return (
-      <Dropdown id={props.id}>
-        <MenuButton
+      <Box id={props.id}>
+        <Button
           slots={{ root: IconButton }}
           slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
         >
-          <MoreHorizRoundedIcon />
-        </MenuButton>
-        <Menu size="sm" sx={{ minWidth: 140 }}>
-          <MenuItem>Edit</MenuItem>
-          <MenuItem>Rename</MenuItem>
-          <MenuItem>Move</MenuItem>
-          <Divider />
-          <MenuItem color="danger" onClick={() => deletefn(props.id)}>Delete</MenuItem>
-        </Menu>
-      </Dropdown>
+          <EditIcon />
+        </Button>
+        <Button onClick={() => deletefn(props.id)}
+          slots={{ root: IconButton }}
+          slotProps={{ root: { variant: 'plain', color: 'danger', size: 'sm' } }}
+        >
+          <DeleteIcon />
+        </Button>
+      </Box>
     );
   }
 
