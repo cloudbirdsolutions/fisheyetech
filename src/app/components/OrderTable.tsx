@@ -37,7 +37,10 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 
-
+import {  ButtonGroup, Tooltip } from '@mui/joy';
+import Settings from '@mui/icons-material/Settings';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -79,17 +82,17 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function RowMenu(props:any) {
-  const deletefn = async (id:any) => {
+function RowMenu(props: any) {
+  const deletefn = async (id: any) => {
     try {
-         
+
       const response = await fetch('http://51.79.147.139:3000/users/delete', {
         method: 'POST',
         headers: {
-          Accept : "application/json",
+          Accept: "application/json",
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({"data": [{"id":id}]}),
+        body: JSON.stringify({ "data": [{ "id": id }] }),
       });
 
       if (!response.ok) {
@@ -119,6 +122,43 @@ function RowMenu(props:any) {
     </Dropdown>
   );
 }
+function RowMenu2(props: any) {
+  const deletefn = async (id: any) => {
+    try {
+
+      const response = await fetch('http://51.79.147.139:3000/users/delete', {
+        method: 'POST',
+        headers: {
+          Accept: "application/json",
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "data": [{ "id": id }] }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Cannot Delete: ' + response.statusText);
+      }
+
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    }
+  }
+
+  return (
+    <ButtonGroup aria-label="outlined primary button group" id={props.id} variant='plain' size='sm'>
+      <Tooltip title="Edit" variant="outlined">
+      <IconButton>
+        <ModeEditIcon color="action" />
+      </IconButton>
+      </Tooltip>
+      <Tooltip title="Delete" variant="outlined">
+      <IconButton>
+        <DeleteIcon color="warning" />
+      </IconButton>
+      </Tooltip>
+    </ButtonGroup>
+  );
+}
 
 
 
@@ -127,34 +167,34 @@ export default function OrderTable() {
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [open, setOpen] = React.useState(false);
   const [rows, setRows] = React.useState();
-  
-  
+
+
 
   React.useEffect(() => {
     const getData = async () => {
       try {
-         
+
         const response = await fetch('http://51.79.147.139:3000/users/get', {
           method: 'GET',
           headers: {
-            Accept : "application/json",
+            Accept: "application/json",
             'Content-Type': 'application/json',
           }
         });
-  
+
         if (!response.ok) {
           throw new Error('Failed to fetch user details: ' + response.statusText);
         }
-  
+
         const data = await response.json();
-        
+
         setRows(data.data);
       } catch (error) {
         console.error('Error fetching user details:', error);
       }
     };
-  
-    getData(); 
+
+    getData();
 
   }, [])
 
@@ -271,7 +311,8 @@ export default function OrderTable() {
           stickyHeader
           hoverRow
           sx={{
-            '--TableCell-headBackground': 'var(--joy-palette-background-level1)',
+            // '--TableCell-headBackground': 'var(--joy-palette-background-level1)',
+            '--TableCell-headBackground': 'var(--joy-palette-primary-plainActiveBg)',
             '--Table-headerUnderlineThickness': '1px',
             '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
             '--TableCell-paddingY': '4px',
@@ -309,7 +350,7 @@ export default function OrderTable() {
             </tr>
           </thead>
           <tbody>
-            {rows && stableSort(rows, getComparator(order, 'id')).map((row:any) => (
+            {rows && stableSort(rows, getComparator(order, 'id')).map((row: any) => (
               <tr key={row?.id}>
                 <td>
                   <Typography level="body-xs">{row?.id}</Typography>
@@ -336,14 +377,14 @@ export default function OrderTable() {
                     {row.status}
                   </Chip>
                 </td>
-                
+
                 <td>
                   <Typography level="body-xs">{row.password}</Typography>
                 </td>
                 <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                    
-                    <RowMenu id={row.id}/>
+
+                    <RowMenu2 id={row.id} />
                   </Box>
                 </td>
               </tr>

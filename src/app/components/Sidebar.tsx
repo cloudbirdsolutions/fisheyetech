@@ -107,6 +107,8 @@ export default function Sidebar() {
         gap: 2,
         borderRight: '1px solid',
         borderColor: 'divider',
+        background:'var(--joy-palette-background-surface)',
+        // color:'var(--joy-palette-common-white)'
       }}
     >
       <GlobalStyles

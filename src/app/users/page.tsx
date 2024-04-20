@@ -205,7 +205,7 @@ export default function JoyOrderDashboardTemplate() {
             </Typography>
             <Stack spacing={2} direction="row">
               <Button
-                color="primary"
+                color="success"
                 startDecorator={<PersonAddIcon />}
                 size="sm"
                 onClick={() => setOpen(true)}

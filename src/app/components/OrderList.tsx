@@ -20,6 +20,8 @@ import MenuButton from '@mui/joy/MenuButton';
 import MenuItem from '@mui/joy/MenuItem';
 import Dropdown from '@mui/joy/Dropdown';
 
+
+
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import BlockIcon from '@mui/icons-material/Block';
@@ -47,40 +49,41 @@ function RowMenu() {
   );
 }
 
+
 export default function OrderList() {
-  const [listItems, setlistItems] = React.useState();
+  const [listItems, setlistItems] = React.useState([]);
 
   React.useEffect(() => {
     const getData = async () => {
       try {
-         
+
         const response = await fetch('http://51.79.147.139:3000/users/get', {
           method: 'GET',
           headers: {
-            Accept : "application/json",
+            Accept: "application/json",
             'Content-Type': 'application/json',
           }
         });
-  
+
         if (!response.ok) {
           throw new Error('Failed to fetch user details: ' + response.statusText);
         }
-  
+
         const data = await response.json();
-        
+
         setlistItems(data.data);
       } catch (error) {
         console.error('Error fetching user details:', error);
       }
     };
-  
-    getData(); 
+
+    getData();
 
   }, [])
 
   return (
     <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
-      {listItems && listItems.map((listItem:any) => (
+      {listItems && listItems.map((listItem: any) => (
         <List
           key={listItem.id}
           size="sm"
@@ -96,7 +99,7 @@ export default function OrderList() {
             }}
           >
             <ListItemContent sx={{ display: 'flex', gap: 2, alignItems: 'start' }}>
-            <ListItemDecorator>
+              <ListItemDecorator>
                 <Avatar size="sm">{listItem.id}</Avatar>
               </ListItemDecorator>
               <div>
@@ -106,7 +109,7 @@ export default function OrderList() {
                 <Typography gutterBottom>
                   {listItem.address}
                 </Typography>
-                
+
                 <Box
                   sx={{
                     display: 'flex',
@@ -124,7 +127,7 @@ export default function OrderList() {
 
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                    <RowMenu />
+                  <RowMenu />
                 </Box>
               </div>
             </ListItemContent>
