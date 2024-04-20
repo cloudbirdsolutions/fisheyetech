@@ -33,9 +33,13 @@ function RowMenu(props:any) {
            }
     }
   
+  function editfn(id: any): void {
+    throw new Error('Function not implemented.');
+  }
+
     return (
       <Box id={props.id}>
-        <Button
+        <Button onClick={() => editfn(props.id)}
           slots={{ root: IconButton }}
           slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
         >
