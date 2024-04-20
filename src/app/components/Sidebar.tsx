@@ -39,6 +39,9 @@ import { AppDispatch } from '../Store/store';
 import {useRouter, usePathname, useSelectedLayoutSegment } from "next/navigation";
 import Link from 'next/link';
 
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
+
+
 function Toggler({
   defaultExpanded = false,
   renderToggle,
@@ -208,6 +211,14 @@ export default function Sidebar() {
               <PeopleIcon />
               <ListItemContent>
                 <Typography level="title-sm">Role List</Typography>
+              </ListItemContent>
+            </Link>
+          </ListItem>
+          <ListItem>
+            <Link href="/joballocation" className={`${isActive('/joballocation') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}`}>
+              <PendingActionsIcon />
+              <ListItemContent>
+                <Typography level="title-sm">Job Allocation</Typography>
               </ListItemContent>
             </Link>
           </ListItem>
