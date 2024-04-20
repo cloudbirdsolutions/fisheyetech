@@ -1,23 +1,23 @@
 
 
-const loginEndpoint = process.env.NEXT_PUBLIC_API_HOST+'/users/create';
+const loginEndpoint = process.env.NEXT_PUBLIC_API_HOST+'/users/delete';
 
-export async function createuserapi(userData:any) {
+export async function deleteuserapi(id:any) {
   try {
     const response = await fetch(loginEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(userData),
+      body: JSON.stringify({"data": [id]}),
     });
 
     if (!response.ok) {
       try {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to Create user');
+        throw new Error(errorData.message || 'Failed to Delete user');
       } catch (error) {
-        throw new Error('Failed to login');
+        throw new Error('Failed to Delete');
       }
     }
 
