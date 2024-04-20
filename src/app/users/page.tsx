@@ -41,7 +41,7 @@ export default function JoyOrderDashboardTemplate() {
     address: "",
     phone: "",
     password: "",
-    statusId: ""
+    statusId: 0
   });
 
 
@@ -57,7 +57,7 @@ export default function JoyOrderDashboardTemplate() {
     const { name, value, type, checked } = e.target;
     setFormData(prevState => ({
       ...prevState,
-      [name]: value     
+      [name]: e.target.name === 'statusId' ? parseInt(value) : value     
     }));
 
     
@@ -91,7 +91,7 @@ export default function JoyOrderDashboardTemplate() {
     e.preventDefault();
 
     // Check if required fields are filled
-    if (!formData.name || !formData.password || !formData.address || !formData.phone || !formData.statusId || !formData.userName) {
+    if (!formData.name || !formData.password || !formData.address || !formData.phone || formData.statusId === 0 || !formData.userName) {
       // Display error message for missing fields
       if (!formData.name) {
         setnameError('Name is required');
@@ -272,10 +272,10 @@ export default function JoyOrderDashboardTemplate() {
                 <div className='space-y-[2px] w-full'>
                       <h3 className='text-textdull text-xs mb-2'>Status</h3>
                       <select name="statusId" onChange={handleChange}>
-                          <option value="">SELECT</option>
-                          <option value="1">ACTIVE</option>
-                          <option value="2">INACTIVE</option>
-                          <option value="3">PENDING</option>
+                          <option value={0}>SELECT</option>
+                          <option value={1}>ACTIVE</option>
+                          <option value={2}>INACTIVE</option>
+                          <option value={3}>PENDING</option>
                       </select>
                 </div>
               </div>
