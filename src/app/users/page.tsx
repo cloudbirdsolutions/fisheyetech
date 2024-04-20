@@ -41,7 +41,7 @@ export default function JoyOrderDashboardTemplate() {
     address: "",
     phone: "",
     password: "",
-    status: ""
+    statusId: ""
   });
 
 
@@ -79,7 +79,7 @@ export default function JoyOrderDashboardTemplate() {
       case 'password':
         setpasswordError('');
         break;
-        case 'status':
+        case 'statusId':
         setstatusError('');
         break;
       default:
@@ -91,7 +91,7 @@ export default function JoyOrderDashboardTemplate() {
     e.preventDefault();
 
     // Check if required fields are filled
-    if (!formData.name || !formData.password || !formData.address || !formData.phone || !formData.status || !formData.userName) {
+    if (!formData.name || !formData.password || !formData.address || !formData.phone || !formData.statusId || !formData.userName) {
       // Display error message for missing fields
       if (!formData.name) {
         setnameError('Name is required');
@@ -106,7 +106,7 @@ export default function JoyOrderDashboardTemplate() {
       if (!formData.phone) {
         setPhonenoError('Phone Number is required');
       }
-      if (!formData.status) {
+      if (!formData.statusId) {
         setstatusError('Status is required');
       }
       if (!formData.userName) {
@@ -271,11 +271,11 @@ export default function JoyOrderDashboardTemplate() {
                 </div>
                 <div className='space-y-[2px] w-full'>
                       <h3 className='text-textdull text-xs mb-2'>Status</h3>
-                      <select name="status" onChange={handleChange}>
+                      <select name="statusId" onChange={handleChange}>
                           <option value="">SELECT</option>
-                          <option value="ACTIVE">ACTIVE</option>
-                          <option value="INACTIVE">INACTIVE</option>
-                          <option value="PENDING">PENDING</option>
+                          <option value="1">ACTIVE</option>
+                          <option value="2">INACTIVE</option>
+                          <option value="3">PENDING</option>
                       </select>
                 </div>
               </div>
