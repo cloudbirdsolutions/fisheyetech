@@ -222,6 +222,14 @@ export default function Sidebar() {
               </ListItemContent>
             </Link>
           </ListItem>
+          <ListItem>
+            <Link href="/tasks" className={`${isActive('/tasks') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}`}>
+              <PendingActionsIcon />
+              <ListItemContent>
+                <Typography level="title-sm">Tasks</Typography>
+              </ListItemContent>
+            </Link>
+          </ListItem>
 
           <ListItem nested>
             <Toggler

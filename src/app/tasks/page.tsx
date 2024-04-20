@@ -14,10 +14,10 @@ import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 
-export default function JoyMessagesTemplate() {
+export default function Task() {
   return (
  <Box>
-    Job allocation components
+    Task components
  </Box>
   );
 }
