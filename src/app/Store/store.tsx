@@ -13,6 +13,7 @@ import {
   REGISTER,
 } from 'redux-persist';
 import createuserSlice from '../Reducers/CreateUserSlice';
+import deleteuserSlice from '../Reducers/DeleteUserSlice';
 const persistConfig = {
   key: 'root',
   storage,
@@ -21,7 +22,8 @@ const persistConfig = {
 
 const appReducer = combineReducers({
   user: userSlice,
-  createuser: createuserSlice
+  createusers: createuserSlice,
+  deleteusers: deleteuserSlice
 });
 
 const rootReducer = (state:any, action:any) => {

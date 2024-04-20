@@ -22,10 +22,7 @@ import Sheet from '@mui/joy/Sheet';
 import Checkbox from '@mui/joy/Checkbox';
 import IconButton, { iconButtonClasses } from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
-import Menu from '@mui/joy/Menu';
-import MenuButton from '@mui/joy/MenuButton';
-import MenuItem from '@mui/joy/MenuItem';
-import Dropdown from '@mui/joy/Dropdown';
+
 
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
@@ -35,9 +32,8 @@ import BlockIcon from '@mui/icons-material/Block';
 import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
-
-
+import { useSelector } from 'react-redux';
+import RowMenu from './RowMenu';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -79,56 +75,16 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function RowMenu(props:any) {
-  const deletefn = async (id:any) => {
-    try {
-         
-      const response = await fetch('http://51.79.147.139:3000/users/delete', {
-        method: 'POST',
-        headers: {
-          Accept : "application/json",
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({"data": [{"id":id}]}),
-      });
-
-      if (!response.ok) {
-        throw new Error('Cannot Delete: ' + response.statusText);
-      }
-
-    } catch (error) {
-      console.error('Error fetching user details:', error);
-    }
-  }
-
-  return (
-    <Dropdown id={props.id}>
-      <MenuButton
-        slots={{ root: IconButton }}
-        slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
-      >
-        <MoreHorizRoundedIcon />
-      </MenuButton>
-      <Menu size="sm" sx={{ minWidth: 140 }}>
-        <MenuItem>Edit</MenuItem>
-        <MenuItem>Rename</MenuItem>
-        <MenuItem>Move</MenuItem>
-        <Divider />
-        <MenuItem color="danger" onClick={() => deletefn(props.id)}>Delete</MenuItem>
-      </Menu>
-    </Dropdown>
-  );
-}
-
-
-
 export default function OrderTable() {
+  const createuser = useSelector((state) => state?.createusers?.data);
+  const deleteuser = useSelector((state) => state?.deleteusers?.data);
+
   const [order, setOrder] = React.useState<Order>('desc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [open, setOpen] = React.useState(false);
   const [rows, setRows] = React.useState();
-  
-  
+
+
 
   React.useEffect(() => {
     const getData = async () => {
@@ -156,7 +112,7 @@ export default function OrderTable() {
   
     getData(); 
 
-  }, [])
+  }, [createuser, deleteuser])
 
   const renderFilters = () => (
     <React.Fragment>

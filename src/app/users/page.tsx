@@ -30,13 +30,14 @@ import { createuser } from '../Reducers/CreateUserSlice';
 import { useRouter } from 'next/navigation';
 
 export default function JoyOrderDashboardTemplate() {
+
+
   const [open, setOpen] = React.useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
-    username: "",
-    email: "",
+    userName: "",
     address: "",
     phone: "",
     password: "",
@@ -46,20 +47,17 @@ export default function JoyOrderDashboardTemplate() {
 
   const [nameError, setnameError] = useState('');
    const [phonenoError, setPhonenoError] = useState('');
-  const [username, setusernameError] = useState('');
+  const [userName, setuserNameError] = useState('');
   const [addressError, setaddressError] = useState('');
   const [passwordError, setpasswordError] = useState('');
   const [statusError, setstatusError] = useState('');
-  const [emailError, setemailError] = useState('');
 
 
   const handleChange = (e:any) => {
     const { name, value, type, checked } = e.target;
-    
     setFormData(prevState => ({
       ...prevState,
-      [name]: type === 'checkbox' ? checked : value
-
+      [name]: value     
     }));
 
     
@@ -69,8 +67,8 @@ export default function JoyOrderDashboardTemplate() {
       case 'name':
         setnameError('');
         break;
-      case 'username':
-        setusernameError('');
+      case 'userName':
+        setuserNameError('');
         break;
         case 'phone':
           setPhonenoError('');
@@ -93,14 +91,12 @@ export default function JoyOrderDashboardTemplate() {
     e.preventDefault();
 
     // Check if required fields are filled
-    if (!formData.name || !formData.email || !formData.password || !formData.address || !formData.phone || !formData.status || !formData.username) {
+    if (!formData.name || !formData.password || !formData.address || !formData.phone || !formData.status || !formData.userName) {
       // Display error message for missing fields
       if (!formData.name) {
         setnameError('Name is required');
       }
-      if (!formData.email) {
-        setemailError('Email is required');
-      }
+      
       if (!formData.password) {
         setpasswordError('Password is required');
       }
@@ -113,8 +109,8 @@ export default function JoyOrderDashboardTemplate() {
       if (!formData.status) {
         setstatusError('Status is required');
       }
-      if (!formData.username) {
-        setusernameError('User Name is required');
+      if (!formData.userName) {
+        setuserNameError('User Name is required');
       }
       return;
     }
@@ -123,7 +119,7 @@ export default function JoyOrderDashboardTemplate() {
       // const userData = Object.fromEntries();
        
       dispatch(createuser(formData)).then(() => {
-        console.log("Success")
+        setOpen(false);
         router.push('/users');
       })
        
@@ -261,42 +257,39 @@ export default function JoyOrderDashboardTemplate() {
                     <Input size="sm" placeholder="name" name="name" value={formData.name} onChange={handleChange}/>
                 </div>
                 <div className='space-y-[2px] w-full'>
-                    <h3 className='text-textdull text-xs mb-2'>Name</h3>
-                    <Input size="sm" placeholder="email" name="email" value={formData.email}
+                    <h3 className='text-textdull text-xs mb-2'>User Name</h3>
+                    <Input size="sm" placeholder="userName" name="userName" value={formData.userName}
                                 onChange={handleChange}/>
                 </div>
               </div>
               <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
+                
                 <div className='space-y-[2px] w-full'>
-                    <h3 className='text-textdull text-xs mb-2'>Name</h3>
-                    <Input size="sm" placeholder="username" name="username" value={formData.username}
-                                onChange={handleChange}/>
-                </div>
-                <div className='space-y-[2px] w-full'>
-                    <h3 className='text-textdull text-xs mb-2'>Name</h3>
+                    <h3 className='text-textdull text-xs mb-2'>Password</h3>
                     <Input size="sm" placeholder="password" name="password" value={formData.password}
                                 onChange={handleChange}/>
                 </div>
+                <div className='space-y-[2px] w-full'>
+                      <h3 className='text-textdull text-xs mb-2'>Status</h3>
+                      <select name="status" onChange={handleChange}>
+                          <option value="">SELECT</option>
+                          <option value="ACTIVE">ACTIVE</option>
+                          <option value="INACTIVE">INACTIVE</option>
+                          <option value="PENDING">PENDING</option>
+                      </select>
+                </div>
               </div>
               <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
                 <div className='space-y-[2px] w-full'>
-                    <h3 className='text-textdull text-xs mb-2'>Name</h3>
+                    <h3 className='text-textdull text-xs mb-2'>Address</h3>
                     <Input size="sm" placeholder="address" name="address" value={formData.address}
                                 onChange={handleChange}/>
                 </div>
                 <div className='space-y-[2px] w-full'>
-                    <h3 className='text-textdull text-xs mb-2'>Name</h3>
+                    <h3 className='text-textdull text-xs mb-2'>Phone</h3>
                     <Input size="sm" placeholder="phonenumber" name="phone" value={formData.phone}
                                 onChange={handleChange}/>
                 </div>
-              </div>
-              <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
-                <div className='space-y-[2px] w-full'>
-                      <h3 className='text-textdull text-xs mb-2'>Name</h3>
-                        <Input size="sm" placeholder="status" name="status" value={formData.status}
-                                onChange={handleChange}/>
-                </div>
-                
               </div>
             
             <Button type="submit">Add User</Button>
