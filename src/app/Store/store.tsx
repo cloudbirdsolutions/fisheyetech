@@ -12,6 +12,7 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
+import createuserSlice from '../Reducers/CreateUserSlice';
 const persistConfig = {
   key: 'root',
   storage,
@@ -20,6 +21,7 @@ const persistConfig = {
 
 const appReducer = combineReducers({
   user: userSlice,
+  createuser: createuserSlice
 });
 
 const rootReducer = (state:any, action:any) => {

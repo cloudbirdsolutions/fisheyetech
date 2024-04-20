@@ -24,11 +24,16 @@ import Sheet from '@mui/joy/Sheet';
 import Input from '@mui/joy/Input';
 import { useState } from 'react';
 
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../Store/store';
+import { createuser } from '../Reducers/CreateUserSlice';
+import { useRouter } from 'next/navigation';
+
 export default function JoyOrderDashboardTemplate() {
   const [open, setOpen] = React.useState<boolean>(false);
-  
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
   const [formData, setFormData] = useState({
-    id: "",
     name: "",
     username: "",
     email: "",
@@ -39,7 +44,6 @@ export default function JoyOrderDashboardTemplate() {
   });
 
 
-  const [idError, setidError] = useState('');
   const [nameError, setnameError] = useState('');
    const [phonenoError, setPhonenoError] = useState('');
   const [username, setusernameError] = useState('');
@@ -62,9 +66,6 @@ export default function JoyOrderDashboardTemplate() {
 
     // Clear corresponding error message when input changes
     switch (name) {
-      case 'id':
-        setidError('');
-        break;
       case 'name':
         setnameError('');
         break;
@@ -95,16 +96,13 @@ export default function JoyOrderDashboardTemplate() {
     if (!formData.name || !formData.email || !formData.password || !formData.address || !formData.phone || !formData.status || !formData.username) {
       // Display error message for missing fields
       if (!formData.name) {
-        setnameError('First Name is required');
-      }
-      if (!formData.id) {
-        setidError('First Name is required');
+        setnameError('Name is required');
       }
       if (!formData.email) {
         setemailError('Email is required');
       }
       if (!formData.password) {
-        setpasswordError('Pincode is required');
+        setpasswordError('Password is required');
       }
       if (!formData.address) {
         setaddressError('Address is required');
@@ -113,13 +111,28 @@ export default function JoyOrderDashboardTemplate() {
         setPhonenoError('Phone Number is required');
       }
       if (!formData.status) {
-        setstatusError('Company Desciption is required');
+        setstatusError('Status is required');
       }
       if (!formData.username) {
-        setusernameError('Company Desciption is required');
+        setusernameError('User Name is required');
       }
       return;
     }
+
+    try {
+      // const userData = Object.fromEntries();
+       
+      dispatch(createuser(formData)).then(() => {
+        console.log("Success")
+        router.push('/users');
+      })
+       
+     } catch (error) {
+       console.error('Failed to create user:', error);
+       // Handle error (e.g., display error message)
+     }
+   
+
   }
   return (
     <CssVarsProvider disableTransitionOnChange>
@@ -242,22 +255,50 @@ export default function JoyOrderDashboardTemplate() {
           </Typography>
           <Stack className='p-8'>
           <form className='gap-8 flex flex-wrap w-[100%] flex-row' onSubmit={handleSubmit}>
-            <Input size="sm" placeholder="id" name="id" value={formData.id}
+            <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
+                <div className='space-y-[2px] w-full'>
+                    <h3 className='text-textdull text-xs mb-2'>Name</h3>
+                    <Input size="sm" placeholder="name" name="name" value={formData.name} onChange={handleChange}/>
+                </div>
+                <div className='space-y-[2px] w-full'>
+                    <h3 className='text-textdull text-xs mb-2'>Name</h3>
+                    <Input size="sm" placeholder="email" name="email" value={formData.email}
                                 onChange={handleChange}/>
-            {idError && <p className="text-red text-xs mt-1 absolute">{idError}</p>}
-
-            <Input size="sm" placeholder="name" name="name" value={formData.name}
+                </div>
+              </div>
+              <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
+                <div className='space-y-[2px] w-full'>
+                    <h3 className='text-textdull text-xs mb-2'>Name</h3>
+                    <Input size="sm" placeholder="username" name="username" value={formData.username}
                                 onChange={handleChange}/>
-            <Input size="sm" placeholder="email" name="email" value={formData.email}
+                </div>
+                <div className='space-y-[2px] w-full'>
+                    <h3 className='text-textdull text-xs mb-2'>Name</h3>
+                    <Input size="sm" placeholder="password" name="password" value={formData.password}
                                 onChange={handleChange}/>
-            <Input size="sm" placeholder="username" name="username" value={formData.username}
+                </div>
+              </div>
+              <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
+                <div className='space-y-[2px] w-full'>
+                    <h3 className='text-textdull text-xs mb-2'>Name</h3>
+                    <Input size="sm" placeholder="address" name="address" value={formData.address}
                                 onChange={handleChange}/>
-            <Input size="sm" placeholder="address" name="address" value={formData.address}
+                </div>
+                <div className='space-y-[2px] w-full'>
+                    <h3 className='text-textdull text-xs mb-2'>Name</h3>
+                    <Input size="sm" placeholder="phonenumber" name="phone" value={formData.phone}
                                 onChange={handleChange}/>
-            <Input size="sm" placeholder="phonenumber" name="phone" value={formData.phone}
+                </div>
+              </div>
+              <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
+                <div className='space-y-[2px] w-full'>
+                      <h3 className='text-textdull text-xs mb-2'>Name</h3>
+                        <Input size="sm" placeholder="status" name="status" value={formData.status}
                                 onChange={handleChange}/>
-            <Input size="sm" placeholder="status" name="status" value={formData.status}
-                                onChange={handleChange}/>
+                </div>
+                
+              </div>
+            
             <Button type="submit">Add User</Button>
             </form>
           </Stack>

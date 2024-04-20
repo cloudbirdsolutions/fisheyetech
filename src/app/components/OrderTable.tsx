@@ -79,9 +79,30 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function RowMenu() {
+function RowMenu(props:any) {
+  const deletefn = async (id:any) => {
+    try {
+         
+      const response = await fetch('http://51.79.147.139:3000/users/delete', {
+        method: 'POST',
+        headers: {
+          Accept : "application/json",
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"data": [{"id":id}]}),
+      });
+
+      if (!response.ok) {
+        throw new Error('Cannot Delete: ' + response.statusText);
+      }
+
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    }
+  }
+
   return (
-    <Dropdown>
+    <Dropdown id={props.id}>
       <MenuButton
         slots={{ root: IconButton }}
         slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
@@ -93,7 +114,7 @@ function RowMenu() {
         <MenuItem>Rename</MenuItem>
         <MenuItem>Move</MenuItem>
         <Divider />
-        <MenuItem color="danger">Delete</MenuItem>
+        <MenuItem color="danger" onClick={() => deletefn(props.id)}>Delete</MenuItem>
       </Menu>
     </Dropdown>
   );
@@ -107,7 +128,8 @@ export default function OrderTable() {
   const [open, setOpen] = React.useState(false);
   const [rows, setRows] = React.useState();
   
-  // const data = await getData()
+  
+
   React.useEffect(() => {
     const getData = async () => {
       try {
@@ -321,7 +343,7 @@ export default function OrderTable() {
                 <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                     
-                    <RowMenu />
+                    <RowMenu id={row.id}/>
                   </Box>
                 </td>
               </tr>
