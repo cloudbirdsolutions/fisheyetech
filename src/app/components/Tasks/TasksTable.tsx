@@ -22,7 +22,10 @@ import Sheet from '@mui/joy/Sheet';
 import Checkbox from '@mui/joy/Checkbox';
 import IconButton, { iconButtonClasses } from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
-
+import Menu from '@mui/joy/Menu';
+import MenuButton from '@mui/joy/MenuButton';
+import MenuItem from '@mui/joy/MenuItem';
+import Dropdown from '@mui/joy/Dropdown';
 
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
@@ -34,12 +37,7 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 
-import {  ButtonGroup, Tooltip } from '@mui/joy';
-import Settings from '@mui/icons-material/Settings';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { useSelector } from 'react-redux';
-import RowMenu from './RowMenu';
+import Add from '@mui/icons-material/Add';
 
 import { useRouter } from 'next/navigation'
 
@@ -83,44 +81,60 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function OrderTable() {
-  const createuser = useSelector((state) => state?.createusers?.data);
-  const deleteuser = useSelector((state) => state?.deleteusers?.data);
+// function RowMenu() {
+//   return (
+//     <Button color="success" variant="solid" size='sm' startDecorator={<Add />} onClick={() => router.push('/dashboard')} >
+//   Record Data
+// </Button>
+//   );
+// }
 
+
+
+export default function TasksTable() {
   const [order, setOrder] = React.useState<Order>('desc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [open, setOpen] = React.useState(false);
   const [rows, setRows] = React.useState();
   
+  const RowMenu = (props: { sheetid: any; })=> {
+    return (
+      <Button color="primary" variant="outlined" size='sm' startDecorator={<Add />} onClick={() => router.push(`/tasks/sheet/${props.sheetid}`)} >
+    Log Data
+  </Button>
+    );
+  }
 
+  const router = useRouter()
 
+  // const data = await getData()
   React.useEffect(() => {
     const getData = async () => {
       try {
-
-        const response = await fetch('http://51.79.147.139:3000/users/get', {
+         
+        const response = await fetch('http://51.79.147.139:3000/joballocation/get-user-jobs?id=2', {
           method: 'GET',
           headers: {
-            Accept: "application/json",
+            Accept : "application/json",
             'Content-Type': 'application/json',
           }
         });
-
+  
         if (!response.ok) {
           throw new Error('Failed to fetch user details: ' + response.statusText);
         }
-
+  
         const data = await response.json();
-
+        
         setRows(data.data);
       } catch (error) {
         console.error('Error fetching user details:', error);
       }
     };
+  
+    getData(); 
 
-    getData();
-
-  }, [createuser, deleteuser])
+  }, [])
 
   const renderFilters = () => (
     <React.Fragment>
@@ -213,14 +227,15 @@ export default function OrderTable() {
         }}
       >
         <FormControl sx={{ flex: 1 }} size="sm">
-          <FormLabel>Search for user</FormLabel>
+          <FormLabel>Search for tasks</FormLabel>
           <Input size="sm" placeholder="Search" startDecorator={<SearchIcon />} />
         </FormControl>
-        {renderFilters()}
+        {/* {renderFilters()} */}
       </Box>
       <Sheet
         className="OrderTableContainer"
-        variant="outlined"
+        // variant="outlined"
+        color={'neutral'}
         sx={{
           display: { xs: 'none', sm: 'initial' },
           width: '100%',
@@ -235,8 +250,7 @@ export default function OrderTable() {
           stickyHeader
           hoverRow
           sx={{
-            // '--TableCell-headBackground': 'var(--joy-palette-background-level1)',
-            '--TableCell-headBackground': 'var(--joy-palette-primary-plainActiveBg)',
+            '--TableCell-headBackground': 'var(--joy-palette-background-level3)',
             '--Table-headerUnderlineThickness': '1px',
             '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
             '--TableCell-paddingY': '4px',
@@ -261,54 +275,43 @@ export default function OrderTable() {
                     },
                   }}
                 >
-                  S.No
+                  ID
                 </Link>
               </th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Name</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>User Name</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Phone</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Address</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Status</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Password</th>
+              <th style={{ width: 140, padding: '12px 6px' }} >Department</th>
+              <th style={{ width: 140, padding: '12px 6px' }}>Sheet</th>
+              <th style={{ width: 140, padding: '12px 6px' }}>Role</th>
+              
               <th style={{ width: 140, padding: '12px 6px' }}>Action</th>
             </tr>
           </thead>
           <tbody>
-            {rows && stableSort(rows, getComparator(order, 'id')).map((row: any) => (
+            {rows && stableSort(rows, getComparator(order, 'id')).map((row:any) => (
               <tr key={row?.id}>
                 <td>
                   <Typography level="body-xs">{row?.id}</Typography>
                 </td>
                 <td>
-                  <Typography level="body-xs">{row?.name}</Typography>
+                  <Typography level="body-xs">{row?.departments.departmentName}</Typography>
                 </td>
                 <td>
-                  <Typography level="body-xs">{row.userName}</Typography>
+                  <Typography level="body-xs">{row?.sheetMaster.sheetName}</Typography>
                 </td>
                 <td>
-                  <Typography level="body-xs">{row.phone}</Typography>
-                </td>
-                <td>
-                  <Typography level="body-xs">{row.address}</Typography>
-                </td>
-                <td>
-                  <Chip
+                <Chip
                     variant="soft"
                     size="sm"
-                    startDecorator={row.status === 'ACTIVE' ? <CheckRoundedIcon /> : row.status === 'PENDING' ? <AutorenewRoundedIcon /> : <BlockIcon />}
-                    color={row.status === 'ACTIVE' ? 'success' : row.status === 'PENDING' ? 'neutral' : 'danger'}
+                    startDecorator={row.status === 'ACTIVE' ? <CheckRoundedIcon /> : row.role.roleName === 'Data Entry' ? <AutorenewRoundedIcon /> : <BlockIcon />}
+                    color={row.role.roleName === 'ACTIVE' ? 'success' : row.role.roleName === 'Data Entry' ? 'success' : 'danger'}
                   >
-                    {row.status}
+                    {row.role.roleName}
                   </Chip>
                 </td>
-
-                <td>
-                  <Typography level="body-xs">{row.password}</Typography>
-                </td>
+               
                 <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-
-                    <RowMenu id={row.id} />
+                    
+                    <RowMenu sheetid={row.sheetMaster.id} />
                   </Box>
                 </td>
               </tr>

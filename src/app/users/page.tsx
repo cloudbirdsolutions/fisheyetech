@@ -213,7 +213,6 @@ export default function JoyOrderDashboardTemplate() {
                 Download Excel
               </Button>
             </Stack>
-
           </Box>
           <OrderTable />
           <OrderList />

@@ -40,6 +40,9 @@ import {useRouter, usePathname, useSelectedLayoutSegment } from "next/navigation
 import Link from 'next/link';
 
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import BadgeIcon from '@mui/icons-material/Badge';
 
 
 function Toggler({
@@ -110,7 +113,7 @@ export default function Sidebar() {
         gap: 2,
         borderRight: '1px solid',
         borderColor: 'divider',
-        background:'var(--joy-palette-background-surface)',
+        background:'var(--joy-palette-background-level3)',
         // color:'var(--joy-palette-common-white)'
       }}
     >
@@ -200,7 +203,7 @@ export default function Sidebar() {
 
           <ListItem>
             <Link href="/departmentlist" className={`${isActive('/departmentlist') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}`}>
-              <PeopleIcon />
+              <ApartmentIcon />
               <ListItemContent>
                 <Typography level="title-sm">Department List</Typography>
               </ListItemContent>
@@ -208,7 +211,7 @@ export default function Sidebar() {
           </ListItem>
           <ListItem>
             <Link href="/rolelist" className={`${isActive('/rolelist') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}`}>
-              <PeopleIcon />
+              <AdminPanelSettingsIcon />
               <ListItemContent>
                 <Typography level="title-sm">Role List</Typography>
               </ListItemContent>
@@ -216,7 +219,7 @@ export default function Sidebar() {
           </ListItem>
           <ListItem>
             <Link href="/joballocation" className={`${isActive('/joballocation') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}`}>
-              <PendingActionsIcon />
+              <BadgeIcon />
               <ListItemContent>
                 <Typography level="title-sm">Job Allocation</Typography>
               </ListItemContent>
