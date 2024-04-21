@@ -48,7 +48,7 @@ function RowMenu() {
 }
 
 export default function RoleLists() {
-  const [listItems, setlistItems] = React.useState();
+  const [listItems, setlistItems] = React.useState([]);
 
   React.useEffect(() => {
     const getData = async () => {
