@@ -84,8 +84,8 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
 }
 
 export default function OrderTable() {
-  const createuser = useSelector((state) => state?.createusers?.data);
-  const deleteuser = useSelector((state) => state?.deleteusers?.data);
+  // const createuser = useSelector((state) => state?.createusers?.data);
+  // const deleteuser = useSelector((state) => state?.deleteusers?.data);
 
   const [order, setOrder] = React.useState<Order>('desc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
@@ -120,7 +120,7 @@ export default function OrderTable() {
 
     getData();
 
-  }, [createuser, deleteuser])
+  }, [])
 
   const renderFilters = () => (
     <React.Fragment>

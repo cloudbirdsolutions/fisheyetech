@@ -279,7 +279,7 @@ export default function TasksTable() {
                 </Link>
               </th>
               <th style={{ width: 140, padding: '12px 6px' }} >Department</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Sheet</th>
+              <th style={{ width: 140, padding: '12px 6px' }}>Entity</th>
               <th style={{ width: 140, padding: '12px 6px' }}>Role</th>
               
               <th style={{ width: 140, padding: '12px 6px' }}>Action</th>

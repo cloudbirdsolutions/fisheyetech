@@ -36,7 +36,7 @@ async function getSheetFields(sheetid: string) {
 
 export default function Log() {
   const params = useParams<{ sheet: string, id: string }>()
-  const [parameters, setParameters] = useState({ id: "", sheetName: "", description: "", parameterMaster: [{parameterName:"", fieldMaster:[{fieldName:""}]}] });
+  const [parameters, setParameters] = useState({ id: "", sheetName: "", description: "", parameterMaster: [{id:"",parameterName:"", fieldMaster:[{fieldName:"",fieldId:""}]}] });
 
   React.useEffect(() => {
 
@@ -72,10 +72,10 @@ export default function Log() {
             <Tab>Shift C</Tab>
           </TabList>
           <TabPanel value={0} sx={{height: 540, overflow: 'auto'}}>
-            {parameters.parameterMaster && <AccordionGroup size='sm' sx={{ minWidth: "60dvw" }}>
+            {parameters.parameterMaster && <AccordionGroup size='sm' sx={{ minWidth: "60dvw" }} >
               {
                 parameters.parameterMaster.map((paramter) => (
-                  <Accordion>
+                  <Accordion key={`paramater_${paramter.id}`}>
                     <AccordionSummary sx={{ backgroundColor: 'var(--joy-palette-background-backdrop)' }}>
                       {paramter.parameterName}
                     </AccordionSummary>
@@ -87,7 +87,7 @@ export default function Log() {
 
                             paramter.fieldMaster && paramter.fieldMaster.map((field) => (
 
-                              <tr>
+                              <tr key={`field_${field.fieldId}`}>
                                 <td>
                                   {field.fieldName}
                                 </td>

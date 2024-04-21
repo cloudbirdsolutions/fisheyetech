@@ -81,9 +81,6 @@ export default function DepartmentList() {
     <CssVarsProvider disableTransitionOnChange>
       <CssBaseline />
       <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
-        <Header />
-        <Sidebar />
-
         <Box
           component="main"
           className="MainContent"
