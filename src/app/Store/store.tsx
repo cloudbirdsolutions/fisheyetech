@@ -14,6 +14,7 @@ import {
 } from 'redux-persist';
 import createuserSlice from '../Reducers/CreateUserSlice';
 import deleteuserSlice from '../Reducers/DeleteUserSlice';
+import editUserSlice from '../Reducers/editUserSlice';
 const persistConfig = {
   key: 'root',
   storage,
@@ -23,7 +24,8 @@ const persistConfig = {
 const appReducer = combineReducers({
   user: userSlice,
   createusers: createuserSlice,
-  deleteusers: deleteuserSlice
+  deleteusers: deleteuserSlice,
+  editusers: editUserSlice,
 });
 
 const rootReducer = (state:any, action:any) => {

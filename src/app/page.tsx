@@ -19,8 +19,10 @@ import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import GoogleIcon from './GoogleIcon';
 import { fetchUserData } from './Reducers/UserSlice';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { AppDispatch } from './Store/store';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 
 interface FormElements extends HTMLFormControlsCollection {
@@ -58,6 +60,30 @@ function ColorSchemeToggle(props: IconButtonProps) {
 
 export default function JoySignInSideTemplate() {
   const dispatch = useDispatch<AppDispatch>();
+  const data = useSelector((state) => state?.user?.data);
+  const router = useRouter();
+  useEffect(() => {
+        
+    if(data === true) {
+        //setError('Invalid email or password')
+        router.push('/users', { scroll: false })
+    } else {
+      //
+    }
+}, [data]);
+  const handleSubmit = (event: React.FormEvent<SignInFormElement>) => {
+    event.preventDefault();
+    const formElements = event.currentTarget.elements;
+    const data1 = {
+      email: formElements.email.value,
+      password: formElements.password.value,
+      persistent: formElements.persistent.checked,
+    };
+    const userdata = JSON.stringify(data1, null, 2);
+    dispatch(fetchUserData(userdata)); 
+  }
+    
+
   return (
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
       <CssBaseline />
@@ -165,17 +191,7 @@ export default function JoySignInSideTemplate() {
             </Divider>
             <Stack gap={4} sx={{ mt: 2 }}>
               <form
-                onSubmit={(event: React.FormEvent<SignInFormElement>) => {
-                  event.preventDefault();
-                  const formElements = event.currentTarget.elements;
-                  const data = {
-                    email: formElements.email.value,
-                    password: formElements.password.value,
-                    persistent: formElements.persistent.checked,
-                  };
-                  const userdata1 = JSON.stringify(data, null, 2);
-                  dispatch(fetchUserData(userdata1)); 
-                }}
+                onSubmit={handleSubmit}
               >
                 <FormControl required>
                   <FormLabel>Email</FormLabel>

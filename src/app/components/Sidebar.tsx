@@ -162,7 +162,7 @@ export default function Sidebar() {
           display: 'flex',
           flexDirection: 'column',
           [`& .${listItemButtonClasses.root}`]: {
-            gap: 1.5,
+            gap: 1,
           },
         }}
       >
@@ -322,12 +322,6 @@ export default function Sidebar() {
             mb: 2,
           }}
         >
-          <ListItem>
-            <ListItemButton>
-              <SupportRoundedIcon />
-              Support
-            </ListItemButton>
-          </ListItem>
           <ListItem>
             <ListItemButton>
               <SettingsRoundedIcon />

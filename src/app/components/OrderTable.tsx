@@ -83,9 +83,10 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function OrderTable() {
+export default function OrderTable(props:any) {
   const createuser = useSelector((state) => state?.createusers?.data);
   const deleteuser = useSelector((state) => state?.deleteusers?.data);
+  const edituser = useSelector((state) => state?.editusers?.data);
 
   const [order, setOrder] = React.useState<Order>('desc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
@@ -120,7 +121,7 @@ export default function OrderTable() {
 
     getData();
 
-  }, [createuser, deleteuser])
+  }, [createuser, deleteuser, edituser])
 
   const renderFilters = () => (
     <React.Fragment>
@@ -226,7 +227,7 @@ export default function OrderTable() {
           width: '100%',
           borderRadius: 'sm',
           flexShrink: 1,
-          overflow: 'auto',
+          overflow: 'hidden',
           minHeight: 0,
         }}
       >
@@ -245,7 +246,7 @@ export default function OrderTable() {
         >
           <thead>
             <tr>
-              <th style={{ width: 80, padding: '12px 6px' }}>
+              <th style={{ padding: '12px 6px' }}>
                 <Link
                   underline="none"
                   color="primary"
@@ -264,13 +265,13 @@ export default function OrderTable() {
                   S.No
                 </Link>
               </th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Name</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>User Name</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Phone</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Address</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Status</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Password</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Action</th>
+              <th style={{ padding: '12px 6px' }}>Name</th>
+              <th style={{ padding: '12px 6px' }}>User Name</th>
+              <th style={{ padding: '12px 6px' }}>Phone</th>
+              <th style={{ padding: '12px 6px' }}>Address</th>
+              <th style={{ padding: '12px 6px' }}>Status</th>
+              <th style={{ padding: '12px 6px' }}>Password</th>
+              <th style={{ padding: '12px 6px' }}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -308,7 +309,7 @@ export default function OrderTable() {
                 <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
 
-                    <RowMenu id={row.id} />
+                    <RowMenu row={row} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel}/>
                   </Box>
                 </td>
               </tr>

@@ -1,7 +1,5 @@
 'use client';
 import * as React from 'react';
-import { CssVarsProvider } from '@mui/joy/styles';
-import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Breadcrumbs from '@mui/joy/Breadcrumbs';
@@ -10,13 +8,10 @@ import Typography from '@mui/joy/Typography';
 
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
-import Sidebar from '../components/Sidebar';
-import DepartmentTable from '../components/DepartmentTable';
-import DepartmentLists from '../components/DepartmentLists';
-import Header from '../components/Header';
+import RoleTable from '../../components/RoleTable';
+import RoleLists from '../../components/RoleLists';
 import Stack from '@mui/joy/Stack';
 import Modal from '@mui/joy/Modal';
 import ModalClose from '@mui/joy/ModalClose';
@@ -24,7 +19,7 @@ import Sheet from '@mui/joy/Sheet';
 import Input from '@mui/joy/Input';
 import { useState } from 'react';
 
-export default function DepartmentList() {
+export default function RoleList() {
   const [open, setOpen] = React.useState<boolean>(false);
   
   const [formData, setFormData] = useState({
@@ -78,60 +73,8 @@ export default function DepartmentList() {
     }
   }
   return (
-    <CssVarsProvider disableTransitionOnChange>
-      <CssBaseline />
-      <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
-        <Header />
-        <Sidebar />
-
-        <Box
-          component="main"
-          className="MainContent"
-          sx={{
-            px: { xs: 2, md: 6 },
-            pt: {
-              xs: 'calc(12px + var(--Header-height))',
-              sm: 'calc(12px + var(--Header-height))',
-              md: 3,
-            },
-            pb: { xs: 2, sm: 2, md: 3 },
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            minWidth: 0,
-            height: '100dvh',
-            gap: 1,
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Breadcrumbs
-              size="sm"
-              aria-label="breadcrumbs"
-              separator={<ChevronRightRoundedIcon />}
-              sx={{ pl: 0 }}
-            >
-              <Link
-                underline="none"
-                color="neutral"
-                href="#some-link"
-                aria-label="Home"
-              >
-                <HomeRoundedIcon />
-              </Link>
-              <Link
-                underline="hover"
-                color="neutral"
-                href="#some-link"
-                fontSize={12}
-                fontWeight={500}
-              >
-                Dashboard
-              </Link>
-              <Typography color="primary" fontWeight={500} fontSize={12}>
-                Department List
-              </Typography>
-            </Breadcrumbs>
-          </Box>
+    <>
+        
           <Box
             sx={{
               display: 'flex',
@@ -144,24 +87,23 @@ export default function DepartmentList() {
             }}
           >
             <Typography level="h2" component="h1">
-              Departments
+              Role
             </Typography>
             <Stack spacing={2} direction="row">
               <Button
-                color="primary"
+                color="success"
                 startDecorator={<PersonAddIcon />}
                 size="sm"
                 onClick={() => setOpen(true)}
               >
-                Add New Department
+                Add New Role
               </Button>
             </Stack>
 
           </Box>
-          <DepartmentTable />
-          <DepartmentLists />
-        </Box>
-      </Box>
+          <RoleTable />
+          <RoleLists />
+
       <Modal
         aria-labelledby="modal-title"
         aria-describedby="modal-desc"
@@ -197,11 +139,11 @@ export default function DepartmentList() {
 
             <Input size="sm" placeholder="name" name="departmentname" value={formData.departmentname}
                                 onChange={handleChange}/>
-            <Button type="submit">Add User</Button>
+            <Button type="submit">Add Role</Button>
             </form>
           </Stack>
         </Sheet>
       </Modal>
-    </CssVarsProvider>
+      </>
   );
 }
