@@ -26,9 +26,8 @@ import { useRouter } from 'next/navigation';
 
 
 interface FormElements extends HTMLFormControlsCollection {
-  email: HTMLInputElement;
+  userName: HTMLInputElement;
   password: HTMLInputElement;
-  persistent: HTMLInputElement;
 }
 interface SignInFormElement extends HTMLFormElement {
   readonly elements: FormElements;
@@ -60,27 +59,26 @@ function ColorSchemeToggle(props: IconButtonProps) {
 
 export default function JoySignInSideTemplate() {
   const dispatch = useDispatch<AppDispatch>();
+  const [error, setError] = React.useState(''); 
+
   const data = useSelector((state) => state?.user?.data);
   const router = useRouter();
   useEffect(() => {
-        
-    if(data === true) {
-        //setError('Invalid email or password')
-        router.push('/users', { scroll: false })
+    if(data?.status === "200") {
+        data.data.roles.roleName === 'admin' ?        
+          router.push('/users', { scroll: false })
+          :
+          router.push('/tasks', { scroll: false })
     } else {
-      //
+      setError('Invalid username or password')
     }
 }, [data]);
-  const handleSubmit = (event: React.FormEvent<SignInFormElement>) => {
-    event.preventDefault();
-    const formElements = event.currentTarget.elements;
-    const data1 = {
-      email: formElements.email.value,
-      password: formElements.password.value,
-      persistent: formElements.persistent.checked,
-    };
-    const userdata = JSON.stringify(data1, null, 2);
-    dispatch(fetchUserData(userdata)); 
+  const handleSubmit = (e:any) => {
+    e.preventDefault();
+    var formData = new FormData(e.target);
+        const userData:any = Object.fromEntries(formData);
+        console.log('form values', userData)
+        dispatch(fetchUserData(userData));      
   }
     
 
@@ -194,8 +192,8 @@ export default function JoySignInSideTemplate() {
                 onSubmit={handleSubmit}
               >
                 <FormControl required>
-                  <FormLabel>Email</FormLabel>
-                  <Input type="email" name="email" />
+                  <FormLabel>User Name</FormLabel>
+                  <Input type="text" name="userName" />
                 </FormControl>
                 <FormControl required>
                   <FormLabel>Password</FormLabel>
@@ -209,7 +207,6 @@ export default function JoySignInSideTemplate() {
                       alignItems: 'center',
                     }}
                   >
-                    <Checkbox size="sm" label="Remember me" name="persistent" />
                     <Link level="title-sm" href="#replace-with-a-link">
                       Forgot your password?
                     </Link>

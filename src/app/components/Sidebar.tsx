@@ -34,7 +34,7 @@ import PeopleIcon from '@mui/icons-material/People';
 
 import ColorSchemeToggle from './ColorSchemeToggle';
 import { closeSidebar } from '../utils';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../Store/store';
 import {useRouter, usePathname, useSelectedLayoutSegment } from "next/navigation";
 import Link from 'next/link';
@@ -84,6 +84,7 @@ export default function Sidebar() {
     return pathname === href ? true : false;
   };
   
+  const logintype = useSelector((state) => state?.user?.data);
 
   const dispatch = useDispatch<AppDispatch>();
   const handleLogout = () => {           
@@ -166,6 +167,7 @@ export default function Sidebar() {
           },
         }}
       >
+        {logintype?.data?.roles?.roleName === 'admin' &&
         <List
           size="sm"
           sx={{
@@ -209,6 +211,16 @@ export default function Sidebar() {
               </ListItemContent>
             </Link>
           </ListItem>
+
+          <ListItem>
+            <Link href="/entities" className={`${isActive('/entities') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}`}>
+              <ApartmentIcon />
+              <ListItemContent>
+                <Typography level="title-sm">Entities</Typography>
+              </ListItemContent>
+            </Link>
+          </ListItem>
+
           <ListItem>
             <Link href="/rolelist" className={`${isActive('/rolelist') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}`}>
               <AdminPanelSettingsIcon />
@@ -311,7 +323,45 @@ export default function Sidebar() {
             </Toggler>
           </ListItem> */}
         </List>
+        }
+        {logintype?.data?.roles?.roleName !== 'admin' &&
+        <List
+          size="sm"
+          sx={{
+            gap: 1,
+            '--List-nestedInsetStart': '30px',
+            '--ListItem-radius': (theme) => theme.vars.radius.sm,
+          }}
+        >
+          <ListItem>
+            <ListItemButton href="/dashboard/" >
+              <HomeRoundedIcon />
+              <ListItemContent>
+                <Typography level="title-sm">Home</Typography>
+              </ListItemContent>
+            </ListItemButton>
+          </ListItem>
 
+          <ListItem>
+          <Link href="/dashboards" className={isActive('/dashboards') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}>
+              <DashboardRoundedIcon />
+              <ListItemContent>
+                <Typography level="title-sm">Dashboard</Typography>
+              </ListItemContent>
+            </Link>
+          </ListItem>
+
+          <ListItem>
+            <Link href="/tasks" className={`${isActive('/tasks') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}`}>
+              <PendingActionsIcon />
+              <ListItemContent>
+                <Typography level="title-sm">Tasks</Typography>
+              </ListItemContent>
+            </Link>
+          </ListItem>
+
+        </List>
+        }
         <List
           size="sm"
           sx={{
@@ -339,8 +389,8 @@ export default function Sidebar() {
           src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
         />
         <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Typography level="title-sm">Bharani</Typography>
-          <Typography level="body-xs">bharani@opalminds.com</Typography>
+          <Typography level="title-sm">{logintype && logintype?.data?.name}</Typography>
+          <Typography level="body-xs">{logintype?.data?.phone}</Typography>
         </Box>
         <IconButton size="sm" variant="plain" color="neutral">
           <LogoutRoundedIcon onClick={handleLogout}/>

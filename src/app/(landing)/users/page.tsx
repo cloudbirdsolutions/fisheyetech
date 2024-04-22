@@ -59,7 +59,8 @@ export default function JoyOrderDashboardTemplate() {
           </Box>
 
           <OrderTable open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
-          <OrderList />
+
+          <OrderList open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
           <modalContext.Provider value={row}>
           <UserModalForm open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
           </modalContext.Provider>

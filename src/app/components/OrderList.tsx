@@ -29,10 +29,14 @@ import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import RowMenu from './RowMenu';
+import { useSelector } from 'react-redux';
 
 
-export default function OrderList() {
+export default function OrderList(props:any) {
   const [listItems, setlistItems] = React.useState([]);
+  const createuser = useSelector((state) => state?.createusers?.data);
+  const deleteuser = useSelector((state) => state?.deleteusers?.data);
+  const edituser = useSelector((state) => state?.editusers?.data);
 
   React.useEffect(() => {
     const getData = async () => {
@@ -60,7 +64,7 @@ export default function OrderList() {
 
     getData();
 
-  }, [])
+  }, [createuser, deleteuser, edituser])
 
   return (
     <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
@@ -108,7 +112,7 @@ export default function OrderList() {
 
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                    <RowMenu id={listItem.id}/>
+                <RowMenu row={listItem} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel}/>
                 </Box>
               </div>
             </ListItemContent>

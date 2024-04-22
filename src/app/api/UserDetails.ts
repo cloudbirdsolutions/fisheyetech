@@ -6,7 +6,7 @@ import userResponse from './userResponse';
 
 export async function fetchUserDetails(userData:any) {
   try {
-   /* const response = await fetch(loginEndpoint, {
+   const response = await fetch(loginEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -26,12 +26,11 @@ export async function fetchUserDetails(userData:any) {
     const data = await response.json();  
 
     localStorage.setItem('accessToken', data.access_token);
-    //return data;
-  if(data) {
+  return data;
+  /*if(data) {
     const userresponsedata = await userResponse(data);
     return userresponsedata;
   }*/
-  return true;
 } catch (error) {
     console.error('Error fetching user details:', error);
     throw error;

@@ -205,7 +205,7 @@ return (
         }}
       >
         <thead>
-          <tr>
+          <tr key="head">
             <th style={{ width: 80, padding: '12px 6px' }}>
               <Link
                 underline="none"
@@ -225,8 +225,8 @@ return (
                 ID
               </Link>
             </th>
-            {headers && headers.map((head)=>(
-                <th style={{ width: 140, padding: '12px 6px' }} >{head}</th>
+            {headers && headers.map((head, i)=>(
+                <th key={i} style={{ width: 140, padding: '12px 6px' }} >{head}</th>
             ))}
       
             <th style={{ width: 140, padding: '12px 6px' }}>Action</th>
