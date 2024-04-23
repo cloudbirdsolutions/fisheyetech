@@ -17,6 +17,8 @@ import Sheet from '@mui/joy/Sheet';
 import Input from '@mui/joy/Input';
 import { useRouter } from 'next/navigation';
 import modalContext from "@/app/context/modalContext";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const UserModalForm = (props:any) =>{
 
@@ -238,7 +240,7 @@ const UserModalForm = (props:any) =>{
           dispatch(createuser(formData)).then(() => {
             
             props.setOpen(false);
-            alert('UserCreated');
+            toast.success("User Created Successfully");
             router.push('/users');
           })
            
@@ -269,6 +271,7 @@ const UserModalForm = (props:any) =>{
           boxShadow: 'lg',
         }}
       >
+        <ToastContainer/>
         <ModalClose variant="plain" sx={{ m: 1 }} />
         <Typography
           component="h2"

@@ -15,6 +15,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '@/app/Store/store';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 interface LogProps {
@@ -44,30 +47,7 @@ interface LogProps {
 //   }
 // }
 
-async function  createDocument(sheetId: string,userId: number,transitionId:number){
 
-  try {
-
-    const response = await fetch(`http://51.79.147.139:3000/sheetdocid/create`, {
-      method: 'POST',
-      headers: {
-        Accept: "application/json",
-        'Content-Type': 'application/json',
-      },
-      body : JSON.stringify({"sheetId":parseInt(sheetId),"userId":userId,"transitionId":transitionId}),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch user details: ' + response.statusText);
-    }
-
-    const data = await response.json();
-    return data
-  } catch (error) {
-    console.error('Error fetching user details:', error);
-  }
-
-}
 
 export default function Log() {
   const params = useParams<{ sheet: string, id: string }>()
@@ -76,6 +56,34 @@ export default function Log() {
 }}])
   const router = useRouter()
   const logintype = useSelector((state:RootState) => state?.user.data);
+  const [refreshListIndicator, setRefreshListIndicator] = useState(Date.now())
+
+  async function  createDocument(sheetId: string,userId: number,transitionId:number){
+
+    try {
+  
+      const response = await fetch(`http://51.79.147.139:3000/sheetdocid/create`, {
+        method: 'POST',
+        headers: {
+          Accept: "application/json",
+          'Content-Type': 'application/json',
+        },
+        body : JSON.stringify({"sheetId":parseInt(sheetId),"userId":userId,"transitionId":transitionId}),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to fetch user details: ' + response.statusText);
+      }
+  
+      const data = await response.json();
+      setRefreshListIndicator(Date.now());
+      toast.success("Document Created Succesfuly!");
+      return data
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    }
+  
+  }
 
   async function getDocumentList(sheetid: string) {
     try {
@@ -135,12 +143,13 @@ export default function Log() {
     fetchData()
 
 
-  }, [params])
+  }, [params,refreshListIndicator])
 
 
   return (
     <>
     <Box sx={{ display: 'flex' }} marginTop={2}>
+    <ToastContainer />
     <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full' >
         {/* <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}> */}
         <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{params.id}</Typography>

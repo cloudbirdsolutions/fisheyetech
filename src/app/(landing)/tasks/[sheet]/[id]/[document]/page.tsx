@@ -12,6 +12,9 @@ import { useSelector } from 'react-redux';
 
 import { RootState } from '@/app/Store/store';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 var jmespath = require('jmespath');
 
 interface LogProps {
@@ -234,6 +237,7 @@ export default function Log() {
         body : JSON.stringify({"data":setDocumentRecordTransitionState})
       });
       setReloadData(Date.now());
+      toast.success("Record Changes Saved Successfully");
       if (!response.ok) {
         throw new Error('Failed to save record changes: ' + response.statusText);
       }
@@ -247,6 +251,7 @@ export default function Log() {
 
   return (
     <Box sx={{ display: 'flex' }} marginTop={2}>
+      <ToastContainer/>
       <Box>
         <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}>
         <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{parameters.sheetName}</Typography>

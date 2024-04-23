@@ -12,7 +12,8 @@ import { createjob } from '../../Reducers/CreateJobSlice';
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/Store/store";
 import { useRouter } from "next/navigation";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ListPermission(props: any) {
 
@@ -240,7 +241,7 @@ export default function ListPermission(props: any) {
       dispatch(createjob(formData)).then(() => {
         router.push('/joballocation');
       }).then(() => {
-        alert("Job Created");
+        toast.success("Job Created Successfully");
       })
 
     } catch (error) {
@@ -253,6 +254,7 @@ export default function ListPermission(props: any) {
 
   return (
     <>
+    <ToastContainer/>
       <form className='gap-8 flex flex-wrap flex-row' onSubmit={handleSubmit}>
         <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full' >
           <div className='space-y-[2px]'>
