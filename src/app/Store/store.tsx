@@ -17,6 +17,8 @@ import deleteuserSlice from '../Reducers/DeleteUserSlice';
 import editUserSlice from '../Reducers/editUserSlice';
 import editentitySlice from '../Reducers/editEntitySlice';
 import createentitySlice from '../Reducers/CreateEntitySlice';
+import createjobSlice from '../Reducers/CreateJobSlice';
+
 const persistConfig = {
   key: 'root',
   storage,
@@ -30,6 +32,7 @@ const appReducer = combineReducers({
   editusers: editUserSlice,
   editentity: editentitySlice,
   createentity: createentitySlice,
+  createjobs: createjobSlice,
 });
 
 const rootReducer = (state:any, action:any) => {
