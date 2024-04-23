@@ -101,10 +101,12 @@ export default function Log() {
     }
   }
   
+
+
   const RowMenu = (props:any)=>{
     return(
-      <Button color="primary" variant="outlined" size='sm' startDecorator={<Add />} onClick={() => router.push(`/tasks/sheet/${props.sheetId}/${props.documentId}`)} >
-    Log Data
+      <Button color="primary" variant="outlined" size='sm' onClick={() => router.push(`/tasks/sheet/${props.sheetId}/${props.documentId}`)} >
+    Data Entry
   </Button>
     )
   }
@@ -139,8 +141,8 @@ export default function Log() {
   return (
     <>
     <Box sx={{ display: 'flex' }} marginTop={2}>
-      <Box>
-        <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}>
+    <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full' >
+        {/* <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}> */}
         <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{params.id}</Typography>
         <Button size='sm' color='primary' startDecorator={<Add />} onClick={() => createDocument(params.id,logintype.data.id,1)}>
             Create New Document
@@ -149,13 +151,13 @@ export default function Log() {
               underline="hover"
               color="neutral"
               href="/tasks"
-              fontSize={12}
+              fontSize={14}
               fontWeight={500}
             >
               Go Back to Task List
             </Link>
-        </Stack>
-      </Box>
+        {/* </Stack> */}
+      </div>
       
     </Box>
     <TableSection tableHeaders={headers} tableRows={rows}/>

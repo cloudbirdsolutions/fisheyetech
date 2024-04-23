@@ -95,15 +95,39 @@ async function getDocumentRecords(documentId: string, shiftId:number) {
     console.error('Error fetching user details:', error);
   }
 }
+async function getUserPermission(sheetId: string, userId:number) {
+  try {
+
+    const response = await fetch(`http://51.79.147.139:3000/joballocation/get-permissions?userId=${userId}&sheetId=${sheetId}`, {
+      method: 'GET',
+      headers: {
+        Accept: "application/json",
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user details: ' + response.statusText);
+    }
+    const data = await response.json();
+    return data
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+  }
+}
 
 
 export default function Log() {
 
   const [index, setIndex] = React.useState(0);
+  const [expandIndex, setExpandIndex] = React.useState<number | null>(0);
+  const [sheetPermissionId,setSheetPermissionId] = React.useState<number>(1);
   const params = useParams<{ id: string, document: string }>()
   const [parameters, setParameters] = useState({ id: "", sheetName: "", description: "", parameterMaster: [{id:"",parameterName:"", fieldMaster:[{id:"",fieldName:"",fieldId:""}]}] });
   
   const logintype = useSelector((state:RootState) => state?.user.data);
+
+  const [relaodData, setReloadData] = useState(Date.now());
   
   const [shiftDetails,setShiftDetails] = useState([{
     
@@ -138,9 +162,11 @@ export default function Log() {
     const fetchData = async () => {
       let fieldResp = await getSheetFields(params.id)
       let shiftResp = await getDocumentShift(params.document)
+      let permissionData = await getUserPermission(params.id,logintype.data.id)
 
       setParameters(fieldResp.data)
       setShiftDetails(shiftResp.data)
+      setSheetPermissionId(permissionData.data[0].permissionType.id)
     }
     fetchData();
 
@@ -178,7 +204,7 @@ export default function Log() {
     fetchData();
 
 
-  },[currentShift,fieldRecord])
+  },[currentShift,fieldRecord,relaodData])
 
   const getFieldValue = (fieldId:string, parameterId:string )=>{
     const matchedRecord = documentRecord.find((rec)=>rec.fieldId === parseInt(fieldId) && rec.parameterId ===parseInt(parameterId))
@@ -198,7 +224,7 @@ export default function Log() {
 
   const saveRecordChnages = async (transistionId:number) =>{
     try {
-      let setDocumentRecordTransitionState = documentRecord.map((rec)=>(Object.assign({},rec,{"transitionId":transistionId})))
+      let setDocumentRecordTransitionState = documentRecord.map((rec)=>(Object.assign({},rec,{"transitionId":transistionId, "updatedBy": logintype.data.id})))
       const response = await fetch(`http://51.79.147.139:3000/forms/save`, {
         method: 'POST',
         headers: {
@@ -207,7 +233,7 @@ export default function Log() {
         },
         body : JSON.stringify({"data":setDocumentRecordTransitionState})
       });
-  
+      setReloadData(Date.now());
       if (!response.ok) {
         throw new Error('Failed to save record changes: ' + response.statusText);
       }
@@ -249,7 +275,7 @@ export default function Log() {
 
             }
           </TabList>
-          {/* {logintype.data.rolesId} */}
+          {/* {sheetPermissionId} */}
           
           <TabPanel value={index} sx={{height: 540, overflow: 'auto'}}>
 
@@ -257,8 +283,13 @@ export default function Log() {
 
             {parameters.parameterMaster && <AccordionGroup size='sm' sx={{ minWidth: "60dvw" }} >
               {
-                parameters.parameterMaster.map((paramter) => (
-                  <Accordion key={`paramater_${paramter.id}`} expanded={0===0}>
+                parameters.parameterMaster.map((paramter,index) => (
+                  <Accordion key={`paramater_${paramter.id}`}
+                  expanded={index === expandIndex}
+                  onChange={(event, expanded) => {
+                    setExpandIndex(expanded ? expandIndex : 0);
+                  }}
+                  >
                     <AccordionSummary sx={{ backgroundColor: 'var(--joy-palette-background-backdrop)' }}>
                       {paramter.parameterName}
                     </AccordionSummary>
@@ -275,7 +306,7 @@ export default function Log() {
                                   {field.fieldName}
                                 </td>
                                 <td>
-                                  <Input key={`input_key_${field.id}`} size='sm' value={getFieldValue(field.id,paramter.id)} onChange={(e)=>updateValue(e,field.id,paramter.id)} disabled={getMatchedFieldRecord(field.id,paramter.id)?.transitionId != logintype.data.rolesId}/>
+                                  <Input key={`input_key_${field.id}`} size='sm' value={getFieldValue(field.id,paramter.id)} onChange={(e)=>updateValue(e,field.id,paramter.id)} disabled={getMatchedFieldRecord(field.id,paramter.id)?.transitionId != sheetPermissionId}/>
                                 </td>
                               </tr>
 

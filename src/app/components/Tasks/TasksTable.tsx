@@ -106,8 +106,8 @@ export default function TasksTable() {
   
   const RowMenu = (props: { sheetid: any, sheetName:any })=> {
     return (
-      <Button color="primary" variant="outlined" size='sm' startDecorator={<Add />} onClick={() => router.push(`/tasks/sheet/${props.sheetid}`)} >
-    Log Data
+      <Button color="primary" variant="outlined" size='sm' onClick={() => router.push(`/tasks/sheet/${props.sheetid}`)} >
+    View Documents
   </Button>
     );
   }
@@ -289,7 +289,7 @@ export default function TasksTable() {
               </th>
               <th style={{ width: 140, padding: '12px 6px' }} >Department</th>
               <th style={{ width: 140, padding: '12px 6px' }}>Entity</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Role</th>
+              <th style={{ width: 140, padding: '12px 6px' }}>Permission</th>
               <th style={{ width: 140, padding: '12px 6px' }}>Assigned To</th>
               
               <th style={{ width: 140, padding: '12px 6px' }}>Action</th>
@@ -311,10 +311,10 @@ export default function TasksTable() {
                 <Chip
                     variant="soft"
                     size="sm"
-                    startDecorator={row.status === 'ACTIVE' ? <CheckRoundedIcon /> : row.role.roleName === 'Data Entry' ? <AutorenewRoundedIcon /> : <BlockIcon />}
-                    color={row.role.roleName === 'ACTIVE' ? 'success' : row.role.roleName === 'Data Entry' ? 'success' : 'danger'}
+                    startDecorator={row.status === 'ACTIVE' ? <CheckRoundedIcon /> : row.permissionType.permissionType === 'Operator' ? <AutorenewRoundedIcon /> : <BlockIcon />}
+                    color={row.permissionType.permissionType === 'ACTIVE' ? 'success' : row.permissionType.permissionType === 'Operator' ? 'success' : 'danger'}
                   >
-                    {row.role.roleName}
+                    {row.permissionType.permissionType}
                   </Chip>
                 </td>
                 <td>
