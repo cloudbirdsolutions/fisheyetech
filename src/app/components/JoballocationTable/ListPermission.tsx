@@ -67,7 +67,7 @@ export default function ListPermission(props:any) {
                 {j?.departments?.departmentName}                    
           </td>
           <td>
-          {j?.rolw?.roleName}
+          {j?.role?.roleName}
           </td>
           <td>
           {j?.sheetMaster?.sheetName}
