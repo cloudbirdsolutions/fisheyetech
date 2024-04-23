@@ -8,6 +8,10 @@ import { useParams } from 'next/navigation'
 import { AccordionGroup, FormControl, FormLabel, Tab, TabList, TabPanel, Tabs, Typography, Table, Sheet, Button, Stack, Link } from '@mui/joy';
 import { Accordion, AccordionDetails, AccordionSummary, Input } from '@mui/joy';
 
+import { useSelector } from 'react-redux';
+
+import { RootState } from '@/app/Store/store';
+
 var jmespath = require('jmespath');
 
 interface LogProps {
@@ -98,6 +102,9 @@ export default function Log() {
   const [index, setIndex] = React.useState(0);
   const params = useParams<{ id: string, document: string }>()
   const [parameters, setParameters] = useState({ id: "", sheetName: "", description: "", parameterMaster: [{id:"",parameterName:"", fieldMaster:[{id:"",fieldName:"",fieldId:""}]}] });
+  
+  const logintype = useSelector((state:RootState) => state?.user.data);
+  
   const [shiftDetails,setShiftDetails] = useState([{
     
       "id": 1,
@@ -177,6 +184,10 @@ export default function Log() {
     const matchedRecord = documentRecord.find((rec)=>rec.fieldId === parseInt(fieldId) && rec.parameterId ===parseInt(parameterId))
     return matchedRecord?.fieldValue
   }
+  const getMatchedFieldRecord = (fieldId:string, parameterId:string )=>{
+    const matchedRecord = documentRecord.find((rec)=>rec.fieldId === parseInt(fieldId) && rec.parameterId ===parseInt(parameterId))
+    return matchedRecord
+  }
 
   const updateValue = (e:React.ChangeEvent<HTMLInputElement>,fieldId:string,paramerterId:string)=>{
     console.log("Value Updated")
@@ -239,7 +250,7 @@ export default function Log() {
             }
           </TabList>
           
-          <TabPanel value={0} sx={{height: 540, overflow: 'auto'}}>
+          <TabPanel value={index} sx={{height: 540, overflow: 'auto'}}>
 
             
 
@@ -263,7 +274,7 @@ export default function Log() {
                                   {field.fieldName}
                                 </td>
                                 <td>
-                                  <Input key={`input_key_${field.id}`} size='sm' value={getFieldValue(field.id,paramter.id)} onChange={(e)=>updateValue(e,field.id,paramter.id)} />
+                                  <Input key={`input_key_${field.id}`} size='sm' value={getFieldValue(field.id,paramter.id)} onChange={(e)=>updateValue(e,field.id,paramter.id)} disabled={getMatchedFieldRecord(field.id,paramter.id)?.transitionId == logintype.data.rolesId}/>
                                 </td>
                               </tr>
 

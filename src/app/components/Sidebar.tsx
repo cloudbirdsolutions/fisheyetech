@@ -35,7 +35,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import ColorSchemeToggle from './ColorSchemeToggle';
 import { closeSidebar } from '../utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../Store/store';
+import { AppDispatch,RootState } from '../Store/store';
 import {useRouter, usePathname, useSelectedLayoutSegment } from "next/navigation";
 import Link from 'next/link';
 
@@ -84,7 +84,7 @@ export default function Sidebar() {
     return pathname === href ? true : false;
   };
   
-  const logintype = useSelector((state) => state?.user?.data);
+  const logintype = useSelector((state:RootState) => state?.user?.data);
 
   const dispatch = useDispatch<AppDispatch>();
   const handleLogout = () => {           

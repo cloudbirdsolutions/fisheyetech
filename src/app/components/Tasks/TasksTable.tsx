@@ -41,6 +41,11 @@ import Add from '@mui/icons-material/Add';
 
 import { useRouter } from 'next/navigation'
 
+import { useSelector } from 'react-redux';
+
+import { RootState } from '@/app/Store/store';
+
+
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -96,8 +101,10 @@ export default function TasksTable() {
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [open, setOpen] = React.useState(false);
   const [rows, setRows] = React.useState();
+
+  const logintype = useSelector((state:RootState) => state?.user.data);
   
-  const RowMenu = (props: { sheetid: any; })=> {
+  const RowMenu = (props: { sheetid: any, sheetName:any })=> {
     return (
       <Button color="primary" variant="outlined" size='sm' startDecorator={<Add />} onClick={() => router.push(`/tasks/sheet/${props.sheetid}`)} >
     Log Data
@@ -112,7 +119,9 @@ export default function TasksTable() {
     const getData = async () => {
       try {
          
-        const response = await fetch('http://51.79.147.139:3000/joballocation/get-user-jobs?id=2', {
+        const url = logintype.data.rolesId === 4 ? `http://51.79.147.139:3000/joballocation/get-all-jobs` :`http://51.79.147.139:3000/joballocation/get-user-jobs?id=${logintype.data.id}`
+        // const url = `http://51.79.147.139:3000/joballocation/get-user-jobs?id=${logintype.data.id}`
+        const response = await fetch(url, {
           method: 'GET',
           headers: {
             Accept : "application/json",
@@ -281,6 +290,7 @@ export default function TasksTable() {
               <th style={{ width: 140, padding: '12px 6px' }} >Department</th>
               <th style={{ width: 140, padding: '12px 6px' }}>Entity</th>
               <th style={{ width: 140, padding: '12px 6px' }}>Role</th>
+              <th style={{ width: 140, padding: '12px 6px' }}>Assigned To</th>
               
               <th style={{ width: 140, padding: '12px 6px' }}>Action</th>
             </tr>
@@ -307,11 +317,13 @@ export default function TasksTable() {
                     {row.role.roleName}
                   </Chip>
                 </td>
-               
+                <td>
+                  <Typography level="body-xs">{row?.users.userName}</Typography>
+                </td>
                 <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                     
-                    <RowMenu sheetid={row.sheetMaster.id} />
+                    <RowMenu sheetid={row.sheetMaster.id} sheetName={row.sheetMaster.sheetName} />
                   </Box>
                 </td>
               </tr>
