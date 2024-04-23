@@ -49,7 +49,36 @@ export default function ListPermission(props:any) {
       const [shift, setShift] = useState(null);
 
     const dispatch = useDispatch<AppDispatch>();
-    const router = useRouter()
+    const router = useRouter();
+
+    const headers = ["Name", "Department", "Role", "sheets"];
+
+   
+
+      const jobstablerows = alljobs?.map((j:any)=> (
+        <tr key={j?.id}>
+          <td>
+            <Typography level="body-xs">{props.selectedrows?.id}</Typography>
+          </td>
+          <td>
+            <Typography level="body-xs">{j?.users?.userName}</Typography>
+          </td>  
+          <td>                
+                {j?.departments?.departmentName}                    
+          </td>
+          <td>
+          {j?.rolw?.roleName}
+          </td>
+          <td>
+          {j?.sheetMaster?.sheetName}
+          </td>         
+      
+          <td>
+              <Button type="submit">Delete Job</Button>
+          </td>        
+        </tr>
+    ))
+
     useEffect(() => {
         const getalljobs = async () => {
             try {
@@ -75,7 +104,7 @@ export default function ListPermission(props:any) {
         }
         getalljobs();
 
-        const getdepartment = async () => {
+    const getdepartment = async () => {
         try {
         const response = await fetch('http://51.79.147.139:3000/departments/get', {
             method: 'GET',
@@ -202,70 +231,7 @@ export default function ListPermission(props:any) {
            }
       }
 
-    const headers = ["Name", "Department", "Role", "sheets", "Shift-A", "Shift-B", "Shift-C", "Shift-D", "Shift-General"];
-
-
-    const jobstablerows:any =  [
-        <tr key={alljobs?.id}>
-          <td>
-            <Typography level="body-xs">{props.selectedrows?.id}</Typography>
-          </td>
-          <td>
-            <Typography level="body-xs">{props.selectedrows?.userName}</Typography>
-          </td>  
-          <td>
-            {
-              department && 
-              <Select multiple={false} onChange={handleChange}>
-                  {department.map((r:any) => {
-                      return <Option value={r.id}>{r.departmentName}</Option>
-                  })                
-                  }   
-              </Select>
-            }
-          </td>
-          <td>
-            {
-              role && 
-              <Select multiple={false} onChange={handleChange}>
-                  {role.map((r:any) => {
-                      return <Option value={r.id}>{r.roleName}</Option>
-                  })                
-                  }   
-              </Select>
-            }
-          </td>
-          <td>
-          {
-              role && 
-              <Select multiple onChange={handleChange}>
-                  {role.map((r:any) => {
-                      return <Option value={r.id}>{r.roleName}</Option>
-                  })                
-                  }   
-              </Select>
-            }
-          </td>  
-          <td>
-            <Checkbox label={'Shift-A'}/>
-          </td>
-          <td>
-          <Checkbox label={'Shift-B'}/>
-          </td>     
-          <td>
-          <Checkbox label={'Shift-C'}/>
-          </td>
-          <td>
-          <Checkbox label={'Shift-D'}/>
-          </td>     
-          <td>
-          <Checkbox label={'General Shift'}/>
-          </td>
-          <td>
-              <Button type="submit">Add Job</Button>
-          </td>        
-        </tr>
-      ]
+   
 
     return (
         <>
@@ -341,7 +307,7 @@ export default function ListPermission(props:any) {
           
           <Button type="submit"> Add Job</Button>
           </form>
-            <TableSection tableHeaders={headers} tableRows={jobstablerows}/>
+        <TableSection tableHeaders={headers} tableRows={jobstablerows}/>
         </>
     )
 }
