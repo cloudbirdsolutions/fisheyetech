@@ -130,7 +130,7 @@ export default function JoySignInSideTemplate() {
               <IconButton variant="soft" color="primary" size="sm">
                 <BadgeRoundedIcon />
               </IconButton>
-              <Typography level="title-lg">Company logo</Typography>
+              <Typography level="title-lg">Fisheyetech</Typography>
             </Box>
             <ColorSchemeToggle />
           </Box>
@@ -162,23 +162,23 @@ export default function JoySignInSideTemplate() {
                 <Typography component="h1" level="h3">
                   Sign in
                 </Typography>
-                <Typography level="body-sm">
+                {/* <Typography level="body-sm">
                   New to company?{' '}
                   <Link href="#replace-with-a-link" level="title-sm">
                     Sign up!
                   </Link>
-                </Typography>
+                </Typography> */}
               </Stack>
-              <Button
+              {/* <Button
                 variant="soft"
                 color="neutral"
                 fullWidth
                 startDecorator={<GoogleIcon />}
               >
                 Continue with Google
-              </Button>
+              </Button> */}
             </Stack>
-            <Divider
+            {/* <Divider
               sx={(theme) => ({
                 [theme.getColorSchemeSelector('light')]: {
                   color: { xs: '#FFF', md: 'text.tertiary' },
@@ -186,7 +186,7 @@ export default function JoySignInSideTemplate() {
               })}
             >
               or
-            </Divider>
+            </Divider> */}
             <Stack gap={4} sx={{ mt: 2 }}>
               <form
                 onSubmit={handleSubmit}

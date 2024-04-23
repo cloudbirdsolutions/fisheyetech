@@ -1,6 +1,7 @@
 
 
-const loginEndpoint = process.env.NEXT_PUBLIC_API_HOST+'/auth/signin';
+// const loginEndpoint = process.env.NEXT_PUBLIC_API_HOST+'/auth/signin';
+const loginEndpoint = 'http://51.79.147.139:3000/auth/signin';
 
 import userResponse from './userResponse';
 
