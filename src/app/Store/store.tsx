@@ -15,6 +15,8 @@ import {
 import createuserSlice from '../Reducers/CreateUserSlice';
 import deleteuserSlice from '../Reducers/DeleteUserSlice';
 import editUserSlice from '../Reducers/editUserSlice';
+import editentitySlice from '../Reducers/editEntitySlice';
+import createentitySlice from '../Reducers/CreateEntitySlice';
 const persistConfig = {
   key: 'root',
   storage,
@@ -26,6 +28,8 @@ const appReducer = combineReducers({
   createusers: createuserSlice,
   deleteusers: deleteuserSlice,
   editusers: editUserSlice,
+  editentity: editentitySlice,
+  createentity: createentitySlice,
 });
 
 const rootReducer = (state:any, action:any) => {

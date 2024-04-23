@@ -10,6 +10,9 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import DepartmentLists from '../../components/DepartmentLists';
 import Stack from '@mui/joy/Stack';
 import EntityTable from '@/app/components/EntityTable';
+import EntityModalForm from '@/app/components/EntityModalForm/EntityModalForm';
+import modalContext from '@/app/context/modalContext';
+
 
 export default function DepartmentList() {  
 
@@ -38,7 +41,7 @@ export default function DepartmentList() {
                 color="success"
                 startDecorator={<PersonAddIcon />}
                 size="sm"
-                onClick={() => setOpen(true)}
+                onClick={() => {setOpen(true); setLabel('Add Entity'); setRow(null)}}
               >
                 Add Entity
               </Button>
@@ -46,7 +49,10 @@ export default function DepartmentList() {
 
           </Box>
           <EntityTable open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
-            
+          
+          <modalContext.Provider value={row}>
+          <EntityModalForm open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
+          </modalContext.Provider>
           </>
   );
 }

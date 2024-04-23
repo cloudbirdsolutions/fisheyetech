@@ -24,7 +24,7 @@ const RowMenu = (props:any) => {
             // const userData = Object.fromEntries();
              
             dispatch(deleteuser(id)).then(() => {
-              router.push('/users');
+              router.push('/entities');
             })
              
            } catch (error) {
@@ -38,10 +38,6 @@ const RowMenu = (props:any) => {
     props.setLabel('Edit User');
     props.setRow(row);
   }
-
-    useEffect(() => {
-
-    })
 
     return (
       <>

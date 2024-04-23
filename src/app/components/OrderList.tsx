@@ -119,10 +119,10 @@ export default function OrderList(props:any) {
             <Chip
               variant="soft"
               size="sm"
-              startDecorator={listItem.status === 'ACTIVE' ? <CheckRoundedIcon /> : listItem.status === 'PENDING' ? <AutorenewRoundedIcon /> : <BlockIcon />}
-              color={listItem.status === 'ACTIVE' ? 'success' : listItem.status === 'PENDING' ? 'neutral' : 'danger'}
+              startDecorator={listItem.statusMaster.statusName === 'ACTIVE' ? <CheckRoundedIcon /> : listItem.statusMaster.statusName === 'PENDING' ? <AutorenewRoundedIcon /> : <BlockIcon />}
+              color={listItem.statusMaster.statusName === 'ACTIVE' ? 'success' : listItem.statusMaster.statusName === 'PENDING' ? 'neutral' : 'danger'}
             >
-              {listItem.status}
+              {listItem.statusMaster.statusName}
             </Chip>
           </ListItem>
           <ListDivider />

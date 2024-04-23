@@ -289,10 +289,10 @@ export default function OrderTable(props:any) {
                   <Chip
                     variant="soft"
                     size="sm"
-                    startDecorator={row.status === 'ACTIVE' ? <CheckRoundedIcon /> : row.status === 'PENDING' ? <AutorenewRoundedIcon /> : <BlockIcon />}
-                    color={row.status === 'ACTIVE' ? 'success' : row.status === 'PENDING' ? 'neutral' : 'danger'}
+                    startDecorator={row?.statusMaster?.statusName === 'ACTIVE' ? <CheckRoundedIcon /> : row?.statusMaster?.statusName === 'PENDING' ? <AutorenewRoundedIcon /> : <BlockIcon />}
+                    color={row?.statusMaster?.statusName === 'ACTIVE' ? 'success' : row?.statusMaster?.statusName === 'PENDING' ? 'neutral' : 'danger'}
                   >
-                    {row.status}
+                    {row?.statusMaster?.statusName}
                   </Chip>
                 </td>
 
