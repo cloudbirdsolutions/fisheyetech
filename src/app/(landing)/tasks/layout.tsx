@@ -35,7 +35,7 @@ export default function SubLayout({ children }: Readonly<{
           gap: 1,
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Breadcrumbs
             size="sm"
             aria-label="breadcrumbs"
@@ -63,7 +63,7 @@ export default function SubLayout({ children }: Readonly<{
               Tasks
             </Typography>
           </Breadcrumbs>
-        </Box>
+        </Box> */}
         <Box
           sx={{
             display: 'flex',

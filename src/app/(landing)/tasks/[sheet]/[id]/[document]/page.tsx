@@ -246,7 +246,7 @@ export default function Log() {
             {parameters.parameterMaster && <AccordionGroup size='sm' sx={{ minWidth: "60dvw" }} >
               {
                 parameters.parameterMaster.map((paramter) => (
-                  <Accordion key={`paramater_${paramter.id}`}>
+                  <Accordion key={`paramater_${paramter.id}`} expanded={0===0}>
                     <AccordionSummary sx={{ backgroundColor: 'var(--joy-palette-background-backdrop)' }}>
                       {paramter.parameterName}
                     </AccordionSummary>
