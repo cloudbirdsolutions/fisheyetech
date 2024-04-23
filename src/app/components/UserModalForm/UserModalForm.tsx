@@ -26,14 +26,26 @@ const UserModalForm = (props:any) =>{
     const row = useContext(modalContext);
 
     const [formData, setFormData] = useState({
-        id: "",
         name: "",
         userName: "",
         address: "",
         phone: "",
         password: "",
-        statusId: 0
+        statusId: 0,
+        rolesId: 0
       });
+
+      
+    const [editformData, seteditFormData] = useState({
+      id:0,
+      name: "",
+      userName: "",
+      address: "",
+      phone: "",
+      password: "",
+      statusId: 0,
+      rolesId: 0
+    });
     
       
     
@@ -43,37 +55,86 @@ const UserModalForm = (props:any) =>{
       const [addressError, setaddressError] = useState('');
       const [passwordError, setpasswordError] = useState('');
       const [statusError, setstatusError] = useState('');
+
+      const [role, setRole] = useState([{
+        "id": 4,
+      "createdAt": "2024-04-20T08:42:38.910Z",
+      "updatedAt": "2024-04-20T08:42:38.910Z",
+      "roleName": "admin",
+      "roleStatus": 1,
+      "permissionId": 1,
+      "statusMaster": {
+        "statusName": "ACTIVE"
+      },
+      "permissionType": {
+        "permissionType": "Data Entry"
+      }
+
+    }])
       useEffect(() => {
         if(row != null) {
-            setFormData({
+            seteditFormData({
                 id: row?.id,
                 name: row?.name,
                 userName: row?.userName,
                 address: row?.address,
                 phone: row?.phone,
                 password: row?.password,
-                statusId: row?.statusId
+                statusId: row?.statusId,
+                rolesId: row?.rolesId
               });
         } else {
             setFormData({
-                id: "",
                 name: "",
                 userName: "",
                 address: "",
                 phone: "",
                 password: "",
-                statusId: 0
+                statusId: 0,
+                rolesId: 0
               })
         }
+
+        const getrole = async () => {
+          try {
+          const response = await fetch('http://51.79.147.139:3000/roles/get', {
+              method: 'GET',
+              headers: {
+                Accept : "application/json",
+                'Content-Type': 'application/json',
+              }
+            });
+      
+            if (!response.ok) {
+              throw new Error('Failed to fetch user details: ' + response.statusText);
+            }
+      
+            const data = await response.json();
+            
+            setRole(data.data);
+          } catch (error) {
+            console.error('Error fetching user details:', error);
+          }
+          
+      }
+      getrole();
+
       },[row])
       
     
       const handleChange = (e:any) => {
         const { name, value, type, checked } = e.target;
+        if(row!=null) {
+          seteditFormData(prevState => ({
+            ...prevState,
+            [name]: e.target.name === 'id' || e.target.name === 'statusId' || e.target.name === 'rolesId' ? parseInt(value) : value     
+          }));
+        } else {
         setFormData(prevState => ({
           ...prevState,
-          [name]: e.target.name === 'statusId' ? parseInt(value) : value     
+          [name]: e.target.name === 'statusId' || e.target.name === 'rolesId' ? parseInt(value) : value     
         }));
+      }
     
         
     
@@ -105,36 +166,37 @@ const UserModalForm = (props:any) =>{
       const handleSubmit = async (e:any) => {
         e.preventDefault();
     
-        // Check if required fields are filled
-        if (!formData.name || !formData.password || !formData.address || !formData.phone || formData.statusId === 0 || !formData.userName) {
-          // Display error message for missing fields
-          if (!formData.name) {
-            setnameError('Name is required');
-          }
-          
-          if (!formData.password) {
-            setpasswordError('Password is required');
-          }
-          if (!formData.address) {
-            setaddressError('Address is required');
-          }
-          if (!formData.phone) {
-            setPhonenoError('Phone Number is required');
-          }
-          if (!formData.statusId) {
-            setstatusError('Status is required');
-          }
-          if (!formData.userName) {
-            setuserNameError('User Name is required');
-          }
-          return;
-        }
+        
     
     if(row != null) {
+      // Check if required fields are filled
+      if (!editformData.name || !editformData.password || !editformData.address || !editformData.phone || editformData.statusId === 0 || !editformData.userName) {
+        // Display error message for missing fields
+        if (!editformData.name) {
+          setnameError('Name is required');
+        }
+        
+        if (!editformData.password) {
+          setpasswordError('Password is required');
+        }
+        if (!editformData.address) {
+          setaddressError('Address is required');
+        }
+        if (!editformData.phone) {
+          setPhonenoError('Phone Number is required');
+        }
+        if (!editformData.statusId) {
+          setstatusError('Status is required');
+        }
+        if (!editformData.userName) {
+          setuserNameError('User Name is required');
+        }
+        return;
+      }
         try {
           // const userData = Object.fromEntries();
            
-          dispatch(edituser(formData)).then(() => {
+          dispatch(edituser(editformData)).then(() => {
             props.setOpen(false);
             router.push('/users');
           })
@@ -144,11 +206,39 @@ const UserModalForm = (props:any) =>{
            // Handle error (e.g., display error message)
          }
     } else {
+
+      // Check if required fields are filled
+      if (!formData.name || !formData.password || !formData.address || !formData.phone || formData.statusId === 0 || !formData.userName) {
+        // Display error message for missing fields
+        if (!formData.name) {
+          setnameError('Name is required');
+        }
+        
+        if (!formData.password) {
+          setpasswordError('Password is required');
+        }
+        if (!formData.address) {
+          setaddressError('Address is required');
+        }
+        if (!formData.phone) {
+          setPhonenoError('Phone Number is required');
+        }
+        if (!formData.statusId) {
+          setstatusError('Status is required');
+        }
+        if (!formData.userName) {
+          setuserNameError('User Name is required');
+        }
+        return;
+      }
+
         try {
           // const userData = Object.fromEntries();
            
           dispatch(createuser(formData)).then(() => {
+            
             props.setOpen(false);
+            alert('UserCreated');
             router.push('/users');
           })
            
@@ -192,22 +282,37 @@ const UserModalForm = (props:any) =>{
         </Typography>
         <Stack className='p-8'>
         <form className='gap-8 flex flex-wrap w-[100%] flex-row' onSubmit={handleSubmit}>
+          <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
             {row != null &&
-            <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
+            
                 <div className='space-y-[2px] w-full'>
                     <h3 className='text-textdull text-xs mb-2'>ID</h3>
-                    <Input size="sm" disabled name="id" value={formData.id} />
+                    <Input size="sm" disabled name="id" value={editformData.id} />
+                </div>
+            }
+                  <div className='space-y-[2px] w-full'>
+                    <h3 className='text-textdull text-xs mb-2'>Role</h3>
+                    {
+                    role && 
+                    <select multiple={false} name="rolesId" onChange={handleChange}>
+                        <option value={0}>Select</option>
+                        {role.map((r:any) => {
+                            return <option value={r.id}>{r.roleName}</option>
+                        })                
+                        }   
+                    </select>
+                 }
                 </div>
             </div>
-            }
+          
           <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
               <div className='space-y-[2px] w-full'>
                   <h3 className='text-textdull text-xs mb-2'>Name</h3>
-                  <Input size="sm" placeholder="name" name="name" value={formData.name} onChange={handleChange}/>
+                  <Input size="sm" placeholder="name" name="name" value={row!=null ? editformData.name : formData.name} onChange={handleChange}/>
               </div>
               <div className='space-y-[2px] w-full'>
                   <h3 className='text-textdull text-xs mb-2'>User Name</h3>
-                  <Input size="sm" placeholder="userName" name="userName" value={formData.userName}
+                  <Input size="sm" placeholder="userName" name="userName" value={row!=null ? editformData.userName : formData.userName}
                               onChange={handleChange}/>
               </div>
             </div>
@@ -215,7 +320,7 @@ const UserModalForm = (props:any) =>{
               
               <div className='space-y-[2px] w-full'>
                   <h3 className='text-textdull text-xs mb-2'>Password</h3>
-                  <Input size="sm" placeholder="password" name="password" value={formData.password}
+                  <Input size="sm" placeholder="password" name="password" value={row!=null ? editformData.password : formData.password}
                               onChange={handleChange}/>
               </div>
               <div className='space-y-[2px] w-full'>
@@ -231,12 +336,12 @@ const UserModalForm = (props:any) =>{
             <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
               <div className='space-y-[2px] w-full'>
                   <h3 className='text-textdull text-xs mb-2'>Address</h3>
-                  <Input size="sm" placeholder="address" name="address" value={formData.address}
+                  <Input size="sm" placeholder="address" name="address" value={row!=null ? editformData.address : formData.address}
                               onChange={handleChange}/>
               </div>
               <div className='space-y-[2px] w-full'>
                   <h3 className='text-textdull text-xs mb-2'>Phone</h3>
-                  <Input size="sm" placeholder="phonenumber" name="phone" value={formData.phone}
+                  <Input size="sm" placeholder="phonenumber" name="phone" value={row!=null ? editformData.phone : formData.phone}
                               onChange={handleChange}/>
               </div>
             </div>

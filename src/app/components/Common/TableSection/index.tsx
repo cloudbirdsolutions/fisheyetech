@@ -188,7 +188,6 @@ return (
         width: '100%',
         borderRadius: 'sm',
         flexShrink: 1,
-        overflow: 'auto',
         minHeight: 0,
       }}
     >
