@@ -196,16 +196,16 @@ export default function Log() {
     // console.log(e.target.value)
   }
 
-  const saveRecordChnages = async () =>{
+  const saveRecordChnages = async (transistionId:number) =>{
     try {
-
+      let setDocumentRecordTransitionState = documentRecord.map((rec)=>(Object.assign({},rec,{"transitionId":transistionId})))
       const response = await fetch(`http://51.79.147.139:3000/forms/save`, {
         method: 'POST',
         headers: {
           Accept: "application/json",
           'Content-Type': 'application/json',
         },
-        body : JSON.stringify({"data":documentRecord})
+        body : JSON.stringify({"data":setDocumentRecordTransitionState})
       });
   
       if (!response.ok) {
@@ -244,11 +244,12 @@ export default function Log() {
             <Tab>Shift C</Tab> */}
             {
               shiftDetails && shiftDetails.map((s)=>(
-                <Tab key={`tab_shift_${s.shiftId}`}   >{s.shiftMaster.shiftType}</Tab>
+                <Tab key={`tab_shift_${s.shiftId}`}  disabled={s.shiftStatus!='Active'}  >{s.shiftMaster.shiftType}</Tab>
               ))
 
             }
           </TabList>
+          {/* {logintype.data.rolesId} */}
           
           <TabPanel value={index} sx={{height: 540, overflow: 'auto'}}>
 
@@ -274,7 +275,7 @@ export default function Log() {
                                   {field.fieldName}
                                 </td>
                                 <td>
-                                  <Input key={`input_key_${field.id}`} size='sm' value={getFieldValue(field.id,paramter.id)} onChange={(e)=>updateValue(e,field.id,paramter.id)} disabled={getMatchedFieldRecord(field.id,paramter.id)?.transitionId == logintype.data.rolesId}/>
+                                  <Input key={`input_key_${field.id}`} size='sm' value={getFieldValue(field.id,paramter.id)} onChange={(e)=>updateValue(e,field.id,paramter.id)} disabled={getMatchedFieldRecord(field.id,paramter.id)?.transitionId != logintype.data.rolesId}/>
                                 </td>
                               </tr>
 
@@ -293,12 +294,18 @@ export default function Log() {
             }
             <Box sx={{display:'flex', gap:'4', position:'absolute', right:'14px', bottom:'18px'}}>
               <Stack direction={'row'} spacing={2}>
-              <Button size='sm' color='primary' onClick={()=>{saveRecordChnages()}}>
-                Save
+              <Button size='sm' color='primary' onClick={()=>{saveRecordChnages(1)}}>
+                Save draft
               </Button>
-              <Button size='sm' color='success'>
-                Submit for Approval
-              </Button>
+              { logintype.data.rolesId ==1 && <Button size='sm' color='success' onClick={()=>{saveRecordChnages(2)}}>
+                Send for Supervisor Approval
+              </Button>}
+              { logintype.data.rolesId ==2 && <Button size='sm' color='success' onClick={()=>{saveRecordChnages(3)}}>
+                Send for Engineer Approval
+              </Button>}
+              { logintype.data.rolesId ==3 && <Button size='sm' color='success' onClick={()=>{saveRecordChnages(4)}}>
+                Approve Document
+              </Button>}
               </Stack>
             </Box>
           </TabPanel>

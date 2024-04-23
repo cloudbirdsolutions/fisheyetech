@@ -318,7 +318,7 @@ export default function ListPermission(props:any) {
                     <select multiple={false} name="sheetId" onChange={handleChange}>
                         <option value={0}>Select</option>
                         {sheets.map((r:any) => {
-                            return <option value={r.id}>{r.sheetMaster?.sheetName}</option>
+                            return <option value={r.sheetMaster.id}>{r.sheetMaster?.sheetName}</option>
                         })                
                         }   
                     </select>

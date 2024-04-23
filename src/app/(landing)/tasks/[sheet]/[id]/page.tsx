@@ -80,9 +80,9 @@ export default function Log() {
   async function getDocumentList(sheetid: string) {
     try {
   
-      // const url = logintype.data.rolesId === 4 ? `http://51.79.147.139:3000/joballocation/get-all-jobs` :`http://51.79.147.139:3000/joballocation/get-user-jobs?id=${logintype.data.id}`
+      const url = [4,2,3].includes(logintype.data.rolesId) ? `http://51.79.147.139:3000/sheetdocid/get-user-docs?sheetId=${sheetid}` :`http://51.79.147.139:3000/sheetdocid/get-user-docs?sheetId=${sheetid}&userId=${logintype.data.id}`
       
-      const response = await fetch(`http://51.79.147.139:3000/sheetdocid/get-user-docs?sheetId=${sheetid}&userId=${logintype.data.id}`, {
+      const response = await fetch(url, {
         method: 'GET',
         headers: {
           Accept: "application/json",
