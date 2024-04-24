@@ -8,6 +8,13 @@ import { useParams } from 'next/navigation'
 import { AccordionGroup, FormControl, FormLabel, Tab, TabList, TabPanel, Tabs, Typography, Table, Sheet, Button, Stack, Link } from '@mui/joy';
 import { Accordion, AccordionDetails, AccordionSummary, Input } from '@mui/joy';
 
+import { useSelector } from 'react-redux';
+
+import { RootState } from '@/app/Store/store';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 var jmespath = require('jmespath');
 
 interface LogProps {
@@ -91,13 +98,40 @@ async function getDocumentRecords(documentId: string, shiftId:number) {
     console.error('Error fetching user details:', error);
   }
 }
+async function getUserPermission(sheetId: string, userId:number) {
+  try {
+
+    const response = await fetch(`http://51.79.147.139:3000/joballocation/get-permissions?userId=${userId}&sheetId=${sheetId}`, {
+      method: 'GET',
+      headers: {
+        Accept: "application/json",
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user details: ' + response.statusText);
+    }
+    const data = await response.json();
+    return data
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+  }
+}
 
 
 export default function Log() {
 
   const [index, setIndex] = React.useState(0);
+  const [expandIndex, setExpandIndex] = React.useState<number | null>(0);
+  const [sheetPermissionId,setSheetPermissionId] = React.useState<number>(1);
   const params = useParams<{ id: string, document: string }>()
   const [parameters, setParameters] = useState({ id: "", sheetName: "", description: "", parameterMaster: [{id:"",parameterName:"", fieldMaster:[{id:"",fieldName:"",fieldId:""}]}] });
+  
+  const logintype = useSelector((state:RootState) => state?.user.data);
+
+  const [relaodData, setReloadData] = useState(Date.now());
+  
   const [shiftDetails,setShiftDetails] = useState([{
     
       "id": 1,
@@ -131,9 +165,11 @@ export default function Log() {
     const fetchData = async () => {
       let fieldResp = await getSheetFields(params.id)
       let shiftResp = await getDocumentShift(params.document)
+      let permissionData = await getUserPermission(params.id,logintype.data.id)
 
       setParameters(fieldResp.data)
       setShiftDetails(shiftResp.data)
+      setSheetPermissionId(permissionData.data[0].permissionType.id)
     }
     fetchData();
 
@@ -171,11 +207,15 @@ export default function Log() {
     fetchData();
 
 
-  },[currentShift,fieldRecord])
+  },[currentShift,fieldRecord,relaodData])
 
   const getFieldValue = (fieldId:string, parameterId:string )=>{
     const matchedRecord = documentRecord.find((rec)=>rec.fieldId === parseInt(fieldId) && rec.parameterId ===parseInt(parameterId))
     return matchedRecord?.fieldValue
+  }
+  const getMatchedFieldRecord = (fieldId:string, parameterId:string )=>{
+    const matchedRecord = documentRecord.find((rec)=>rec.fieldId === parseInt(fieldId) && rec.parameterId ===parseInt(parameterId))
+    return matchedRecord
   }
 
   const updateValue = (e:React.ChangeEvent<HTMLInputElement>,fieldId:string,paramerterId:string)=>{
@@ -185,18 +225,19 @@ export default function Log() {
     // console.log(e.target.value)
   }
 
-  const saveRecordChnages = async () =>{
+  const saveRecordChnages = async (transistionId:number) =>{
     try {
-
+      let setDocumentRecordTransitionState = documentRecord.map((rec)=>(Object.assign({},rec,{"transitionId":transistionId, "updatedBy": logintype.data.id})))
       const response = await fetch(`http://51.79.147.139:3000/forms/save`, {
         method: 'POST',
         headers: {
           Accept: "application/json",
           'Content-Type': 'application/json',
         },
-        body : JSON.stringify({"data":documentRecord})
+        body : JSON.stringify({"data":setDocumentRecordTransitionState})
       });
-  
+      setReloadData(Date.now());
+      toast.success("Record Changes Saved Successfully");
       if (!response.ok) {
         throw new Error('Failed to save record changes: ' + response.statusText);
       }
@@ -210,6 +251,7 @@ export default function Log() {
 
   return (
     <Box sx={{ display: 'flex' }} marginTop={2}>
+      <ToastContainer/>
       <Box>
         <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}>
         <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{parameters.sheetName}</Typography>
@@ -233,20 +275,26 @@ export default function Log() {
             <Tab>Shift C</Tab> */}
             {
               shiftDetails && shiftDetails.map((s)=>(
-                <Tab key={`tab_shift_${s.shiftId}`}   >{s.shiftMaster.shiftType}</Tab>
+                <Tab key={`tab_shift_${s.shiftId}`}  disabled={s.shiftStatus!='Active'}  >{s.shiftMaster.shiftType}</Tab>
               ))
 
             }
           </TabList>
+          {/* {sheetPermissionId} */}
           
-          <TabPanel value={0} sx={{height: 540, overflow: 'auto'}}>
+          <TabPanel value={index} sx={{height: 540, overflow: 'auto'}}>
 
             
 
             {parameters.parameterMaster && <AccordionGroup size='sm' sx={{ minWidth: "60dvw" }} >
               {
-                parameters.parameterMaster.map((paramter) => (
-                  <Accordion key={`paramater_${paramter.id}`} expanded={0===0}>
+                parameters.parameterMaster.map((paramter,index) => (
+                  <Accordion key={`paramater_${paramter.id}`}
+                  expanded={index === expandIndex}
+                  onChange={(event, expanded) => {
+                    setExpandIndex(expanded ? expandIndex : index);
+                  }}
+                  >
                     <AccordionSummary sx={{ backgroundColor: 'var(--joy-palette-background-backdrop)' }}>
                       {paramter.parameterName}
                     </AccordionSummary>
@@ -263,7 +311,7 @@ export default function Log() {
                                   {field.fieldName}
                                 </td>
                                 <td>
-                                  <Input key={`input_key_${field.id}`} size='sm' value={getFieldValue(field.id,paramter.id)} onChange={(e)=>updateValue(e,field.id,paramter.id)} />
+                                  <Input key={`input_key_${field.id}`} size='sm' value={getFieldValue(field.id,paramter.id)} onChange={(e)=>updateValue(e,field.id,paramter.id)} disabled={getMatchedFieldRecord(field.id,paramter.id)?.transitionId != sheetPermissionId}/>
                                 </td>
                               </tr>
 
@@ -282,12 +330,18 @@ export default function Log() {
             }
             <Box sx={{display:'flex', gap:'4', position:'absolute', right:'14px', bottom:'18px'}}>
               <Stack direction={'row'} spacing={2}>
-              <Button size='sm' color='primary' onClick={()=>{saveRecordChnages()}}>
-                Save
+              <Button size='sm' color='primary' onClick={()=>{saveRecordChnages(1)}}>
+                Save draft
               </Button>
-              <Button size='sm' color='success'>
-                Submit for Approval
-              </Button>
+              { logintype.data.rolesId ==1 && <Button size='sm' color='success' onClick={()=>{saveRecordChnages(2)}}>
+                Send for Supervisor Approval
+              </Button>}
+              { logintype.data.rolesId ==2 && <Button size='sm' color='success' onClick={()=>{saveRecordChnages(3)}}>
+                Send for Engineer Approval
+              </Button>}
+              { logintype.data.rolesId ==3 && <Button size='sm' color='success' onClick={()=>{saveRecordChnages(4)}}>
+                Approve Document
+              </Button>}
               </Stack>
             </Box>
           </TabPanel>

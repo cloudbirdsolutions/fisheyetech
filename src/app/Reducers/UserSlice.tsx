@@ -12,7 +12,30 @@ export const fetchUserData = createAsyncThunk('user/fetchUserData', async (userd
 // Define the user slice
 const userSlice = createSlice({
   name: 'user',
-  initialState: { entities: [], loading: 'idle', data: {} },
+  initialState: { entities: [], loading: 'idle', data: 
+    {
+      "status": "",
+      "message": "",
+      "data": {
+          "id": 0,
+          "createdAt": "",
+          "updatedAt": "",
+          "name": "",
+          "userName": "",
+          "address": "",
+          "phone": "",
+          "password": "",
+          "statusId": 0,
+          "rolesId": 0,
+          "roles": {
+              "roleName": ""
+          },
+          "statusMaster": {
+              "statusName": ""
+          }
+      }
+  
+  } },
   reducers: {
     // standard reducer logic, with auto-generated action types per reducer
   },

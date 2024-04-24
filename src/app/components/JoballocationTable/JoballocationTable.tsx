@@ -108,7 +108,7 @@ export default function JoballocationTable() {
         <Typography level="body-xs">{row?.id}</Typography>
       </td>
       <td>
-        <Typography level="body-xs">{row?.userName}</Typography>
+        <Typography level="body-xs">{row?.name}</Typography>
       </td>
       <td>
       <Chip
@@ -122,7 +122,7 @@ export default function JoballocationTable() {
       </td>
       <td>
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>          
-         <Button onClick={() => jobs(row)}> Job Allocation</Button>
+         <Button onClick={() => jobs(row)}> Allocate Job</Button>
         </Box>
       </td>
     </tr>

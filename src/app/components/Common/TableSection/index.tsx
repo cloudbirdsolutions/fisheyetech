@@ -174,14 +174,14 @@ return (
       }}
     >
       <FormControl sx={{ flex: 1 }} size="sm">
-        <FormLabel>Search for tasks</FormLabel>
+        <FormLabel sx={{fontSize:'12'}}>Search</FormLabel>
         <Input size="sm" placeholder="Search" startDecorator={<SearchIcon />} />
       </FormControl>
       {/* {renderFilters()} */}
     </Box>
     <Sheet
       className="OrderTableContainer"
-      // variant="outlined"
+      variant="outlined"
       color={'neutral'}
       sx={{
         display: { xs: 'none', sm: 'initial' },

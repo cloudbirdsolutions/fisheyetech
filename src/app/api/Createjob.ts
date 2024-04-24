@@ -1,6 +1,7 @@
 
 
-const loginEndpoint = process.env.NEXT_PUBLIC_API_HOST+'/joballocation/create';
+// const loginEndpoint = process.env.NEXT_PUBLIC_API_HOST+'/joballocation/create';
+const loginEndpoint = 'http://51.79.147.139:3000'+'/joballocation/create';
 
 export async function createjobapi(userData:any) {
   try {
