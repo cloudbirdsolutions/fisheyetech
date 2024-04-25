@@ -33,8 +33,11 @@ import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import RowMenu from './RowMenu';
+import { AppDispatch } from '../Store/store';
+import { useRouter } from 'next/navigation';
+import { deleteuser } from '../Reducers/DeleteUserSlice';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -78,7 +81,7 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
 
 export default function OrderTable(props:any) {
   const createuser = useSelector((state) => state?.createusers?.data);
-  const deleteuser = useSelector((state) => state?.deleteusers?.data);
+  const deleteusers = useSelector((state) => state?.deleteusers?.data);
   const edituser = useSelector((state) => state?.editusers?.data);
 
   const [order, setOrder] = React.useState<Order>('desc');
@@ -86,6 +89,22 @@ export default function OrderTable(props:any) {
   const [open, setOpen] = React.useState(false);
   const [rows, setRows] = React.useState();
   
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+
+  const handleDeleteFunction = (id:any) => {
+    try {
+      // const userData = Object.fromEntries();
+       
+      dispatch(deleteuser(id)).then(() => {
+        router.push('/users');
+      })
+       
+     } catch (error) {
+       console.error('Failed to Delete user:', error);
+       // Handle error (e.g., display error message)
+     }
+  }
 
 
   React.useEffect(() => {
@@ -114,7 +133,7 @@ export default function OrderTable(props:any) {
 
     getData();
 
-  }, [createuser, deleteuser, edituser])
+  }, [createuser, deleteusers, edituser])
 
   const renderFilters = () => (
     <React.Fragment>
@@ -302,7 +321,7 @@ export default function OrderTable(props:any) {
                 <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
 
-                    <RowMenu row={row} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel}/>
+                    <RowMenu row={row} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel} parentFunction={handleDeleteFunction}/>
                   </Box>
                 </td>
               </tr>

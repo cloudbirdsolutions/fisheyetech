@@ -9,8 +9,8 @@ import { useContext, useEffect, useState } from 'react';
 
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../Store/store';
-import { createuser } from '../../Reducers/CreateUserSlice';
-import {edituser} from '../../Reducers/editUserSlice';
+import { createdepartment } from '../../Reducers/CreateDepartmentSlice';
+import {editdepartment} from '../../Reducers/editDepartmentSlice';
 import Modal from '@mui/joy/Modal';
 import ModalClose from '@mui/joy/ModalClose';
 import Sheet from '@mui/joy/Sheet';
@@ -26,23 +26,24 @@ const DepartmentModalForm = (props:any) =>{
     const row = useContext(modalContext);
 
     const [formData, setFormData] = useState({
-        id: "",
-        departmentName: "",
-       });
-    
+      departmentName: ""
+    });
+    const [editformData, seteditFormData] = useState({
+      id: 0,
+      departmentName: ""
+    });
       
     
       const [departmentError, setdepartmentError] = useState('');
       
       useEffect(() => {
         if(row != null) {
-            setFormData({
+          seteditFormData({
                 id: row?.id,
                 departmentName: row?.name
               });
         } else {
             setFormData({
-                id: "",
                 departmentName: ""
             })
         }
@@ -51,11 +52,18 @@ const DepartmentModalForm = (props:any) =>{
     
       const handleChange = (e:any) => {
         const { name, value, type, checked } = e.target;
+           
+        if(row!=null) {
+          seteditFormData(prevState => ({
+            ...prevState,
+            [name]: e.target.name === 'id'  ? parseInt(value) : value     
+          }));
+        } else {
         setFormData(prevState => ({
           ...prevState,
-          [name]: e.target.name === 'statusId' ? parseInt(value) : value     
+          [name]: value     
         }));
-    
+      }
         
     
         // Clear corresponding error message when input changes
@@ -83,9 +91,9 @@ const DepartmentModalForm = (props:any) =>{
         try {
           // const userData = Object.fromEntries();
            
-          dispatch(edituser(formData)).then(() => {
+          dispatch(editdepartment(editformData)).then(() => {
             props.setOpen(false);
-            router.push('/users');
+            router.push('/departmentlist');
           })
            
          } catch (error) {
@@ -96,9 +104,9 @@ const DepartmentModalForm = (props:any) =>{
         try {
           // const userData = Object.fromEntries();
            
-          dispatch(createuser(formData)).then(() => {
+          dispatch(createdepartment(formData)).then(() => {
             props.setOpen(false);
-            router.push('/users');
+            router.push('/departmentlist');
           })
            
          } catch (error) {
@@ -137,7 +145,7 @@ const DepartmentModalForm = (props:any) =>{
           fontWeight="lg"
           mb={1}
         >
-          {props.label}
+          {props.label} Department
         </Typography>
         <Stack className='p-8'>
         <form className='gap-8 flex flex-wrap w-[100%] flex-row' onSubmit={handleSubmit}>
@@ -145,19 +153,19 @@ const DepartmentModalForm = (props:any) =>{
             <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
                 <div className='space-y-[2px] w-full'>
                     <h3 className='text-textdull text-xs mb-2'>ID</h3>
-                    <Input size="sm" disabled name="id" value={formData.id} />
+                    <Input size="sm" disabled name="id" value={editformData.id} />
                 </div>
             </div>
             }
           <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
               <div className='space-y-[2px] w-full'>
                   <h3 className='text-textdull text-xs mb-2'>Name</h3>
-                  <Input size="sm" placeholder="name" name="name" value={formData.departmentName} onChange={handleChange}/>
+                  <Input size="sm" placeholder="Department Name" name="departmentName" value={formData.departmentName} onChange={handleChange}/>
                   {departmentError && <p>{departmentError}</p>}
               </div>
             </div>
           
-          <Button type="submit"> {props.label}</Button>
+          <Button type="submit"> {props.label} Department</Button>
           </form>
         </Stack>
       </Sheet>

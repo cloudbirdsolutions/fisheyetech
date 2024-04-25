@@ -7,6 +7,10 @@ import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
 import TableSection from './Common/TableSection';
 import RowMenu from './RowMenu';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../Store/store';
+import { useRouter } from 'next/navigation';
+import { deleteentity } from '../Reducers/deleteentitySlice';
 
 
 
@@ -52,12 +56,29 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
 
 export default function EntityTable(props:any) {
   const [order, setOrder] = React.useState<Order>('desc');
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
-  const [open, setOpen] = React.useState(false);
   const [rows, setRows] = React.useState([{id:"",createdAt:"",updatedAt:"",departmentName: ""}]);
   
-  
+  const createentity = useSelector((state) => state?.createentitys?.data);
+  const deleteentitys = useSelector((state) => state?.deleteentitys?.data);
+  const editentity = useSelector((state) => state?.editentitys?.data);
 
+
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+
+  const handleDeleteFunction = (id:any) => {
+    try {
+      // const userData = Object.fromEntries();
+       
+      dispatch(deleteentity(id)).then(() => {
+        router.push('/entities');
+      })
+       
+     } catch (error) {
+       console.error('Failed to Delete user:', error);
+       // Handle error (e.g., display error message)
+     }
+  }
   // const data = await getData()
   React.useEffect(() => {
     const getData = async () => {
@@ -85,7 +106,7 @@ export default function EntityTable(props:any) {
   
     getData(); 
 
-  }, [])
+  }, [createentity, deleteentitys, editentity])
 
   const headers = ["Sheet Name"];
 
@@ -101,7 +122,7 @@ export default function EntityTable(props:any) {
       <td>
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
           
-          <RowMenu row={row} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel}/>
+          <RowMenu row={row} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel} parentFunction={handleDeleteFunction}/>
         </Box>
       </td>
     </tr>

@@ -7,7 +7,6 @@ import Typography from '@mui/joy/Typography';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 
-import DepartmentLists from '../../components/DepartmentLists';
 import Stack from '@mui/joy/Stack';
 import EntityTable from '@/app/components/EntityTable';
 import EntityModalForm from '@/app/components/EntityModalForm/EntityModalForm';
@@ -41,7 +40,7 @@ export default function DepartmentList() {
                 color="success"
                 startDecorator={<PersonAddIcon />}
                 size="sm"
-                onClick={() => {setOpen(true); setLabel('Add Entity'); setRow(null)}}
+                onClick={() => {setOpen(true); setLabel('Add'); setRow(null)}}
               >
                 Add Entity
               </Button>

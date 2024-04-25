@@ -18,15 +18,19 @@ import Input from '@mui/joy/Input';
 import { useRouter } from 'next/navigation';
 import modalContext from "@/app/context/modalContext";
 
-const UserModalForm = (props:any) =>{
+const EntityModalForm = (props:any) =>{
 
     const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
 
     const row = useContext(modalContext);
 
-    const [formData, setFormData] = useState({
+    const [editformData, seteditFormData] = useState({
         id: "",
+        sheetName: ""
+      });
+
+      const [formData, setFormData] = useState({
         sheetName: ""
       });
     
@@ -35,13 +39,12 @@ const UserModalForm = (props:any) =>{
       const [sheetName, setsheetNameError] = useState('');
       useEffect(() => {
         if(row != null) {
-            setFormData({
+            seteditFormData({
                 id: row?.id,
                 sheetName: row?.sheetName
               });
         } else {
             setFormData({
-                id: "",
                 sheetName: ""
               })
         }
@@ -50,16 +53,23 @@ const UserModalForm = (props:any) =>{
     
       const handleChange = (e:any) => {
         const { name, value, type, checked } = e.target;
+        if(row!=null) {
+          seteditFormData(prevState => ({
+            ...prevState,
+            [name]: e.target.name === 'id' ? parseInt(value) : value     
+          }));
+        } else {
         setFormData(prevState => ({
           ...prevState,
-          [name]: e.target.name === 'statusId' ? parseInt(value) : value     
+          [name]: value     
         }));
+      }
     
         
     
         // Clear corresponding error message when input changes
         switch (name) {
-          case 'userName':
+          case 'sheetName':
             setsheetNameError('');
             break;
           default:
@@ -72,18 +82,26 @@ const UserModalForm = (props:any) =>{
     
         // Check if required fields are filled
           // Display error message for missing fields
-          if (!formData.sheetName) {
+          if(row != null) {
+            if (!editformData.sheetName) {
+              setsheetNameError('Sheet Name is required');
+            
+              return;
+            }
+          } else {
+            if (!formData.sheetName) {
             setsheetNameError('Sheet Name is required');
           
             return;
           }
+        }
 
     
     if(row != null) {
         try {
           // const userData = Object.fromEntries();
            
-          dispatch(editentity(formData)).then(() => {
+          dispatch(editentity(editformData)).then(() => {
             props.setOpen(false);
             router.push('/entities');
           })
@@ -137,7 +155,7 @@ const UserModalForm = (props:any) =>{
           fontWeight="lg"
           mb={1}
         >
-          {props.label}
+          {props.label} Entity
         </Typography>
         <Stack className='p-8'>
         <form className='gap-8 flex flex-wrap w-[100%] flex-row' onSubmit={handleSubmit}>
@@ -145,18 +163,18 @@ const UserModalForm = (props:any) =>{
             <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
                 <div className='space-y-[2px] w-full'>
                     <h3 className='text-textdull text-xs mb-2'>ID</h3>
-                    <Input size="sm" disabled name="id" value={formData.id} />
+                    <Input size="sm" disabled name="id" value={editformData.id} />
                 </div>
             </div>
             }
           <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
               <div className='space-y-[2px] w-full'>
-                  <h3 className='text-textdull text-xs mb-2'>User Name</h3>
-                  <Input size="sm" placeholder="sheetName" name="userName" value={formData.sheetName}
+                  <h3 className='text-textdull text-xs mb-2'>Sheet Name</h3>
+                  <Input size="sm" placeholder="sheetName" name="sheetName" value={row!=null ? editformData.sheetName:formData.sheetName}
                               onChange={handleChange}/>
               </div>
             </div>
-          <Button type="submit"> {props.label}</Button>
+          <Button type="submit"> {props.label} Entity</Button>
           </form>
         </Stack>
       </Sheet>
@@ -164,4 +182,4 @@ const UserModalForm = (props:any) =>{
     )
 }
 
-export default UserModalForm;
+export default EntityModalForm;
