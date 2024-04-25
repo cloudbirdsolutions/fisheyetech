@@ -160,10 +160,13 @@ return (
         </ModalDialog>
       </Modal>
     </Sheet>
+    <Sheet variant='outlined' sx={{borderRadius: 'sm',}}>
     <Box
       className="SearchAndFilters-tabletUp"
       sx={{
+        backgroundColor : 'var(--joy-palette-primary-100)',
         borderRadius: 'sm',
+        px:2,
         py: 2,
         display: { xs: 'none', sm: 'flex' },
         flexWrap: 'wrap',
@@ -179,6 +182,7 @@ return (
       </FormControl>
       {/* {renderFilters()} */}
     </Box>
+    </Sheet>
     <Sheet
       className="OrderTableContainer"
       variant="outlined"
@@ -196,11 +200,13 @@ return (
         stickyHeader
         hoverRow
         sx={{
-          '--TableCell-headBackground': 'var(--joy-palette-background-level3)',
+          '--TableCell-headBackground': 'var(--joy-palette-primary-800)',
           '--Table-headerUnderlineThickness': '1px',
           '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
           '--TableCell-paddingY': '4px',
           '--TableCell-paddingX': '8px',
+          '& th ': {color:"white"},
+            backgroundColor : 'var(--joy-palette-primary-50)'
         }}
       >
         <thead>

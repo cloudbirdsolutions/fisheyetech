@@ -180,6 +180,7 @@ export default function OrderTable(props:any) {
           display: { xs: 'flex', sm: 'none' },
           my: 1,
           gap: 1,
+          
         }}
       >
         <Input
@@ -212,10 +213,13 @@ export default function OrderTable(props:any) {
           </ModalDialog>
         </Modal>
       </Sheet>
+      <Sheet variant='outlined' sx={{borderRadius: 'sm',}}>
       <Box
         className="SearchAndFilters-tabletUp"
         sx={{
+          backgroundColor : 'var(--joy-palette-primary-100)',
           borderRadius: 'sm',
+          px:2,
           py: 2,
           display: { xs: 'none', sm: 'flex' },
           flexWrap: 'wrap',
@@ -231,6 +235,7 @@ export default function OrderTable(props:any) {
         </FormControl>
         {renderFilters()}
       </Box>
+      </Sheet>
       <Sheet
         className="OrderTableContainer"
         variant="outlined"
@@ -249,15 +254,17 @@ export default function OrderTable(props:any) {
           hoverRow
           sx={{
             // '--TableCell-headBackground': 'var(--joy-palette-background-level1)',
-            '--TableCell-headBackground': 'var(--joy-palette-primary-plainActiveBg)',
+            '--TableCell-headBackground': 'var(--joy-palette-primary-800)',
             '--Table-headerUnderlineThickness': '1px',
             '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
             '--TableCell-paddingY': '4px',
             '--TableCell-paddingX': '8px',
+            '& th ': {color:"white"},
+            backgroundColor : 'var(--joy-palette-primary-50)'
           }}
         >
-          <thead>
-            <tr>
+          <thead >
+            <tr >
               <th style={{ padding: '12px 6px' }}>
                 <Link
                   underline="none"

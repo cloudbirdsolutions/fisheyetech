@@ -106,33 +106,33 @@ export default function RoleTable() {
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [open, setOpen] = React.useState(false);
   const [rows, setRows] = React.useState();
-  
+
   // const data = await getData()
   React.useEffect(() => {
     const getData = async () => {
       try {
-         
+
         const response = await fetch('http://51.79.147.139:3000/roles/get', {
           method: 'GET',
           headers: {
-            Accept : "application/json",
+            Accept: "application/json",
             'Content-Type': 'application/json',
           }
         });
-  
+
         if (!response.ok) {
           throw new Error('Failed to fetch user details: ' + response.statusText);
         }
-  
+
         const data = await response.json();
-        
+
         setRows(data.data);
       } catch (error) {
         console.error('Error fetching user details:', error);
       }
     };
-  
-    getData(); 
+
+    getData();
 
   }, [])
 
@@ -213,25 +213,29 @@ export default function RoleTable() {
           </ModalDialog>
         </Modal>
       </Sheet>
-      <Box
-        className="SearchAndFilters-tabletUp"
-        sx={{
-          borderRadius: 'sm',
-          py: 2,
-          display: { xs: 'none', sm: 'flex' },
-          flexWrap: 'wrap',
-          gap: 1.5,
-          '& > *': {
-            minWidth: { xs: '120px', md: '160px' },
-          },
-        }}
-      >
-        <FormControl sx={{ flex: 1 }} size="sm">
-          <FormLabel>Search for user</FormLabel>
-          <Input size="sm" placeholder="Search" startDecorator={<SearchIcon />} />
-        </FormControl>
-        {renderFilters()}
-      </Box>
+      <Sheet variant='outlined' sx={{ borderRadius: 'sm', }}>
+        <Box
+          className="SearchAndFilters-tabletUp"
+          sx={{
+            backgroundColor: 'var(--joy-palette-primary-100)',
+            borderRadius: 'sm',
+            px: 2,
+            py: 2,
+            display: { xs: 'none', sm: 'flex' },
+            flexWrap: 'wrap',
+            gap: 1.5,
+            '& > *': {
+              minWidth: { xs: '120px', md: '160px' },
+            },
+          }}
+        >
+          <FormControl sx={{ flex: 1 }} size="sm">
+            <FormLabel>Search for user</FormLabel>
+            <Input size="sm" placeholder="Search" startDecorator={<SearchIcon />} />
+          </FormControl>
+          {renderFilters()}
+        </Box>
+      </Sheet>
       <Sheet
         className="OrderTableContainer"
         variant="outlined"
@@ -249,11 +253,13 @@ export default function RoleTable() {
           stickyHeader
           hoverRow
           sx={{
-            '--TableCell-headBackground': 'var(--joy-palette-background-level1)',
+            '--TableCell-headBackground': 'var(--joy-palette-primary-800)',
             '--Table-headerUnderlineThickness': '1px',
             '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
             '--TableCell-paddingY': '4px',
             '--TableCell-paddingX': '8px',
+            '& th ': {color:"white"},
+            backgroundColor : 'var(--joy-palette-primary-50)'
           }}
         >
           <thead>
@@ -284,7 +290,7 @@ export default function RoleTable() {
             </tr>
           </thead>
           <tbody>
-            {rows && stableSort(rows, getComparator(order, 'id')).map((row:any) => (
+            {rows && stableSort(rows, getComparator(order, 'id')).map((row: any) => (
               <tr key={row?.id}>
                 <td>
                   <Typography level="body-xs">{row?.id}</Typography>
@@ -305,10 +311,10 @@ export default function RoleTable() {
                 <td>
                   <Typography level="body-xs">{row?.permissionId}</Typography>
                 </td>
-                
+
                 <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                    
+
                     <RowMenu />
                   </Box>
                 </td>

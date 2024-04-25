@@ -107,7 +107,7 @@ export default function TasksTable() {
   const RowMenu = (props: { sheetid: any, sheetName:any })=> {
     return (
       <Button color="primary" variant="outlined" size='sm' onClick={() => router.push(`/tasks/sheet/${props.sheetid}`)} >
-    View Documents
+    Documents
   </Button>
     );
   }
@@ -222,11 +222,14 @@ export default function TasksTable() {
           </ModalDialog>
         </Modal>
       </Sheet>
+      <Sheet  variant='outlined' sx={{borderRadius: 'sm'}}>
       <Box
         className="SearchAndFilters-tabletUp"
         sx={{
+          backgroundColor : 'var(--joy-palette-primary-100)',
           borderRadius: 'sm',
           py: 2,
+          px: 2,
           display: { xs: 'none', sm: 'flex' },
           flexWrap: 'wrap',
           gap: 1.5,
@@ -239,8 +242,11 @@ export default function TasksTable() {
           <FormLabel>Search for tasks</FormLabel>
           <Input size="sm" placeholder="Search" startDecorator={<SearchIcon />} />
         </FormControl>
+        
         {/* {renderFilters()} */}
       </Box>
+      </Sheet>
+      <Divider sx={{ my: 2 }} />
       <Sheet
         className="OrderTableContainer"
         // variant="outlined"
@@ -259,11 +265,13 @@ export default function TasksTable() {
           stickyHeader
           hoverRow
           sx={{
-            '--TableCell-headBackground': 'var(--joy-palette-background-level3)',
+            '--TableCell-headBackground': 'var(--joy-palette-primary-800)',
             '--Table-headerUnderlineThickness': '1px',
             '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
             '--TableCell-paddingY': '4px',
             '--TableCell-paddingX': '8px',
+            '& th ': {color:"white"},
+            backgroundColor : 'var(--joy-palette-primary-50)'
           }}
         >
           <thead>

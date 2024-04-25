@@ -159,7 +159,7 @@ const sidebarItems = [
   },
   {
     label: 'Tasks',
-    navPath: '/taks',
+    navPath: '/tasks',
     icon: <PendingActionsIcon />,
     roles: ['admin', 'user']
   },
@@ -183,7 +183,7 @@ export default function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
   const isActive = (href: any) => {
-    return pathname === href ? true : false;
+    return pathname.includes(href) ;
   };
 
   const logintype = useSelector((state: RootState) => state?.user?.data);
