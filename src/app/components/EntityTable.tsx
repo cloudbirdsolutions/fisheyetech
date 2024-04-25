@@ -10,7 +10,7 @@ import RowMenu from './RowMenu';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../Store/store';
 import { useRouter } from 'next/navigation';
-import { deleteentity } from '../Reducers/deleteentitySlice';
+import { deleteentity } from '../Reducers/DeleteEntitySlice';
 
 
 

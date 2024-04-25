@@ -9,7 +9,7 @@ export const deleteentity = createAsyncThunk('deleteentitys/deleteeentity', asyn
     return data;
  });
 // Define the user slice
-const deleteentitySlice = createSlice({
+const deleteEntitySlice = createSlice({
   name: 'deleteentitys',
   initialState: { entities: [], loading: 'idle', data: {} },
   reducers: {
@@ -31,4 +31,4 @@ const deleteentitySlice = createSlice({
   },
 })
 
-export default deleteentitySlice.reducer;
+export default deleteEntitySlice.reducer;
