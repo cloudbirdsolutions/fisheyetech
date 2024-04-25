@@ -9,66 +9,15 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import DepartmentTable from '../../components/DepartmentTable';
 import DepartmentLists from '../../components/DepartmentLists';
 import Stack from '@mui/joy/Stack';
-import Modal from '@mui/joy/Modal';
-import ModalClose from '@mui/joy/ModalClose';
-import Sheet from '@mui/joy/Sheet';
-import Input from '@mui/joy/Input';
-import { useState } from 'react';
+import modalContext from '@/app/context/modalContext';
+import DepartmentModalForm from '@/app/components/DepartmentModalForm/DepartmentModalForm';
 
 export default function DepartmentList() {
+  const [label, setLabel] = React.useState<string>('');
   const [open, setOpen] = React.useState<boolean>(false);
+  const [row, setRow] = React.useState(null);
   
-  const [formData, setFormData] = useState({
-    id: "",
-    departmentname: "",
-   
-  });
-
-
-  const [idError, setidError] = useState('');
-  const [departmentnameError, setdepartmentnameError] = useState('');
-
-
-  const handleChange = (e:any) => {
-    const { name, value, type, checked } = e.target;
-    
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: type === 'checkbox' ? checked : value
-
-    }));
-
-    
-
-    // Clear corresponding error message when input changes
-    switch (name) {
-      case 'id':
-        setidError('');
-        break;
-      case 'departmentname':
-        setdepartmentnameError('');
-        break;
-      default:
-        break;
-    }
-  };
-
-  const handleSubmit = async (e:any) => {
-    e.preventDefault();
-
-    // Check if required fields are filled
-    if (!formData.id || !formData.departmentname) {
-      // Display error message for missing fields
-      if (!formData.departmentname) {
-        setdepartmentnameError('First Name is required');
-      }
-      if (!formData.id) {
-        setidError('First Name is required');
-      }
-      return;
-    }
-  }
-  return (
+   return (
     <>
           <Box
             sx={{
@@ -89,56 +38,20 @@ export default function DepartmentList() {
                 color="success"
                 startDecorator={<PersonAddIcon />}
                 size="sm"
-                onClick={() => setOpen(true)}
+                onClick={() => {setOpen(true); setLabel('Add'); setRow(null)}}
               >
                 Add New Department
               </Button>
             </Stack>
 
           </Box>
-          <DepartmentTable />
-          <DepartmentLists />
+          <DepartmentTable open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
+          <DepartmentLists open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
     
-      <Modal
-        aria-labelledby="modal-title"
-        aria-describedby="modal-desc"
-        open={open}
-        onClose={() => setOpen(false)}
-        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-      >
-        <Sheet
-          variant="outlined"
-          sx={{
-            maxWidth: 800,
-            borderRadius: 'md',
-            p: 3,
-            boxShadow: 'lg',
-          }}
-        >
-          <ModalClose variant="plain" sx={{ m: 1 }} />
-          <Typography
-            component="h2"
-            id="modal-title"
-            level="h4"
-            textColor="inherit"
-            fontWeight="lg"
-            mb={1}
-          >
-            Add New User
-          </Typography>
-          <Stack className='p-8'>
-          <form className='gap-8 flex flex-wrap w-[100%] flex-row' onSubmit={handleSubmit}>
-            <Input size="sm" placeholder="id" name="id" value={formData.id}
-                                onChange={handleChange}/>
-            {idError && <p className="text-red text-xs mt-1 absolute">{idError}</p>}
-
-            <Input size="sm" placeholder="name" name="departmentname" value={formData.departmentname}
-                                onChange={handleChange}/>
-            <Button type="submit">Add User</Button>
-            </form>
-          </Stack>
-        </Sheet>
-      </Modal>
+          <modalContext.Provider value={row}>
+          <DepartmentModalForm open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
+          </modalContext.Provider>
+      
       </>
   );
 }

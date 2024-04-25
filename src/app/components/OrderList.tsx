@@ -29,14 +29,34 @@ import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import RowMenu from './RowMenu';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/navigation';
+import { deleteuser } from '../Reducers/DeleteUserSlice';
+import { AppDispatch } from '../Store/store';
 
 
 export default function OrderList(props:any) {
   const [listItems, setlistItems] = React.useState([]);
   const createuser = useSelector((state) => state?.createusers?.data);
-  const deleteuser = useSelector((state) => state?.deleteusers?.data);
+  const deleteusers = useSelector((state) => state?.deleteusers?.data);
   const edituser = useSelector((state) => state?.editusers?.data);
+
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+
+  const handleDeleteFunction = (id:any) => {
+    try {
+      // const userData = Object.fromEntries();
+       
+      dispatch(deleteuser(id)).then(() => {
+        router.push('/users');
+      })
+       
+     } catch (error) {
+       console.error('Failed to Delete user:', error);
+       // Handle error (e.g., display error message)
+     }
+  }
 
   React.useEffect(() => {
     const getData = async () => {
@@ -64,7 +84,7 @@ export default function OrderList(props:any) {
 
     getData();
 
-  }, [createuser, deleteuser, edituser])
+  }, [createuser, deleteusers, edituser])
 
   return (
     <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
@@ -112,7 +132,7 @@ export default function OrderList(props:any) {
 
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                <RowMenu row={listItem} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel}/>
+                <RowMenu row={listItem} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel} parentFunction={handleDeleteFunction}/>
                 </Box>
               </div>
             </ListItemContent>
