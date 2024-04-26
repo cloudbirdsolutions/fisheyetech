@@ -196,7 +196,7 @@ export default function Log() {
           {/* <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}> */}
           <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{sheetName}</Typography>
           <Typography level='title-sm' component="h1" sx={{ marginBottom: "12px" }}>{permision.permissionType.permissionType}</Typography>
-          <Typography level='title-sm' component="h1" sx={{ marginBottom: "12px" }}>{permision.permissionType.id}</Typography>
+          {/* <Typography level='title-sm' component="h1" sx={{ marginBottom: "12px" }}>{permision.permissionType.id}</Typography> */}
           <Link
             underline="hover"
             color="primary"
