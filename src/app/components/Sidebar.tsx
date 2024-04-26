@@ -163,18 +163,18 @@ const sidebarItems = [
     icon: <PendingActionsIcon />,
     roles: ['admin', 'user']
   },
-  {
-    label: 'Reviews',
-    navPath: '/reviews',
-    icon: <AssignmentRoundedIcon />,
-    roles: ['admin', 'user']
-  },
-  {
-    label: 'Comments',
-    navPath: '/messages',
-    icon: <QuestionAnswerRoundedIcon />,
-    roles: ['admin', 'user']
-  }
+  // {
+  //   label: 'Reviews',
+  //   navPath: '/reviews',
+  //   icon: <AssignmentRoundedIcon />,
+  //   roles: ['admin', 'user']
+  // },
+  // {
+  //   label: 'Comments',
+  //   navPath: '/messages',
+  //   icon: <QuestionAnswerRoundedIcon />,
+  //   roles: ['admin', 'user']
+  // }
 
 ]
 
@@ -299,7 +299,7 @@ export default function Sidebar() {
             </List>
           
 
-          <List
+          {/* <List
             size="sm"
             sx={{
               mt: 'auto',
@@ -315,7 +315,7 @@ export default function Sidebar() {
                 Settings
               </ListItemButton>
             </ListItem>
-          </List>
+          </List> */}
 
         </Box>
         <Divider />
