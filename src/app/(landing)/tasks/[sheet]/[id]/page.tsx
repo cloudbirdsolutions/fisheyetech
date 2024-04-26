@@ -25,32 +25,35 @@ interface LogProps {
 }
 
 
-// async function getSheetDetails(sheetid: string) {
-//   try {
+async function getSheetDetails(sheetid: string) {
+  try {
 
-//     const response = await fetch(`http://51.79.147.139:3000/sheetdocid/get?sheetId=${sheetid}`, {
-//       method: 'GET',
-//       headers: {
-//         Accept: "application/json",
-//         'Content-Type': 'application/json',
-//       }
-//     });
+    const response = await fetch(`${API_BASE_URL}/sheetmaster/get-sheets?id=${sheetid}`, {
+      method: 'GET',
+      headers: {
+        Accept: "application/json",
+        'Content-Type': 'application/json',
+      }
+    });
 
-//     if (!response.ok) {
-//       throw new Error('Failed to fetch user details: ' + response.statusText);
-//     }
+    if (!response.ok) {
+      throw new Error('Failed to fetch user details: ' + response.statusText);
+    }
 
-//     const data = await response.json();
-//     return data
-//   } catch (error) {
-//     console.error('Error fetching user details:', error);
-//   }
-// }
+    const data = await response.json();
+    return data
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+  }
+}
 
 
 
 export default function Log() {
   const params = useParams<{ sheet: string, id: string }>()
+  const [permisionId,setPermissionId] = useState(null)
+  const [sheetName, setSheetName]= useState('');
+
   const [documentList, setDocumentList] = useState([{
     id: "", createdAt: "", transitionId: "", updatedAt: "", sheetId: "", userId: "", users: { userName: "" }, "transitionMaster": {
       "transitionName": ""
@@ -90,7 +93,7 @@ export default function Log() {
   const getDocumentList:any = useCallback(async(sheetid: string) => {
     try {
 
-      const url = [2, 3].includes(logintype.data.rolesId) ? `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}` : `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}&userId=${logintype.data.id}`
+      const url = [2, 3].includes(2) ? `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}` : `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}&userId=${logintype.data.id}`
 
       const response = await fetch(url, {
         method: 'GET',
@@ -142,7 +145,9 @@ export default function Log() {
 
     const fetchData = async () => {
       let resposne = await getDocumentList(params.id)
+      let sheetDetails = await getSheetDetails(params.id)
       setDocumentList(resposne.data)
+      setSheetName(sheetDetails.data[0].sheetName)
     }
     fetchData()
 
@@ -156,7 +161,7 @@ export default function Log() {
         <ToastContainer />
         <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full' >
           {/* <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}> */}
-          <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{params.id}</Typography>
+          <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{sheetName}</Typography>
           <Link
             underline="hover"
             color="primary"
