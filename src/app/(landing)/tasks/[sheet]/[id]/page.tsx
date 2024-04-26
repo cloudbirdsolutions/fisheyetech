@@ -17,8 +17,8 @@ import { RootState } from '@/app/Store/store';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-
+import { API_BASE_URL } from '@/app/config'; 
+ 
 
 interface LogProps {
   sheetid: string
@@ -51,30 +51,32 @@ interface LogProps {
 
 export default function Log() {
   const params = useParams<{ sheet: string, id: string }>()
-  const [documentList,setDocumentList] = useState([{id:"",createdAt:"",transitionId:"",updatedAt:"",sheetId:"",userId:"",users:{userName:""}, "transitionMaster": {
-    "transitionName": ""
-}}])
+  const [documentList, setDocumentList] = useState([{
+    id: "", createdAt: "", transitionId: "", updatedAt: "", sheetId: "", userId: "", users: { userName: "" }, "transitionMaster": {
+      "transitionName": ""
+    }
+  }])
   const router = useRouter()
-  const logintype = useSelector((state:RootState) => state?.user.data);
+  const logintype = useSelector((state: RootState) => state?.user.data);
   const [refreshListIndicator, setRefreshListIndicator] = useState(Date.now())
 
-  async function  createDocument(sheetId: string,userId: number,transitionId:number){
+  async function createDocument(sheetId: string, userId: number, transitionId: number) {
 
     try {
-  
-      const response = await fetch(`http://51.79.147.139:3000/sheetdocid/create`, {
+
+      const response = await fetch(`${API_BASE_URL}/sheetdocid/create`, {
         method: 'POST',
         headers: {
           Accept: "application/json",
           'Content-Type': 'application/json',
         },
-        body : JSON.stringify({"sheetId":parseInt(sheetId),"userId":userId,"transitionId":transitionId}),
+        body: JSON.stringify({ "sheetId": parseInt(sheetId), "userId": userId, "transitionId": transitionId }),
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to fetch user details: ' + response.statusText);
       }
-  
+
       const data = await response.json();
       setRefreshListIndicator(Date.now());
       toast.success("Document Created Succesfuly!");
@@ -82,14 +84,14 @@ export default function Log() {
     } catch (error) {
       console.error('Error fetching user details:', error);
     }
-  
+
   }
 
   async function getDocumentList(sheetid: string) {
     try {
-  
-      const url = [4,2,3].includes(logintype.data.rolesId) ? `http://51.79.147.139:3000/sheetdocid/get-user-docs?sheetId=${sheetid}` :`http://51.79.147.139:3000/sheetdocid/get-user-docs?sheetId=${sheetid}&userId=${logintype.data.id}`
-      
+
+      const url = [2, 3].includes(logintype.data.rolesId) ? `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}` : `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}&userId=${logintype.data.id}`
+
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -97,39 +99,39 @@ export default function Log() {
           'Content-Type': 'application/json',
         }
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to fetch user details: ' + response.statusText);
       }
-  
+
       const data = await response.json();
       return data
     } catch (error) {
       console.error('Error fetching user details:', error);
     }
   }
-  
 
 
-  const RowMenu = (props:any)=>{
-    return(
+
+  const RowMenu = (props: any) => {
+    return (
       <Button color="primary" variant="outlined" size='sm' onClick={() => router.push(`/tasks/sheet/${props.sheetId}/${props.documentId}`)} >
-    Data Entry
-  </Button>
+        Data Entry
+      </Button>
     )
   }
-  
-  const headers = ["Created At","Updated At","Created By","Status"]
-  const rows = documentList.map((o)=>(
+
+  const headers = ["Created At", "Updated At", "Created By", "Status"]
+  const rows = documentList.map((o) => (
     <tr key={`document_id_${o.id}`}>
-     <td><Typography level="body-xs">{o?.id}</Typography></td>
-     <td><Typography level="body-xs">{o?.createdAt}</Typography></td>
-     <td><Typography level="body-xs">{o?.updatedAt}</Typography></td>
-     <td><Typography level="body-xs">{o?.users.userName}</Typography></td>
-     <td><Typography level="body-xs">{o?.transitionMaster.transitionName}</Typography></td>
-     <td>
-      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}><RowMenu sheetId={o.sheetId} documentId={o.id} /></Box>
-     </td>
+      <td><Typography level="body-xs">{o?.id}</Typography></td>
+      <td><Typography level="body-xs">{o?.createdAt}</Typography></td>
+      <td><Typography level="body-xs">{o?.updatedAt}</Typography></td>
+      <td><Typography level="body-xs">{o?.users.userName}</Typography></td>
+      <td><Typography level="body-xs">{o?.transitionMaster.transitionName}</Typography></td>
+      <td>
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}><RowMenu sheetId={o.sheetId} documentId={o.id} /></Box>
+      </td>
     </tr>
 
   ))
@@ -143,33 +145,35 @@ export default function Log() {
     fetchData()
 
 
-  }, [params,refreshListIndicator])
+  }, [params, refreshListIndicator])
 
 
   return (
     <>
-    <Box sx={{ display: 'flex' }} marginTop={2}>
-    <ToastContainer />
-    <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full' >
-        {/* <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}> */}
-        <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{params.id}</Typography>
-        <Button size='sm' color='primary' startDecorator={<Add />} onClick={() => createDocument(params.id,logintype.data.id,1)}>
+      <Box sx={{ display: 'flex' }} marginTop={2}>
+        <ToastContainer />
+        <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full' >
+          {/* <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}> */}
+          <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{params.id}</Typography>
+          <Link
+            underline="hover"
+            color="primary"
+            href="/tasks"
+            fontSize={14}
+            fontWeight={500}
+            sx={{ ml: 'auto' }} 
+          >
+            Go Back to Task List
+          </Link>
+          <Button size='sm' color='primary' startDecorator={<Add />} onClick={() => createDocument(params.id, logintype.data.id, 1)}>
             Create New Document
-        </Button>
-        <Link
-              underline="hover"
-              color="neutral"
-              href="/tasks"
-              fontSize={14}
-              fontWeight={500}
-            >
-              Go Back to Task List
-            </Link>
-        {/* </Stack> */}
-      </div>
-      
-    </Box>
-    <TableSection tableHeaders={headers} tableRows={rows}/>
+          </Button>
+
+          {/* </Stack> */}
+        </div>
+
+      </Box>
+      <TableSection tableHeaders={headers} tableRows={rows} />
     </>
   );
 }

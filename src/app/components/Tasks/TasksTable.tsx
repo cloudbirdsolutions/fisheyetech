@@ -45,6 +45,7 @@ import { useSelector } from 'react-redux';
 
 import { RootState } from '@/app/Store/store';
 
+import { API_BASE_URL } from '@/app/config';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -119,7 +120,7 @@ export default function TasksTable() {
     const getData = async () => {
       try {
          
-        const url = [4].includes(logintype.data.rolesId) ? `http://51.79.147.139:3000/joballocation/get-all-jobs` :`http://51.79.147.139:3000/joballocation/get-user-jobs?id=${logintype.data.id}`
+        const url = [4].includes(logintype.data.rolesId) ? `${API_BASE_URL}/joballocation/get-all-jobs` :`${API_BASE_URL}/joballocation/get-user-jobs?id=${logintype.data.id}`
         // const url = `http://51.79.147.139:3000/joballocation/get-user-jobs?id=${logintype.data.id}`
         const response = await fetch(url, {
           method: 'GET',

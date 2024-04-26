@@ -35,7 +35,7 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 import { useDispatch, useSelector } from 'react-redux';
 import RowMenu from './RowMenu';
-import { AppDispatch } from '../Store/store';
+import { AppDispatch,RootState } from '../Store/store';
 import { useRouter } from 'next/navigation';
 import { deleteuser } from '../Reducers/DeleteUserSlice';
 
@@ -80,9 +80,9 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
 }
 
 export default function OrderTable(props:any) {
-  const createuser = useSelector((state) => state?.createusers?.data);
-  const deleteusers = useSelector((state) => state?.deleteusers?.data);
-  const edituser = useSelector((state) => state?.editusers?.data);
+  const createuser = useSelector((state:RootState) => state?.createusers?.data);
+  const deleteusers = useSelector((state:RootState) => state?.deleteusers?.data);
+  const edituser = useSelector((state:RootState) => state?.editusers?.data);
 
   const [order, setOrder] = React.useState<Order>('desc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);

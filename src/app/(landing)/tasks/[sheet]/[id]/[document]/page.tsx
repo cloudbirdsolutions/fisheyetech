@@ -14,6 +14,8 @@ import { RootState } from '@/app/Store/store';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import MyMessages from '@/app/components/MyMessages';
+import { API_BASE_URL } from '@/app/config';
 
 var jmespath = require('jmespath');
 
@@ -38,7 +40,7 @@ interface Reccod {
 async function getSheetFields(sheetid: string) {
   try {
 
-    const response = await fetch(`http://51.79.147.139:3000/forms/get?id=${sheetid}`, {
+    const response = await fetch(`${API_BASE_URL}/forms/get?id=${sheetid}`, {
       method: 'GET',
       headers: {
         Accept: "application/json",
@@ -59,7 +61,7 @@ async function getSheetFields(sheetid: string) {
 async function getDocumentShift(documentId: string) {
   try {
 
-    const response = await fetch(`http://51.79.147.139:3000/docshiftstate/get?id=${documentId}`, {
+    const response = await fetch(`${API_BASE_URL}/docshiftstate/get?id=${documentId}`, {
       method: 'GET',
       headers: {
         Accept: "application/json",
@@ -80,7 +82,7 @@ async function getDocumentShift(documentId: string) {
 async function getDocumentRecords(documentId: string, shiftId: number) {
   try {
 
-    const response = await fetch(`http://51.79.147.139:3000/recordmaster/get-records?docId=${documentId}&shiftId=${shiftId}`, {
+    const response = await fetch(`${API_BASE_URL}/recordmaster/get-records?docId=${documentId}&shiftId=${shiftId}`, {
       method: 'GET',
       headers: {
         Accept: "application/json",
@@ -101,7 +103,7 @@ async function getDocumentRecords(documentId: string, shiftId: number) {
 async function getUserPermission(sheetId: string, userId: number) {
   try {
 
-    const response = await fetch(`http://51.79.147.139:3000/joballocation/get-permissions?userId=${userId}&sheetId=${sheetId}`, {
+    const response = await fetch(`${API_BASE_URL}/joballocation/get-permissions?userId=${userId}&sheetId=${sheetId}`, {
       method: 'GET',
       headers: {
         Accept: "application/json",
@@ -228,7 +230,7 @@ export default function Log() {
   const saveRecordChnages = async (transistionId: number) => {
     try {
       let setDocumentRecordTransitionState = documentRecord.map((rec) => (Object.assign({}, rec, { "transitionId": transistionId, "updatedBy": logintype.data.id })))
-      const response = await fetch(`http://51.79.147.139:3000/forms/save`, {
+      const response = await fetch(`${API_BASE_URL}/forms/save`, {
         method: 'POST',
         headers: {
           Accept: "application/json",
@@ -286,7 +288,7 @@ export default function Log() {
                 </TabList>
                 <TabPanel value={index} variant='soft' color='primary' >
                   {parameters.parameterMaster && <AccordionGroup size='sm' sx={{ minWidth: "60dvw", borderRadius: 'md', }} variant="outlined"
-                    transition="0.2s" color='primary' >
+                    transition="0.2s" color='neutral' >
                     {
                       parameters.parameterMaster.map((paramter, index) => (
                         <Accordion key={`paramater_${paramter.id}`}
@@ -368,7 +370,7 @@ export default function Log() {
         </Box>
         {/* <Divider /> */}
         <Box marginTop={2}>
-          <Card variant="soft" color="neutral" invertedColors size='sm' >
+          <Card  invertedColors size='sm' >
           <Typography
               level="title-md"
               textColor="inherit"
@@ -381,13 +383,13 @@ export default function Log() {
                 // onChange={(event, newValue) => setIndex(newValue as number)}
               >
                 <TabList >
-                  <Tab indicatorPlacement="top" variant='solid' color='neutral'>
-                   Activity
-                  </Tab>
-                  <Tab indicatorPlacement="top" variant='solid' color='warning'>
+                  <Tab indicatorPlacement="top" variant='soft' color='neutral'>
                    Reviews
                   </Tab>
                 </TabList>
+                <TabPanel>
+                  <MyMessages/>
+                </TabPanel>
               </Tabs>
             </CardContent>
           </Card>
