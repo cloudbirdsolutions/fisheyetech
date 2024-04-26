@@ -284,8 +284,9 @@ export default function Sidebar() {
             >
               {
                 sidebarItems.map((eachItem) => (
-                  (eachItem.roles.includes(logintype.data.roles.roleName)&& <ListItem >
-                    <ListItemButton onClick={() => (router.push(eachItem.navPath))} selected={isActive(eachItem.navPath)} >
+                  eachItem.roles.includes(logintype.data.roles.roleName)&& (
+                  <ListItem >
+                    <ListItemButton onClick={() => {router.push(eachItem.navPath);closeSidebar();}} selected={isActive(eachItem.navPath)} >
                       <ListItemDecorator>
                         {eachItem.icon}
                       </ListItemDecorator>

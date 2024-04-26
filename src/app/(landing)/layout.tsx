@@ -6,7 +6,7 @@ import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import { CssVarsProvider } from '@mui/joy/styles';
 import CssBaseline from '@mui/joy/CssBaseline';
-
+import { useTheme } from "@mui/material";
 
 
 import { Box } from "@mui/joy";
@@ -19,40 +19,48 @@ export const metadata: Metadata = {
   description: "powered by oplaminds",
 };
 
-export default function SubLayout({children}: Readonly<{
+export default function SubLayout({ children }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-   
+
+
+    <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
+      <Header />
+      <Sidebar />
+      <Box sx={{
+        display: 'flex',
+        minHeight: '100dvh',
+        width: {md:'82%'},
+        marginLeft: { md: '240px' }, 
+        justifyContent: { xs: 'center', md: 'flex-start' } ,
         
-            <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
-              <Header />
-              <Sidebar />
-              <Box sx={{ display: 'flex', minHeight: '100dvh', width: '82%', marginLeft: '240px' }}>
-                <Box
-                  component="main"
-                  className="MainContent"
-                  sx={{
-                    px: { xs: 2, md: 6 },
-                    pt: {
-                      xs: 'calc(12px + var(--Header-height))',
-                      sm: 'calc(12px + var(--Header-height))',
-                      md: 3,
-                    },
-                    pb: { xs: 2, sm: 2, md: 3 },
-                    flex: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    minWidth: 0,
-                    gap: 1,
-                  }}
-                >
-                      <Breadcrumb />
-                 
-                      {children}
-                  </Box>
-                </Box>
-            </Box>
-          
+       
+      }}>
+        <Box
+          component="main"
+          className="MainContent"
+          sx={{
+            px: { xs: 2, md: 6 },
+            pt: {
+              xs: 'calc(12px + var(--Header-height))',
+              sm: 'calc(12px + var(--Header-height))',
+              md: 3,
+            },
+            pb: { xs: 2, sm: 2, md: 3 },
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            minWidth: 0,
+            gap: 1,
+          }}
+        >
+          <Breadcrumb />
+
+          {children}
+        </Box>
+      </Box>
+    </Box>
+
   );
 }

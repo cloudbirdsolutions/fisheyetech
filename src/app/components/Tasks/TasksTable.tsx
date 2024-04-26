@@ -222,6 +222,7 @@ export default function TasksTable() {
           </ModalDialog>
         </Modal>
       </Sheet>
+      
       <Sheet  variant='outlined' sx={{borderRadius: 'sm'}}>
       <Box
         className="SearchAndFilters-tabletUp"

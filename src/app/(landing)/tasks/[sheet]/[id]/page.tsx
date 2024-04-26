@@ -123,11 +123,11 @@ export default function Log() {
   const headers = ["Created At","Updated At","Created By","Status"]
   const rows = documentList.map((o)=>(
     <tr key={`document_id_${o.id}`}>
-     <td><Typography level="body-xs">{o?.id}</Typography></td>
-     <td><Typography level="body-xs">{o?.createdAt}</Typography></td>
-     <td><Typography level="body-xs">{o?.updatedAt}</Typography></td>
-     <td><Typography level="body-xs">{o?.users.userName}</Typography></td>
-     <td><Typography level="body-xs">{o?.transitionMaster.transitionName}</Typography></td>
+     <td><Typography level="body-xs" >{o?.id}</Typography></td>
+     <td><Typography level="body-xs" sx={{ overflowWrap: 'break-word' }}>{o?.createdAt}</Typography></td>
+     <td><Typography level="body-xs" sx={{ overflowWrap: 'break-word' }} >{o?.updatedAt}</Typography></td>
+     <td><Typography level="body-xs" sx={{ overflowWrap: 'break-word' }}>{o?.users.userName}</Typography></td>
+     <td><Typography level="body-xs" sx={{ overflowWrap: 'break-word' }}>{o?.transitionMaster.transitionName}</Typography></td>
      <td>
       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}><RowMenu sheetId={o.sheetId} documentId={o.id} /></Box>
      </td>
