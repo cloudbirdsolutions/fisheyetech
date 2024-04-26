@@ -27,28 +27,38 @@ import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
-function RowMenu() {
-  return (
-    <Dropdown>
-      <MenuButton
-        slots={{ root: IconButton }}
-        slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
-      >
-        <MoreHorizRoundedIcon />
-      </MenuButton>
-      <Menu size="sm" sx={{ minWidth: 140 }}>
-        <MenuItem>Edit</MenuItem>
-        <MenuItem>Rename</MenuItem>
-        <MenuItem>Move</MenuItem>
-        <Divider />
-        <MenuItem color="danger">Delete</MenuItem>
-      </Menu>
-    </Dropdown>
-  );
-}
+import RowMenu from "./RowMenu";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../Store/store";
+import { useRouter } from "next/navigation";
+import { deleterole } from "../Reducers/DeleteRoleSlice";
 
-export default function RoleLists() {
+export default function RoleLists(props:any) {
   const [listItems, setlistItems] = React.useState([]);
+
+  const createrole = useSelector(
+    (state: any) => state?.createroles?.data
+  );
+  const deleteroles = useSelector(
+    (state: any) => state?.deleteroles?.data
+  );
+  const editrole = useSelector(
+    (state: any) => state?.editroles?.data
+  );
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+  const HandleDeleteFunction = (id: any) => {
+    try {
+      // const userData = Object.fromEntries();
+
+      dispatch(deleterole(id)).then(() => {
+        router.push("/rolelist");
+      });
+    } catch (error) {
+      console.error("Failed to Delete user:", error);
+      // Handle error (e.g., display error message)
+    }
+  };
 
   React.useEffect(() => {
     const getData = async () => {
@@ -76,7 +86,7 @@ export default function RoleLists() {
   
     getData(); 
 
-  }, [])
+  }, [createrole, deleteroles, editrole])
 
   return (
     <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
@@ -97,25 +107,33 @@ export default function RoleLists() {
           >
             <ListItemContent sx={{ display: 'flex', gap: 2, alignItems: 'start' }}>
             <ListItemDecorator>
-                <Avatar size="sm">{listItem.id}</Avatar>
+                <Avatar size="sm">{listItem?.id}</Avatar>
               </ListItemDecorator>
               <div>
                 <Typography fontWeight={600} gutterBottom>
-                  {listItem.roleName}
+                  {listItem?.roleName}
                 </Typography>
                 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                    <RowMenu />
+                    <RowMenu
+                      row={listItem}
+                      open={props.open}
+                      setOpen={props.setOpen}
+                      label={props.label}
+                      setRow={props.setRow}
+                      setLabel={props.setLabel}
+                      parentFunction={HandleDeleteFunction}
+                    />
                 </Box>
               </div>
             </ListItemContent>
             <Chip
               variant="soft"
               size="sm"
-              startDecorator={listItem.roleStatus === 'ACTIVE' ? <CheckRoundedIcon /> : listItem.roleStatus === 'PENDING' ? <AutorenewRoundedIcon /> : <BlockIcon />}
-              color={listItem.roleStatus === 'ACTIVE' ? 'success' : listItem.roleStatus === 'PENDING' ? 'neutral' : 'danger'}
+              startDecorator={listItem?.statusMaster?.statusName === 'ACTIVE' ? <CheckRoundedIcon /> : listItem?.statusMaster?.statusName === 'PENDING' ? <AutorenewRoundedIcon /> : <BlockIcon />}
+              color={listItem?.statusMaster?.statusName === 'ACTIVE' ? 'success' : listItem?.statusMaster?.statusName === 'PENDING' ? 'neutral' : 'danger'}
             >
-              {listItem.roleStatus}
+              {listItem?.statusMaster?.statusName}
             </Chip>
           </ListItem>
           <ListDivider />

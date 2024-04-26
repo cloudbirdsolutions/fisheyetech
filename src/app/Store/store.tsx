@@ -22,6 +22,9 @@ import createdepartmentSlice from '../Reducers/CreateDepartmentSlice';
 import deletedepartmentSlice from '../Reducers/DeleteDepartmentSlice';
 import editdepartmentSlice from '../Reducers/editDepartmentSlice';
 import deleteEntitySlice from '../Reducers/DeleteEntitySlice';
+import createroleSlice from '../Reducers/CreateRoleSlice';
+import deleteroleSlice from '../Reducers/DeleteRoleSlice';
+import editroleSlice from '../Reducers/editRoleSlice';
 
 const persistConfig = {
   key: 'root',
@@ -40,7 +43,10 @@ const appReducer = combineReducers({
   createdepartments: createdepartmentSlice,
   deletedepartments: deletedepartmentSlice,
   editdepartments: editdepartmentSlice,
-  deleteentity: deleteEntitySlice
+  deleteentity: deleteEntitySlice,
+  createroles: createroleSlice,
+  deleteroles: deleteroleSlice,
+  editroles: editroleSlice,
 });
 
 const rootReducer = (state:any, action:any) => {

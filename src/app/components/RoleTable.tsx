@@ -2,42 +2,26 @@
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from 'react';
-import { ColorPaletteProp } from '@mui/joy/styles';
-import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Chip from '@mui/joy/Chip';
-import Divider from '@mui/joy/Divider';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
 import Link from '@mui/joy/Link';
-import Input from '@mui/joy/Input';
-import Modal from '@mui/joy/Modal';
-import ModalDialog from '@mui/joy/ModalDialog';
-import ModalClose from '@mui/joy/ModalClose';
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
 import Table from '@mui/joy/Table';
 import Sheet from '@mui/joy/Sheet';
-import Checkbox from '@mui/joy/Checkbox';
 import IconButton, { iconButtonClasses } from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
-import Menu from '@mui/joy/Menu';
-import MenuButton from '@mui/joy/MenuButton';
-import MenuItem from '@mui/joy/MenuItem';
-import Dropdown from '@mui/joy/Dropdown';
-
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import SearchIcon from '@mui/icons-material/Search';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import BlockIcon from '@mui/icons-material/Block';
 import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 
-
+import RowMenu from "./RowMenu";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../Store/store";
+import { useRouter } from "next/navigation";
+import { deleterole } from "@/app/Reducers/DeleteRoleSlice";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -79,33 +63,37 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function RowMenu() {
-  return (
-    <Dropdown>
-      <MenuButton
-        slots={{ root: IconButton }}
-        slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
-      >
-        <MoreHorizRoundedIcon />
-      </MenuButton>
-      <Menu size="sm" sx={{ minWidth: 140 }}>
-        <MenuItem>Edit</MenuItem>
-        <MenuItem>Rename</MenuItem>
-        <MenuItem>Move</MenuItem>
-        <Divider />
-        <MenuItem color="danger">Delete</MenuItem>
-      </Menu>
-    </Dropdown>
+
+export default function RoleTable(props: any) {
+  const [order, setOrder] = React.useState<Order>("desc");
+  const [rows, setRows] = React.useState(null!);
+
+  const createrole = useSelector(
+    (state: any) => state?.createroles?.data
   );
-}
+  const deleteroles = useSelector(
+    (state: any) => state?.deleteroles?.data
+  );
+  const editrole = useSelector(
+    (state: any) => state?.editroles?.data
+  );
 
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
 
+  const HandleDeleteFunction = (id: any) => {
+    try {
+      // const userData = Object.fromEntries();
 
-export default function RoleTable() {
-  const [order, setOrder] = React.useState<Order>('desc');
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
-  const [open, setOpen] = React.useState(false);
-  const [rows, setRows] = React.useState();
+      dispatch(deleterole(id)).then(() => {
+        router.push("/rolelist");
+      });
+    } catch (error) {
+      console.error("Failed to Delete user:", error);
+      // Handle error (e.g., display error message)
+    }
+  };
+
 
   // const data = await getData()
   React.useEffect(() => {
@@ -134,110 +122,13 @@ export default function RoleTable() {
 
     getData();
 
-  }, [])
+  }, [createrole, deleteroles, editrole])
 
-  const renderFilters = () => (
-    <React.Fragment>
-      <FormControl size="sm">
-        <FormLabel>Status</FormLabel>
-        <Select
-          size="sm"
-          placeholder="Filter by status"
-          slotProps={{ button: { sx: { whiteSpace: 'nowrap' } } }}
-        >
-          <Option value="Active">Active</Option>
-          <Option value="pending">Pending</Option>
-          <Option value="Inactive">Inactive</Option>
-        </Select>
-      </FormControl>
-      <FormControl size="sm">
-        <FormLabel>Category</FormLabel>
-        <Select size="sm" placeholder="All">
-          <Option value="all">All</Option>
-          <Option value="refund">Refund</Option>
-          <Option value="purchase">Purchase</Option>
-          <Option value="debit">Debit</Option>
-        </Select>
-      </FormControl>
-      <FormControl size="sm">
-        <FormLabel>Customer</FormLabel>
-        <Select size="sm" placeholder="All">
-          <Option value="all">All</Option>
-          <Option value="olivia">Olivia Rhye</Option>
-          <Option value="steve">Steve Hampton</Option>
-          <Option value="ciaran">Ciaran Murray</Option>
-          <Option value="marina">Marina Macdonald</Option>
-          <Option value="charles">Charles Fulton</Option>
-          <Option value="jay">Jay Hoper</Option>
-        </Select>
-      </FormControl>
-    </React.Fragment>
-  );
   return (
     <React.Fragment>
+      
       <Sheet
-        className="SearchAndFilters-mobile"
-        sx={{
-          display: { xs: 'flex', sm: 'none' },
-          my: 1,
-          gap: 1,
-        }}
-      >
-        <Input
-          size="sm"
-          placeholder="Search"
-          startDecorator={<SearchIcon />}
-          sx={{ flexGrow: 1 }}
-        />
-        <IconButton
-          size="sm"
-          variant="outlined"
-          color="neutral"
-          onClick={() => setOpen(true)}
-        >
-          <FilterAltIcon />
-        </IconButton>
-        <Modal open={open} onClose={() => setOpen(false)}>
-          <ModalDialog aria-labelledby="filter-modal" layout="fullscreen">
-            <ModalClose />
-            <Typography id="filter-modal" level="h2">
-              Filters
-            </Typography>
-            <Divider sx={{ my: 2 }} />
-            <Sheet sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {renderFilters()}
-              <Button color="primary" onClick={() => setOpen(false)}>
-                Submit
-              </Button>
-            </Sheet>
-          </ModalDialog>
-        </Modal>
-      </Sheet>
-      <Sheet variant='outlined' sx={{ borderRadius: 'sm', }}>
-        <Box
-          className="SearchAndFilters-tabletUp"
-          sx={{
-            backgroundColor: 'var(--joy-palette-primary-100)',
-            borderRadius: 'sm',
-            px: 2,
-            py: 2,
-            display: { xs: 'none', sm: 'flex' },
-            flexWrap: 'wrap',
-            gap: 1.5,
-            '& > *': {
-              minWidth: { xs: '120px', md: '160px' },
-            },
-          }}
-        >
-          <FormControl sx={{ flex: 1 }} size="sm">
-            <FormLabel>Search for user</FormLabel>
-            <Input size="sm" placeholder="Search" startDecorator={<SearchIcon />} />
-          </FormControl>
-          {renderFilters()}
-        </Box>
-      </Sheet>
-      <Sheet
-        className="OrderTableContainer"
+        className="RowTableContainer"
         variant="outlined"
         sx={{
           display: { xs: 'none', sm: 'initial' },
@@ -302,10 +193,10 @@ export default function RoleTable() {
                   <Chip
                     variant="soft"
                     size="sm"
-                    startDecorator={row.roleStatus === 'ACTIVE' ? <CheckRoundedIcon /> : row.roleStatus === 'PENDING' ? <AutorenewRoundedIcon /> : <BlockIcon />}
-                    color={row.roleStatus === 'ACTIVE' ? 'success' : row.roleStatus === 'PENDING' ? 'neutral' : 'danger'}
+                    startDecorator={row?.statusMaster?.statusName === 'ACTIVE' ? <CheckRoundedIcon /> : row?.statusMaster?.statusName === 'PENDING' ? <AutorenewRoundedIcon /> : <BlockIcon />}
+                    color={row?.statusMaster?.statusName === 'ACTIVE' ? 'success' : row?.statusMaster?.statusName === 'PENDING' ? 'neutral' : 'danger'}
                   >
-                    {row.roleStatus}
+                    {row?.statusMaster?.statusName}
                   </Chip>
                 </td>
                 <td>
@@ -315,7 +206,15 @@ export default function RoleTable() {
                 <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
 
-                    <RowMenu />
+                    <RowMenu
+              row={row}
+              open={props.open}
+              setOpen={props.setOpen}
+              label={props.label}
+              setRow={props.setRow}
+              setLabel={props.setLabel}
+              parentFunction={HandleDeleteFunction}
+            />
                   </Box>
                 </td>
               </tr>
