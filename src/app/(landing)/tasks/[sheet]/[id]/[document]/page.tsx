@@ -46,7 +46,7 @@ async function getSheetFields(sheetid: string) {
         Accept: "application/json",
         'Content-Type': 'application/json',
       }
-    );
+  });
 
     if (!response.ok) {
       throw new Error("Failed to fetch user details: " + response.statusText);
