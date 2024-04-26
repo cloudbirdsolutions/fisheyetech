@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
-import { Providers } from "../Provider/provider";
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import { CssVarsProvider } from '@mui/joy/styles';
@@ -11,6 +10,7 @@ import CssBaseline from '@mui/joy/CssBaseline';
 
 import { Box } from "@mui/joy";
 import Breadcrumb from "../components/Breadcrumbs/Breadcrumbs";
+import { Providers } from "../Provider/provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +24,9 @@ export default function SubLayout({children}: Readonly<{
 }>) {
   return (
    
-        
+    <Providers>
+    <CssVarsProvider disableTransitionOnChange>
+      <CssBaseline />
             <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
               <Header />
               <Sidebar />
@@ -53,6 +55,8 @@ export default function SubLayout({children}: Readonly<{
                   </Box>
                 </Box>
             </Box>
+          </CssVarsProvider>
+        </Providers>
           
   );
 }
