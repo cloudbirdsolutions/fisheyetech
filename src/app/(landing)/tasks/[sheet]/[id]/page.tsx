@@ -5,7 +5,7 @@ import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
 import { useCallback, useState } from 'react';
 import { useParams } from 'next/navigation'
-import { AccordionGroup, FormControl, FormLabel, Tab, TabList, TabPanel, Tabs, Typography, Table, Sheet, Button, Stack, Link } from '@mui/joy';
+import { AccordionGroup, FormControl, FormLabel, Tab, TabList, TabPanel, Tabs, Typography, Table, Sheet, Button, Stack, Link, Divider, Chip } from '@mui/joy';
 import { Accordion, AccordionDetails, AccordionSummary, Input } from '@mui/joy';
 import TableSection from '@/app/components/Common/TableSection';
 import { Add } from '@mui/icons-material';
@@ -54,10 +54,10 @@ export default function Log() {
   const params = useParams<{ sheet: string, id: string }>()
   const [permision,setPermission] = useState({
     "permissionType": {
-        "id": 1,
-        "createdAt": "2024-04-20T08:38:18.589Z",
-        "updatedAt": "2024-04-20T08:38:18.589Z",
-        "permissionType": "Operator"
+        "id": 0,
+        "createdAt": "",
+        "updatedAt": "",
+        "permissionType": ""
     }
 })
   const [sheetName, setSheetName]= useState('');
@@ -112,7 +112,7 @@ export default function Log() {
 
       const data = await response.json();
       setRefreshListIndicator(Date.now());
-      toast.success("Document Created Succesfuly!");
+      toast.success(data.message);
       return data
     } catch (error) {
       console.error('Error fetching user details:', error);
@@ -171,32 +171,44 @@ export default function Log() {
 
   ))
 
+  React.useEffect(()=>{
+
+    let fetchData = async () =>{
+      let sheetDetails = await getSheetDetails(params.id)
+      let permissionResponse = await getUserPermission()
+      setSheetName(sheetDetails.data[0].sheetName)
+      setPermission(permissionResponse.data[0])
+    }
+    fetchData();
+    
+  },[])
+
+
   React.useEffect(() => {
 
     const fetchData = async () => {
       let resposne = await getDocumentList(params.id)
-      let sheetDetails = await getSheetDetails(params.id)
-      let permissionResponse = await getUserPermission()
-
       setDocumentList(resposne.data)
-      setSheetName(sheetDetails.data[0].sheetName)
-      setPermission(permissionResponse.data[0])
     }
     fetchData()
 
   //eslint-disable-next-line
-  }, [params,refreshListIndicator,permision])
+  }, [params,permision,refreshListIndicator])
 
 
   return (
     <>
-      <Box sx={{ display: 'flex' }} marginTop={2}>
+      <Box marginTop={2}>
         <ToastContainer />
-        <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full' >
-          {/* <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}> */}
-          <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{sheetName}</Typography>
-          <Typography level='title-sm' component="h1" sx={{ marginBottom: "12px" }}>{permision.permissionType.permissionType}</Typography>
+        <Typography level='title-lg' color='warning'>Document List</Typography>
+        <Divider/>
+        <Stack direction={'row'}  justifyContent="space-between"  spacing={3} marginBottom={2} marginTop={2}>
+        <Stack>
+          <Typography level='title-sm' component="h1">{sheetName}</Typography>
+          <Chip variant='soft' color="primary">{permision.permissionType.permissionType}</Chip>
           {/* <Typography level='title-sm' component="h1" sx={{ marginBottom: "12px" }}>{permision.permissionType.id}</Typography> */}
+        </Stack>
+        <Stack direction={'row'} spacing={2} justifyContent={'flex-end'} alignItems={'flex-end'}>
           <Link
             underline="hover"
             color="primary"
@@ -207,13 +219,12 @@ export default function Log() {
           >
             Go Back to Task List
           </Link>
-          <Button size='sm' color='primary' startDecorator={<Add />} onClick={() => createDocument(params.id, logintype.data.id, 1)}>
+         { [1].includes(permision.permissionType.id) && <Button size='sm' color='primary' startDecorator={<Add />} onClick={() => createDocument(params.id, logintype.data.id, 1)}>
             Create New Document
-          </Button>
-
-          {/* </Stack> */}
-        </div>
-
+          </Button>}
+        </Stack>
+        </Stack>
+        <Divider/>
       </Box>
       <TableSection tableHeaders={headers} tableRows={rows} />
     </>

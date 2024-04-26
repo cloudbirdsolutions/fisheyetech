@@ -16,6 +16,7 @@ export type MessageInputProps = {
   textAreaValue: string;
   setTextAreaValue: (value: string) => void;
   onSubmit: () => void;
+ 
 };
 
 export default function MessageInput(props: MessageInputProps) {

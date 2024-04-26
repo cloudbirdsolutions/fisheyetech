@@ -289,7 +289,7 @@ export default function Sidebar() {
                       <ListItemDecorator>
                         {eachItem.icon}
                       </ListItemDecorator>
-                      <Typography level="title-sm">{eachItem.label}</Typography>
+                      <Typography level="title-sm" sx={{fontWeight:600}}>{eachItem.label}</Typography>
                       {/* {eachItem.label} */}
                     </ListItemButton>
                   </ListItem>)
