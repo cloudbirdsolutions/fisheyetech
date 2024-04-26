@@ -54,7 +54,7 @@ export default function DepartmentLists() {
     const getData = async () => {
       try {
          
-        const response = await fetch('http://51.79.147.139:3000/departments/get', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/departments/get`, {
           method: 'GET',
           headers: {
             Accept : "application/json",

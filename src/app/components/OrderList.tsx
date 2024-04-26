@@ -37,14 +37,14 @@ import { AppDispatch } from '../Store/store';
 
 export default function OrderList(props:any) {
   const [listItems, setlistItems] = React.useState([]);
-  const createuser = useSelector((state) => state?.createusers?.data);
-  const deleteusers = useSelector((state) => state?.deleteusers?.data);
-  const edituser = useSelector((state) => state?.editusers?.data);
+  const createuser = useSelector((state:any) => state?.createusers?.data);
+  const deleteusers = useSelector((state:any) => state?.deleteusers?.data);
+  const edituser = useSelector((state:any) => state?.editusers?.data);
 
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
-  const handleDeleteFunction = (id:any) => {
+  const HandleDeleteFunction = (id:any) => {
     try {
       // const userData = Object.fromEntries();
        
@@ -62,7 +62,7 @@ export default function OrderList(props:any) {
     const getData = async () => {
       try {
 
-        const response = await fetch('http://51.79.147.139:3000/users/get', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/users/get`, {
           method: 'GET',
           headers: {
             Accept: "application/json",
@@ -132,7 +132,7 @@ export default function OrderList(props:any) {
 
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                <RowMenu row={listItem} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel} parentFunction={handleDeleteFunction}/>
+                <RowMenu row={listItem} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel} parentFunction={HandleDeleteFunction}/>
                 </Box>
               </div>
             </ListItemContent>

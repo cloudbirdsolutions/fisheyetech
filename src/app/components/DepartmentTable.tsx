@@ -57,15 +57,15 @@ export default function DepartmentTable(props:any) {
   const [order, setOrder] = React.useState<Order>('desc');
   const [rows, setRows] = React.useState([{id:"",createdAt:"",updatedAt:"",departmentName: ""}]);
   
-  const createdepartment = useSelector((state) => state?.createdepartments?.data);
-  const deletedepartments = useSelector((state) => state?.deletedepartments?.data);
-  const editdepartment = useSelector((state) => state?.editdepartments?.data);
+  const createdepartment = useSelector((state:any) => state?.createdepartments?.data);
+  const deletedepartments = useSelector((state:any) => state?.deletedepartments?.data);
+  const editdepartment = useSelector((state:any) => state?.editdepartments?.data);
 
   const childRef = React.useRef(null);
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
-  const handleDeleteFunction = (id:any) => {
+  const HandleDeleteFunction = (id:any) => {
     try {
       // const userData = Object.fromEntries();
        
@@ -84,7 +84,7 @@ export default function DepartmentTable(props:any) {
     const getData = async () => {
       try {
          
-        const response = await fetch('http://51.79.147.139:3000/departments/get', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/departments/get`, {
           method: 'GET',
           headers: {
             Accept : "application/json",
@@ -122,7 +122,7 @@ export default function DepartmentTable(props:any) {
       <td>
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
           
-          <RowMenu row={row} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel} parentFunction={handleDeleteFunction}/>
+          <RowMenu row={row} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel} parentFunction={HandleDeleteFunction}/>
         </Box>
       </td>
     </tr>

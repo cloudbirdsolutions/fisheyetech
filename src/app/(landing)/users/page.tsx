@@ -15,12 +15,12 @@ import UserModalForm from '@/app/components/UserModalForm/UserModalForm';
 import { createContext, useContext, useState } from 'react';
 import modalContext from '@/app/context/modalContext';
 
-export default function JoyOrderDashboardTemplate() {
+export default function Users() {
 
 
   const [open, setOpen] = React.useState<boolean>(false);
   const [label, setLabel] = React.useState<string>('');
-  const [row, setRow] = React.useState(null);
+  const [row, setRow] = React.useState(null!);
   
   return (
     <>
@@ -44,7 +44,7 @@ export default function JoyOrderDashboardTemplate() {
                 color="success"
                 startDecorator={<PersonAddIcon />}
                 size="sm"
-                onClick={() => {setOpen(true); setLabel('Add New User'); setRow(null)}}
+                onClick={() => {setOpen(true); setLabel('Add New User'); setRow(null!)}}
               >
                 Add New User
               </Button>

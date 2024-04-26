@@ -24,9 +24,7 @@ export default function SubLayout({children}: Readonly<{
 }>) {
   return (
    
-        <Providers>
-          <CssVarsProvider disableTransitionOnChange>
-            <CssBaseline />
+        
             <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
               <Header />
               <Sidebar />
@@ -55,7 +53,6 @@ export default function SubLayout({children}: Readonly<{
                   </Box>
                 </Box>
             </Box>
-          </CssVarsProvider>
-        </Providers>
+          
   );
 }

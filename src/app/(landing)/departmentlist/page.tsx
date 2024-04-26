@@ -15,7 +15,7 @@ import DepartmentModalForm from '@/app/components/DepartmentModalForm/Department
 export default function DepartmentList() {
   const [label, setLabel] = React.useState<string>('');
   const [open, setOpen] = React.useState<boolean>(false);
-  const [row, setRow] = React.useState(null);
+  const [row, setRow] = React.useState(null!);
   
    return (
     <>
@@ -38,7 +38,7 @@ export default function DepartmentList() {
                 color="success"
                 startDecorator={<PersonAddIcon />}
                 size="sm"
-                onClick={() => {setOpen(true); setLabel('Add'); setRow(null)}}
+                onClick={() => {setOpen(true); setLabel('Add'); setRow(null!)}}
               >
                 Add New Department
               </Button>

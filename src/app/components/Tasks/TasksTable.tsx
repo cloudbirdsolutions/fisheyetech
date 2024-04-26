@@ -119,7 +119,7 @@ export default function TasksTable() {
     const getData = async () => {
       try {
          
-        const url = [4].includes(logintype.data.rolesId) ? `http://51.79.147.139:3000/joballocation/get-all-jobs` :`http://51.79.147.139:3000/joballocation/get-user-jobs?id=${logintype.data.id}`
+        const url = [4].includes(logintype.data.rolesId) ? `${process.env.NEXT_PUBLIC_API_HOST}/joballocation/get-all-jobs` :`http://51.79.147.139:3000/joballocation/get-user-jobs?id=${logintype.data.id}`
         // const url = `http://51.79.147.139:3000/joballocation/get-user-jobs?id=${logintype.data.id}`
         const response = await fetch(url, {
           method: 'GET',
@@ -142,7 +142,7 @@ export default function TasksTable() {
     };
   
     getData(); 
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const renderFilters = () => (

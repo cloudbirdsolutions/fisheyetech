@@ -23,7 +23,7 @@ const EntityModalForm = (props:any) =>{
     const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
 
-    const row = useContext(modalContext);
+    const row:any = useContext(modalContext);
 
     const [editformData, seteditFormData] = useState({
         id: "",

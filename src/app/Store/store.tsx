@@ -21,7 +21,7 @@ import createjobSlice from '../Reducers/CreateJobSlice';
 import createdepartmentSlice from '../Reducers/CreateDepartmentSlice';
 import deletedepartmentSlice from '../Reducers/DeleteDepartmentSlice';
 import editdepartmentSlice from '../Reducers/editDepartmentSlice';
-import deleteEntitySlice from '../Reducers/deleteentitySlice';
+import deleteEntitySlice from '../Reducers/DeleteEntitySlice';
 
 const persistConfig = {
   key: 'root',

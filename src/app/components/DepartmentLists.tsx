@@ -17,21 +17,22 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 import RowMenu from './RowMenu';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../Store/store';
+import { AppDispatch, RootState } from '../Store/store';
 import { useRouter } from 'next/navigation';
 import { deletedepartment } from '../Reducers/DeleteDepartmentSlice';
-
 export default function DepartmentLists(props:any) {
-  const [listItems, setlistItems] = React.useState([]);
-  const createdepartment = useSelector((state) => state?.createdepartments?.data);
-  const deletedepartments = useSelector((state) => state?.deletedepartments?.data);
-  const editdepartment = useSelector((state) => state?.editdepartments?.data);
+  
 
-  const handleDeleteFunction = (id:any) => {
+  const [listItems, setlistItems] = React.useState([]);
+  const createdepartment = useSelector((state:any) => state?.createdepartments?.data);
+  const deletedepartments = useSelector((state:any) => state?.deletedepartments?.data);
+  const editdepartment = useSelector((state:any) => state?.editdepartments?.data);
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+  const HandleDeleteFunction = (id:any) => {
     try {
       // const userData = Object.fromEntries();
-       const dispatch = useDispatch<AppDispatch>();
-       const router = useRouter();
+       
       dispatch(deletedepartment(id)).then(() => {
         router.push('/departmentlist');
       })
@@ -46,7 +47,7 @@ export default function DepartmentLists(props:any) {
     const getData = async () => {
       try {
          
-        const response = await fetch('http://51.79.147.139:3000/departments/get', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/departments/get`, {
           method: 'GET',
           headers: {
             Accept : "application/json",
@@ -97,7 +98,7 @@ export default function DepartmentLists(props:any) {
                 </Typography>
                 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                <RowMenu row={listItem} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel} parentFunction={handleDeleteFunction}/>
+                <RowMenu row={listItem} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel} parentFunction={HandleDeleteFunction}/>
                 </Box>
               </div>
             </ListItemContent>

@@ -165,6 +165,7 @@ export default function Log() {
     const fetchData = async () => {
       let fieldResp = await getSheetFields(params.id)
       let shiftResp = await getDocumentShift(params.document)
+      
       let permissionData = await getUserPermission(params.id,logintype.data.id)
 
       setParameters(fieldResp.data)
@@ -173,10 +174,12 @@ export default function Log() {
     }
     fetchData();
 
+// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params])
 
   React.useEffect(()=>{
     setCurrentShift(shiftDetails[index].shiftId)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
    },[index])
 
   React.useEffect(()=>{
@@ -206,7 +209,7 @@ export default function Log() {
     }
     fetchData();
 
-
+// eslint-disable-next-line react-hooks/exhaustive-deps
   },[currentShift,fieldRecord,relaodData])
 
   const getFieldValue = (fieldId:string, parameterId:string )=>{
