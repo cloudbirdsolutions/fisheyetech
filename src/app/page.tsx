@@ -29,9 +29,7 @@ interface FormElements extends HTMLFormControlsCollection {
   userName: HTMLInputElement;
   password: HTMLInputElement;
 }
-interface SignInFormElement extends HTMLFormElement {
-  readonly elements: FormElements;
-}
+
 
 function ColorSchemeToggle(props: IconButtonProps) {
   const { onClick, ...other } = props;
@@ -57,22 +55,25 @@ function ColorSchemeToggle(props: IconButtonProps) {
   );
 }
 
-export default function JoySignInSideTemplate() {
+export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
   const [error, setError] = React.useState(''); 
 
-  const data = useSelector((state) => state?.user?.data);
+  const data = useSelector((state:any) => state?.user?.data);
   const router = useRouter();
+  
   useEffect(() => {
     if(data?.status === "200") {
-        data.data.roles.roleName === 'admin' ?        
+        data?.data?.roles?.roleName === 'admin' ?        
           router.push('/users', { scroll: false })
           :
           router.push('/tasks', { scroll: false })
     } else {
       setError('Invalid username or password')
     }
-}, [data]);
+    // eslint-disable-next-line
+  }, [data]);
+
   const handleSubmit = (e:any) => {
     e.preventDefault();
     var formData = new FormData(e.target);

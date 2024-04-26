@@ -36,7 +36,7 @@ import DropZone from '@/app/components/DropZone';
 import FileUpload from '@/app/components/FileUpload';
 import CountrySelector from '@/app/components/CountrySelector';
 import EditorToolbar from '@/app/components/EditorToolbar';
-
+import Image from 'next/image';
 export default function MyProfile() {
   return (
     
@@ -120,9 +120,8 @@ export default function MyProfile() {
                 maxHeight={200}
                 sx={{ flex: 1, minWidth: 120, borderRadius: '100%' }}
               >
-                <img
+                <Image
                   src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
-                  srcSet="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286&dpr=2 2x"
                   loading="lazy"
                   alt=""
                 />
@@ -212,9 +211,8 @@ export default function MyProfile() {
                   maxHeight={108}
                   sx={{ flex: 1, minWidth: 108, borderRadius: '100%' }}
                 >
-                  <img
+                  <Image
                     src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
-                    srcSet="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286&dpr=2 2x"
                     loading="lazy"
                     alt=""
                   />

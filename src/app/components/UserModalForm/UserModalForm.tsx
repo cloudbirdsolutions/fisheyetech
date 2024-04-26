@@ -25,7 +25,7 @@ const UserModalForm = (props:any) =>{
     const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
 
-    const row = useContext(modalContext);
+    const row:any = useContext(modalContext);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -74,7 +74,7 @@ const UserModalForm = (props:any) =>{
 
     }])
       useEffect(() => {
-        if(row != null) {
+        if(row!=null) {
             seteditFormData({
                 id: row?.id,
                 name: row?.name,
@@ -170,7 +170,7 @@ const UserModalForm = (props:any) =>{
     
         
     
-    if(row != null) {
+    if(row!=null) {
       // Check if required fields are filled
       if (!editformData.name || !editformData.password || !editformData.address || !editformData.phone || editformData.statusId === 0 || !editformData.userName) {
         // Display error message for missing fields
@@ -286,7 +286,7 @@ const UserModalForm = (props:any) =>{
         <Stack className='p-8'>
         <form className='gap-8 flex flex-wrap w-[100%] flex-row' onSubmit={handleSubmit}>
           <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
-            {row != null &&
+            {row!=null &&
             
                 <div className='space-y-[2px] w-full'>
                     <h3 className='text-textdull text-xs mb-2'>ID</h3>
@@ -299,8 +299,8 @@ const UserModalForm = (props:any) =>{
                     role && 
                     <select multiple={false} name="rolesId" onChange={handleChange}>
                         <option value={0}>Select</option>
-                        {role.map((r:any) => {
-                            return <option value={r.id}>{r.roleName}</option>
+                        {role.map((r:any, i) => {
+                            return <option key={i} value={r.id}>{r.roleName}</option>
                         })                
                         }   
                     </select>

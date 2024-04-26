@@ -23,7 +23,7 @@ const DepartmentModalForm = (props:any) =>{
     const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
 
-    const row = useContext(modalContext);
+    const row:any = useContext(modalContext);
 
     const [formData, setFormData] = useState({
       departmentName: ""
@@ -37,7 +37,7 @@ const DepartmentModalForm = (props:any) =>{
       const [departmentError, setdepartmentError] = useState('');
       
       useEffect(() => {
-        if(row != null) {
+        if(row!=null) {
           seteditFormData({
                 id: row?.id,
                 departmentName: row?.name
@@ -87,7 +87,7 @@ const DepartmentModalForm = (props:any) =>{
           return;
         }
     
-    if(row != null) {
+    if(row!=null) {
         try {
           // const userData = Object.fromEntries();
            
@@ -149,7 +149,7 @@ const DepartmentModalForm = (props:any) =>{
         </Typography>
         <Stack className='p-8'>
         <form className='gap-8 flex flex-wrap w-[100%] flex-row' onSubmit={handleSubmit}>
-            {row != null &&
+            {row!=null &&
             <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
                 <div className='space-y-[2px] w-full'>
                     <h3 className='text-textdull text-xs mb-2'>ID</h3>

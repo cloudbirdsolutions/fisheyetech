@@ -10,31 +10,31 @@ import { Accordion, AccordionDetails, AccordionSummary, Input } from '@mui/joy';
 import { tabClasses } from '@mui/joy/Tab';
 import { useSelector } from 'react-redux';
 
-import { RootState } from '@/app/Store/store';
+import { RootState } from "@/app/Store/store";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MyMessages from '@/app/components/MyMessages';
 import { API_BASE_URL } from '@/app/config';
 
-var jmespath = require('jmespath');
+var jmespath = require("jmespath");
 
 interface LogProps {
-  sheetid: string
+  sheetid: string;
 }
 
 interface Reccod {
-  "id"?: number,
-  "createdAt"?: string,
-  "updatedAt"?: string,
-  "createdBy": number,
-  "updatedBy": number,
-  "documentId": number,
-  "shiftId": number,
-  "fieldId": number,
-  "fieldValue": string,
-  "transitionId": number,
-  "parameterId": number
+  id?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy: number;
+  updatedBy: number;
+  documentId: number;
+  shiftId: number;
+  fieldId: number;
+  fieldValue: string;
+  transitionId: number;
+  parameterId: number;
 }
 
 async function getSheetFields(sheetid: string) {
@@ -46,16 +46,16 @@ async function getSheetFields(sheetid: string) {
         Accept: "application/json",
         'Content-Type': 'application/json',
       }
-    });
+    );
 
     if (!response.ok) {
-      throw new Error('Failed to fetch user details: ' + response.statusText);
+      throw new Error("Failed to fetch user details: " + response.statusText);
     }
 
     const data = await response.json();
-    return data
+    return data;
   } catch (error) {
-    console.error('Error fetching user details:', error);
+    console.error("Error fetching user details:", error);
   }
 }
 async function getDocumentShift(documentId: string) {
@@ -234,22 +234,24 @@ export default function Log() {
         method: 'POST',
         headers: {
           Accept: "application/json",
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ "data": setDocumentRecordTransitionState })
       });
       setReloadData(Date.now());
       toast.success("Record Changes Saved Successfully");
       if (!response.ok) {
-        throw new Error('Failed to save record changes: ' + response.statusText);
+        throw new Error(
+          "Failed to save record changes: " + response.statusText
+        );
       }
 
       const data = await response.json();
-      return data
+      return data;
     } catch (error) {
-      console.error('Error fetching user details:', error);
+      console.error("Error fetching user details:", error);
     }
-  }
+  };
 
   return (
     <Sheet variant='outlined' sx={{ px: 2, py: 2, borderRadius: 'sm' }}>

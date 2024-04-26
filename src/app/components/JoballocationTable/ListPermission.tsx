@@ -74,7 +74,7 @@ export default function ListPermission(props: any) {
   useEffect(() => {
     const getalljobs = async () => {
       try {
-        const response = await fetch(`http://51.79.147.139:3000/joballocation/get-user-jobs?id=${props?.selectedrows?.id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/joballocation/get-user-jobs?id=${props?.selectedrows?.id}`, {
           method: 'GET',
           headers: {
             Accept: "application/json",
@@ -98,7 +98,7 @@ export default function ListPermission(props: any) {
 
     const getdepartment = async () => {
       try {
-        const response = await fetch('http://51.79.147.139:3000/departments/get', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/departments/get`, {
           method: 'GET',
           headers: {
             Accept: "application/json",
@@ -123,7 +123,7 @@ export default function ListPermission(props: any) {
 
     const getPermission = async () => {
       try {
-        const response = await fetch('http://51.79.147.139:3000/permissiontype/get', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/permissiontype/get`, {
           method: 'GET',
           headers: {
             Accept: "application/json",
@@ -147,7 +147,7 @@ export default function ListPermission(props: any) {
 
     const getshift = async () => {
       try {
-        const response = await fetch(`http://51.79.147.139:3000/sheetshiftmaster/get-shift?id=${props?.selectedrows?.id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetshiftmaster/get-shift?id=${props?.selectedrows?.id}`, {
           method: 'GET',
           headers: {
             Accept: "application/json",
@@ -168,7 +168,7 @@ export default function ListPermission(props: any) {
 
     }
     getshift();
-
+// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creatjob])
 
   const handleChange = async (e: any) => {
@@ -181,7 +181,7 @@ export default function ListPermission(props: any) {
     if (e.target.name === 'departmentId') {
       try {
 
-        const response = await fetch(`http://51.79.147.139:3000/departmentsheets/get-sheets?id=${parseInt(value)}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/departmentsheets/get-sheets?id=${parseInt(value)}`, {
           method: 'GET',
           headers: {
             Accept: "application/json",
@@ -207,7 +207,7 @@ export default function ListPermission(props: any) {
     if (e.target.name === 'sheetId') {
       try {
 
-        const response = await fetch(`http://51.79.147.139:3000/sheetshiftmaster/get-shift?id=${parseInt(value)}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetshiftmaster/get-shift?id=${parseInt(value)}`, {
           method: 'GET',
           headers: {
             Accept: "application/json",
@@ -271,8 +271,8 @@ export default function ListPermission(props: any) {
               department &&
               <select name="departmentId" onChange={handleChange}>
                 <option value={0}>Select</option>
-                {department.map((r: any) => {
-                  return <option value={r.id}>{r.departmentName}</option>
+                {department.map((r: any, i) => {
+                  return <option key={i} value={r.id}>{r.departmentName}</option>
                 })
                 }
               </select>
@@ -285,7 +285,7 @@ export default function ListPermission(props: any) {
                     permission && 
                     <select multiple={false} name="permissionId" onChange={handleChange}>
                         <option value={0}>Select</option>
-                        {permission.map((r:any) =>(<option value={r.id}>{r.permissionType}</option>))                }   
+                        {permission.map((r:any, i) =>(<option key={i} value={r.id}>{r.permissionType}</option>))                }   
                     </select>
                  }
 
@@ -299,8 +299,8 @@ export default function ListPermission(props: any) {
                 <h3 className='text-textdull text-xs mb-2'>Sheet Name</h3>
                 <select multiple={false} name="sheetId" onChange={handleChange}>
                   <option value={0}>Select</option>
-                  {sheets.map((r: any) => {
-                    return <option value={r.sheetMaster.id}>{r.sheetMaster?.sheetName}</option>
+                  {sheets.map((r: any, i) => {
+                    return <option key={i} value={r.sheetMaster.id}>{r.sheetMaster?.sheetName}</option>
                   })
                   }
                 </select>
@@ -311,8 +311,8 @@ export default function ListPermission(props: any) {
               <h3 className='text-textdull text-xs mb-2'>Shift</h3>
               <select multiple={false} name="shiftId" onChange={handleChange}>
                 <option value={0}>Select</option>
-                {shift?.map((r: any) => {
-                  return <option value={r.shiftId}>{r.shiftMaster?.shiftType}</option>
+                {shift?.map((r: any, i) => {
+                  return <option key={i} value={r.shiftId}>{r.shiftMaster?.shiftType}</option>
                 })
                 }
               </select>

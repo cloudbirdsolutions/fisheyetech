@@ -58,15 +58,15 @@ export default function EntityTable(props:any) {
   const [order, setOrder] = React.useState<Order>('desc');
   const [rows, setRows] = React.useState([{id:"",createdAt:"",updatedAt:"",departmentName: ""}]);
   
-  const createentity = useSelector((state) => state?.createentitys?.data);
-  const deleteentitys = useSelector((state) => state?.deleteentitys?.data);
-  const editentity = useSelector((state) => state?.editentitys?.data);
+  const createentity = useSelector((state:any) => state?.createentitys?.data);
+  const deleteentitys = useSelector((state:any) => state?.deleteentitys?.data);
+  const editentity = useSelector((state:any) => state?.editentitys?.data);
 
 
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
-  const handleDeleteFunction = (id:any) => {
+  const HandleDeleteFunction = (id:any) => {
     try {
       // const userData = Object.fromEntries();
        
@@ -84,7 +84,7 @@ export default function EntityTable(props:any) {
     const getData = async () => {
       try {
          
-        const response = await fetch('http://51.79.147.139:3000/sheetMaster/get', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetMaster/get`, {
           method: 'GET',
           headers: {
             Accept : "application/json",
@@ -122,7 +122,7 @@ export default function EntityTable(props:any) {
       <td>
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
           
-          <RowMenu row={row} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel} parentFunction={handleDeleteFunction}/>
+          <RowMenu row={row} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel} parentFunction={HandleDeleteFunction}/>
         </Box>
       </td>
     </tr>

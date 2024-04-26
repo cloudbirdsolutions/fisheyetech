@@ -3,7 +3,7 @@ import * as React from 'react';
 import { CssVarsProvider } from '@mui/joy/styles';
 import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useParams } from 'next/navigation'
 import { AccordionGroup, FormControl, FormLabel, Tab, TabList, TabPanel, Tabs, Typography, Table, Sheet, Button, Stack, Link } from '@mui/joy';
 import { Accordion, AccordionDetails, AccordionSummary, Input } from '@mui/joy';
@@ -87,7 +87,7 @@ export default function Log() {
 
   }
 
-  async function getDocumentList(sheetid: string) {
+  const getDocumentList:any = useCallback(async(sheetid: string) => {
     try {
 
       const url = [2, 3].includes(logintype.data.rolesId) ? `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}` : `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}&userId=${logintype.data.id}`
@@ -109,7 +109,9 @@ export default function Log() {
     } catch (error) {
       console.error('Error fetching user details:', error);
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  
 
 
 
@@ -144,8 +146,8 @@ export default function Log() {
     }
     fetchData()
 
-
-  }, [params, refreshListIndicator])
+  //eslint-disable-next-line
+  }, [params,refreshListIndicator])
 
 
   return (

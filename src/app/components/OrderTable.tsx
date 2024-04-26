@@ -92,7 +92,7 @@ export default function OrderTable(props:any) {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
-  const handleDeleteFunction = (id:any) => {
+  const HandleDeleteFunction = (id:any) => {
     try {
       // const userData = Object.fromEntries();
        
@@ -111,7 +111,7 @@ export default function OrderTable(props:any) {
     const getData = async () => {
       try {
 
-        const response = await fetch('http://51.79.147.139:3000/users/get', {
+        const response = await fetch(`http://51.79.147.139:3000/users/get`, {
           method: 'GET',
           headers: {
             Accept: "application/json",
@@ -328,7 +328,7 @@ export default function OrderTable(props:any) {
                 <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
 
-                    <RowMenu row={row} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel} parentFunction={handleDeleteFunction}/>
+                    <RowMenu row={row} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel} parentFunction={HandleDeleteFunction}/>
                   </Box>
                 </td>
               </tr>
