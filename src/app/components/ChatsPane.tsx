@@ -14,7 +14,7 @@ import { toggleMessagesPane } from '../utils';
 type ChatsPaneProps = {
   chats: ChatProps[];
   setSelectedChat: (chat: ChatProps) => void;
-  selectedChatId: string;
+  selectedChatId: number;
 };
 
 export default function ChatsPane(props: ChatsPaneProps) {
@@ -92,12 +92,14 @@ export default function ChatsPane(props: ChatsPaneProps) {
         }}
       >
         {chats.map((chat) => (
-          <ChatListItem
-            key={chat.id}
-            {...chat}
-            setSelectedChat={setSelectedChat}
-            selectedChatId={selectedChatId}
-          />
+          // <ChatListItem
+          //   key={chat.id}
+          //   {...chat}
+          //   setSelectedChat={setSelectedChat}
+          //   selectedChatId={selectedChatId}
+          // />
+          <ChatListItem key={`chat_${chat.id}`} {...chat} setSelectedChat={setSelectedChat} selectedChatId={selectedChatId}/>
+          // <Typography>{chat.users.userName}</Typography>
         ))}
       </List>
     </Sheet>

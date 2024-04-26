@@ -7,8 +7,12 @@ import ChatsPane from './ChatsPane';
 import { ChatProps } from '../types';
 import { chats } from '../data';
 
-export default function MyProfile() {
-  const [selectedChat, setSelectedChat] = React.useState<ChatProps>(chats[0]);
+interface MyMessagesProps {
+  chats : ChatProps[]
+}
+
+export default function MyMessages(props:MyMessagesProps) {
+  const [selectedChat, setSelectedChat] = React.useState<ChatProps>(props.chats[0]);
   return (
     <Sheet
       sx={{
@@ -37,7 +41,7 @@ export default function MyProfile() {
         }}
       >
         <ChatsPane
-          chats={chats}
+          chats={props.chats}
           selectedChatId={selectedChat.id}
           setSelectedChat={setSelectedChat}
         />

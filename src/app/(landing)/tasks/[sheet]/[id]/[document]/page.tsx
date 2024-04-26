@@ -16,6 +16,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MyMessages from '@/app/components/MyMessages';
 import { API_BASE_URL } from '@/app/config';
+import { ChatProps } from '@/app/types';
 
 var jmespath = require("jmespath");
 
@@ -100,6 +101,26 @@ async function getDocumentRecords(documentId: string, shiftId: number) {
     console.error('Error fetching user details:', error);
   }
 }
+async function getDocumentReviews(documentId: string) {
+  try {
+
+    const response = await fetch(`${API_BASE_URL}/review/get?id=${documentId}`, {
+      method: 'GET',
+      headers: {
+        Accept: "application/json",
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user details: ' + response.statusText);
+    }
+    const data = await response.json();
+    return data
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+  }
+}
 async function getUserPermission(sheetId: string, userId: number) {
   try {
 
@@ -134,6 +155,7 @@ export default function Log() {
 
   const [relaodData, setReloadData] = useState(Date.now());
 
+
   const [shiftDetails, setShiftDetails] = useState([{
 
     "id": 1,
@@ -161,6 +183,44 @@ export default function Log() {
   }])
 
   const [fieldRecord, setFieldRecord] = useState(jmespath.search(parameters, "parameterMaster[].fieldMaster[].{fieldId:id,parameterId:parameterId}"))
+
+  const [reviews,setReivews] = useState<ChatProps[]>([
+    {
+        "id": 1,
+        "createdAt": "2024-04-26T05:26:59.637Z",
+        "updatedAt": "2024-04-26T05:26:59.637Z",
+        "docId": 232,
+        "createdBy": 2,
+        "summary": "Pls check temperature limit",
+        "users": {
+            "userName": "Bharani1"
+        },
+        "comments": [
+            {
+                "id": 1,
+                "createdAt": "2024-04-26T05:26:59.637Z",
+                "updatedAt": "2024-04-26T05:26:59.637Z",
+                "reviewId": 1,
+                "comments": "Temperature limit checked and updated",
+                "createdBy": 1,
+                "users": {
+                    "userName": "Moses"
+                }
+            }
+        ]
+    }
+])
+
+  React.useEffect(()=>{
+
+    let fetchFromServer = async()=> {
+      let reviewResp = await getDocumentReviews(params.document);
+      setReivews(reviewResp.data)
+    } 
+    fetchFromServer()
+
+  },[])
+
 
   React.useEffect(() => {
 
@@ -390,7 +450,7 @@ export default function Log() {
                   </Tab>
                 </TabList>
                 <TabPanel>
-                  <MyMessages/>
+                 {reviews.length > 0 && <MyMessages chats={reviews} />}
                 </TabPanel>
               </Tabs>
             </CardContent>

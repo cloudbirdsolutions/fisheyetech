@@ -15,12 +15,12 @@ type MessagesPaneProps = {
 
 export default function MessagesPane(props: MessagesPaneProps) {
   const { chat } = props;
-  const [chatMessages, setChatMessages] = React.useState(chat.messages);
+  const [chatMessages, setChatMessages] = React.useState(chat.comments);
   const [textAreaValue, setTextAreaValue] = React.useState('');
 
   React.useEffect(() => {
-    setChatMessages(chat.messages);
-  }, [chat.messages]);
+    setChatMessages(chat.comments);
+  }, [chat.comments]);
 
   return (
     <Sheet
@@ -31,7 +31,7 @@ export default function MessagesPane(props: MessagesPaneProps) {
         backgroundColor: 'background.level1',
       }}
     >
-      <MessagesPaneHeader sender={chat.sender} />
+      <MessagesPaneHeader sender={chat.users} />
       <Box
         sx={{
           display: 'flex',
@@ -45,7 +45,7 @@ export default function MessagesPane(props: MessagesPaneProps) {
       >
         <Stack spacing={2} justifyContent="flex-end">
           {chatMessages.map((message: MessageProps, index: number) => {
-            const isYou = message.sender === 'You';
+            const isYou = message.users === 'You';
             return (
               <Stack
                 key={index}
@@ -53,10 +53,10 @@ export default function MessagesPane(props: MessagesPaneProps) {
                 spacing={2}
                 flexDirection={isYou ? 'row-reverse' : 'row'}
               >
-                {message.sender !== 'You' && (
+                {message.users !== 'You' && (
                   <AvatarWithStatus
-                    online={message.sender.online}
-                    src={message.sender.avatar}
+                    online={false}
+                    src={message.users.userName}
                   />
                 )}
                 <ChatBubble variant={isYou ? 'sent' : 'received'} {...message} />
@@ -70,14 +70,17 @@ export default function MessagesPane(props: MessagesPaneProps) {
         setTextAreaValue={setTextAreaValue}
         onSubmit={() => {
           const newId = chatMessages.length + 1;
-          const newIdString = newId.toString();
+          const newIdString = newId;
           setChatMessages([
             ...chatMessages,
             {
               id: newIdString,
-              sender: 'You',
-              content: textAreaValue,
-              timestamp: 'Just now',
+              users: 'You',
+              comments: textAreaValue,
+              createdAt: 'Just now',
+              createdBy:2,
+              reviewId:1,
+              updatedAt:'Just now'
             },
           ]);
         }}
