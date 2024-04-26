@@ -120,7 +120,7 @@ export default function Log() {
 
   }
 
-  const getDocumentList:any = useCallback(async(sheetid: string) => {
+  const getDocumentList = async(sheetid: string) => {
     try {
 
       const url = [2, 3].includes(permision.permissionType.id) ? `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}` : `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}&userId=${logintype.data.id}`
@@ -143,7 +143,7 @@ export default function Log() {
       console.error('Error fetching user details:', error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }
   
 
 
@@ -185,7 +185,7 @@ export default function Log() {
     fetchData()
 
   //eslint-disable-next-line
-  }, [params,refreshListIndicator])
+  }, [params,refreshListIndicator,permision])
 
 
   return (
@@ -196,6 +196,7 @@ export default function Log() {
           {/* <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}> */}
           <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{sheetName}</Typography>
           <Typography level='title-sm' component="h1" sx={{ marginBottom: "12px" }}>{permision.permissionType.permissionType}</Typography>
+          <Typography level='title-sm' component="h1" sx={{ marginBottom: "12px" }}>{permision.permissionType.id}</Typography>
           <Link
             underline="hover"
             color="primary"
