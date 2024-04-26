@@ -283,8 +283,8 @@ export default function Sidebar() {
               }}
             >
               {
-                sidebarItems.map((eachItem) => (
-                  (eachItem.roles.includes(logintype.data.roles.roleName)&& <ListItem >
+                sidebarItems.map((eachItem, i) => (
+                  (eachItem.roles.includes(logintype.data.roles.roleName)&& <ListItem key={i}>
                     <ListItemButton onClick={() => (router.push(eachItem.navPath))} selected={isActive(eachItem.navPath)} >
                       <ListItemDecorator>
                         {eachItem.icon}

@@ -17,6 +17,7 @@ import Sheet from '@mui/joy/Sheet';
 import Input from '@mui/joy/Input';
 import { useRouter } from 'next/navigation';
 import modalContext from "@/app/context/modalContext";
+import { Box, ModalDialog } from '@mui/joy';
 
 const DepartmentModalForm = (props:any) =>{
 
@@ -127,15 +128,7 @@ const DepartmentModalForm = (props:any) =>{
       onClose={() => props.setOpen(false)}
       sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
     >  
-      <Sheet
-        variant="outlined"
-        sx={{
-          maxWidth: 800,
-          borderRadius: 'md',
-          p: 3,
-          boxShadow: 'lg',
-        }}
-      >
+    <ModalDialog size='lg'>
         <ModalClose variant="plain" sx={{ m: 1 }} />
         <Typography
           component="h2"
@@ -147,28 +140,28 @@ const DepartmentModalForm = (props:any) =>{
         >
           {props.label} Department
         </Typography>
-        <Stack className='p-8'>
-        <form className='gap-8 flex flex-wrap w-[100%] flex-row' onSubmit={handleSubmit}>
+        <Stack>
+        <form style={{display:'flex' , flexDirection: 'column', gap: '8'}} onSubmit={handleSubmit}>
             {row!=null &&
-            <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
+            <Box component="div" display="flex" alignItems="center" flexDirection={'row'} py={2}>
                 <div className='space-y-[2px] w-full'>
                     <h3 className='text-textdull text-xs mb-2'>ID</h3>
                     <Input size="sm" disabled name="id" value={editformData.id} />
                 </div>
-            </div>
+            </Box>
             }
-          <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
-              <div className='space-y-[2px] w-full'>
-                  <h3 className='text-textdull text-xs mb-2'>Name</h3>
+            <Box component="div" display="flex" alignItems="center" flexDirection={'column'} py={2}>
+              <Box component="div" sx={{width:'100%'}}>
+                 <Typography level="h3" fontSize="xl" sx={{ mb: 0.5 }}>Name</Typography>
                   <Input size="sm" placeholder="Department Name" name="departmentName" value={formData.departmentName} onChange={handleChange}/>
                   {departmentError && <p>{departmentError}</p>}
-              </div>
-            </div>
+              </Box>
+            </Box>
           
           <Button type="submit"> {props.label} Department</Button>
           </form>
         </Stack>
-      </Sheet>
+      </ModalDialog>
     </Modal>
     )
 }

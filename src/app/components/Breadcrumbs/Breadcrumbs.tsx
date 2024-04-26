@@ -34,28 +34,32 @@ const Breadcrumb = ({containerClasses, listClasses, activeClasses, capitalizeLin
       >
         <HomeRoundedIcon />
       </Link>
-            {
-              // <ul>
+      </Breadcrumbs>
+      <Breadcrumbs
+      size="sm"
+      aria-label="breadcrumbs"
+      separator={<ChevronRightRoundedIcon />}
+      sx={{ pl: 0 }}
+    >
+                {
                   pathNames.map( (link, index) => {
                         let href = `/${pathNames.slice(0, index + 1).join('/')}`
                         let itemClasses = paths === href ? `${listClasses} ${activeClasses}` : listClasses
                         let itemLink = capitalizeLinks ? link[0].toUpperCase() + link.slice(1, link.length) : link
                         return (
                             <React.Fragment key={index}>
-                                <li className={itemClasses} >
+                                {/*<li className={itemClasses} >*/}
                                     <Link underline="hover"
                         color="neutral"
                         fontSize={12}
                         fontWeight={500} href={href}>{itemLink.toUpperCase()}</Link>
-                                </li>
+                               {/* </li>*/}
                                 {/* {pathNames.length !== index + 1} */}
                             </React.Fragment>
                         )
                     })
-                  }
-                  {/* </ul>        */}
-            
-    </Breadcrumbs>
+                  }  
+      </Breadcrumbs>
   </Box>
 )
 }

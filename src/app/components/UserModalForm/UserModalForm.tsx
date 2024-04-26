@@ -288,12 +288,12 @@ const UserModalForm = (props:any) =>{
           <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
             {row!=null &&
             
-                <div className='space-y-[2px] w-full'>
+                <div className='space-y-[2px] w-2/4'>
                     <h3 className='text-textdull text-xs mb-2'>ID</h3>
                     <Input size="sm" disabled name="id" value={editformData.id} />
                 </div>
             }
-                  <div className='space-y-[2px] w-full'>
+                  <div className='space-y-[2px] w-2/4'>
                     <h3 className='text-textdull text-xs mb-2'>Role</h3>
                     {
                     role && 
@@ -309,11 +309,11 @@ const UserModalForm = (props:any) =>{
             </div>
           
           <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
-              <div className='space-y-[2px] w-full'>
+              <div className='space-y-[2px] w-2/4'>
                   <h3 className='text-textdull text-xs mb-2'>Name</h3>
                   <Input size="sm" placeholder="name" name="name" value={row!=null ? editformData.name : formData.name} onChange={handleChange}/>
               </div>
-              <div className='space-y-[2px] w-full'>
+              <div className='space-y-[2px] w-2/4'>
                   <h3 className='text-textdull text-xs mb-2'>User Name</h3>
                   <Input size="sm" placeholder="userName" name="userName" value={row!=null ? editformData.userName : formData.userName}
                               onChange={handleChange}/>
