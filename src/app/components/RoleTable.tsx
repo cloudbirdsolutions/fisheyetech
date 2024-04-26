@@ -249,11 +249,11 @@ export default function RoleTable() {
           stickyHeader
           hoverRow
           sx={{
-            '--TableCell-headBackground': 'var(--joy-palette-background-level1)',
+            '--TableCell-headBackground': '#0A2744',
             '--Table-headerUnderlineThickness': '1px',
             '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
             '--TableCell-paddingY': '4px',
-            '--TableCell-paddingX': '8px',
+            '--TableCell-paddingX': '8px', backgroundColor:'var(--joy-palette-primary-50)',
           }}
         >
           <thead>
@@ -266,7 +266,7 @@ export default function RoleTable() {
                   onClick={() => setOrder(order === 'asc' ? 'desc' : 'asc')}
                   fontWeight="lg"
                   endDecorator={<ArrowDropDownIcon />}
-                  sx={{
+                  sx={{ color:'#FFFFFF',
                     '& svg': {
                       transition: '0.2s',
                       transform:
@@ -277,10 +277,10 @@ export default function RoleTable() {
                   S.No
                 </Link>
               </th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Role Name</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Role Status</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>permission</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Action</th>
+              <th style={{ color:'#ffffff', width: 140, padding: '12px 6px' }}>Role Name</th>
+              <th style={{ color:'#ffffff', width: 140, padding: '12px 6px' }}>Role Status</th>
+              <th style={{ color:'#ffffff', width: 140, padding: '12px 6px' }}>permission</th>
+              <th style={{ color:'#ffffff', width: 140, padding: '12px 6px' }}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -332,8 +332,8 @@ export default function RoleTable() {
         <Button
           size="sm"
           variant="outlined"
-          color="neutral"
-          startDecorator={<KeyboardArrowLeftIcon />}
+          sx={{backgroundColor:'#136C13' , color:'#FFFFFF'}}
+          startDecorator={<KeyboardArrowLeftIcon sx={{color:'#FFFFFF'}} />}
         >
           Previous
         </Button>
@@ -354,8 +354,9 @@ export default function RoleTable() {
         <Button
           size="sm"
           variant="outlined"
-          color="neutral"
-          endDecorator={<KeyboardArrowRightIcon />}
+          
+          endDecorator={<KeyboardArrowRightIcon sx={{color:'#FFFFFF'}} />}
+          sx={{backgroundColor:'#136C13' , color:'#FFFFFF'}}
         >
           Next
         </Button>

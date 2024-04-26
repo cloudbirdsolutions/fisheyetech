@@ -230,11 +230,11 @@ export default function OrderTable(props:any) {
           hoverRow
           sx={{
             // '--TableCell-headBackground': 'var(--joy-palette-background-level1)',
-            '--TableCell-headBackground': 'var(--joy-palette-primary-plainActiveBg)',
+            '--TableCell-headBackground': '#0A2744',
             '--Table-headerUnderlineThickness': '1px',
             '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
             '--TableCell-paddingY': '4px',
-            '--TableCell-paddingX': '8px',
+            '--TableCell-paddingX': '8px', backgroundColor:'var(--joy-palette-primary-50)'
           }}
         >
           <thead>
@@ -242,12 +242,12 @@ export default function OrderTable(props:any) {
               <th style={{ padding: '12px 6px' }}>
                 <Link
                   underline="none"
-                  color="primary"
+                  
                   component="button"
                   onClick={() => setOrder(order === 'asc' ? 'desc' : 'asc')}
                   fontWeight="lg"
                   endDecorator={<ArrowDropDownIcon />}
-                  sx={{
+                  sx={{ color:'#ffffff',
                     '& svg': {
                       transition: '0.2s',
                       transform:
@@ -258,13 +258,13 @@ export default function OrderTable(props:any) {
                   S.No
                 </Link>
               </th>
-              <th style={{ padding: '12px 6px' }}>Name</th>
-              <th style={{ padding: '12px 6px' }}>User Name</th>
-              <th style={{ padding: '12px 6px' }}>Phone</th>
-              <th style={{ padding: '12px 6px' }}>Address</th>
-              <th style={{ padding: '12px 6px' }}>Status</th>
-              <th style={{ padding: '12px 6px' }}>Password</th>
-              <th style={{ padding: '12px 6px' }}>Action</th>
+              <th style={{ color:'#ffffff', padding: '12px 6px' }}>Name</th>
+              <th style={{ color:'#ffffff', padding: '12px 6px' }}>User Name</th>
+              <th style={{ color:'#ffffff', padding: '12px 6px' }}>Phone</th>
+              <th style={{ color:'#ffffff', padding: '12px 6px' }}>Address</th>
+              <th style={{ color:'#ffffff', padding: '12px 6px' }}>Status</th>
+              <th style={{ color:'#ffffff', padding: '12px 6px' }}>Password</th>
+              <th style={{ color:'#ffffff', padding: '12px 6px' }}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -325,8 +325,8 @@ export default function OrderTable(props:any) {
         <Button
           size="sm"
           variant="outlined"
-          color="neutral"
-          startDecorator={<KeyboardArrowLeftIcon />}
+          sx={{backgroundColor:'#136C13' , color:'#FFFFFF'}}
+          startDecorator={<KeyboardArrowLeftIcon sx={{color:'#FFFFFF'}} />}
         >
           Previous
         </Button>
@@ -347,8 +347,9 @@ export default function OrderTable(props:any) {
         <Button
           size="sm"
           variant="outlined"
-          color="neutral"
-          endDecorator={<KeyboardArrowRightIcon />}
+          
+          endDecorator={<KeyboardArrowRightIcon sx={{color:'#FFFFFF'}} />}
+          sx={{backgroundColor:'#136C13' , color:'#FFFFFF'}}
         >
           Next
         </Button>

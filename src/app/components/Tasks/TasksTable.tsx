@@ -143,7 +143,7 @@ export default function TasksTable() {
   
     getData(); 
 
-  }, [])
+  },[] )
 
   const renderFilters = () => (
     <React.Fragment>
@@ -259,11 +259,11 @@ export default function TasksTable() {
           stickyHeader
           hoverRow
           sx={{
-            '--TableCell-headBackground': 'var(--joy-palette-background-level3)',
+            '--TableCell-headBackground': '#0A2744',
             '--Table-headerUnderlineThickness': '1px',
             '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
             '--TableCell-paddingY': '4px',
-            '--TableCell-paddingX': '8px',
+            '--TableCell-paddingX': '8px', backgroundColor:'var(--joy-palette-primary-50)'
           }}
         >
           <thead>
@@ -271,28 +271,28 @@ export default function TasksTable() {
               <th style={{ width: 80, padding: '12px 6px' }}>
                 <Link
                   underline="none"
-                  color="primary"
+                 
                   component="button"
                   onClick={() => setOrder(order === 'asc' ? 'desc' : 'asc')}
                   fontWeight="lg"
                   endDecorator={<ArrowDropDownIcon />}
-                  sx={{
+                  sx={{ color:'#FFFFFF',
                     '& svg': {
                       transition: '0.2s',
                       transform:
-                        order === 'desc' ? 'rotate(0deg)' : 'rotate(180deg)',
+                        order === 'desc' ? 'rotate(0deg)' : 'rotate(180deg)'
                     },
                   }}
                 >
                   ID
                 </Link>
               </th>
-              <th style={{ width: 140, padding: '12px 6px' }} >Department</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Entity</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Permission</th>
-              <th style={{ width: 140, padding: '12px 6px' }}>Assigned To</th>
+              <th style={{ color:'#FFFFFF', width: 140, padding: '12px 6px' }} >Department</th>
+              <th style={{ color:'#FFFFFF', width: 140, padding: '12px 6px' }}>Entity</th>
+              <th style={{ color:'#FFFFFF', width: 140, padding: '12px 6px' }}>Permission</th>
+              <th style={{ color:'#FFFFFF', width: 140, padding: '12px 6px' }}>Assigned To</th>
               
-              <th style={{ width: 140, padding: '12px 6px' }}>Action</th>
+              <th style={{ color:'#FFFFFF', width: 140, padding: '12px 6px' }}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -346,8 +346,8 @@ export default function TasksTable() {
         <Button
           size="sm"
           variant="outlined"
-          color="neutral"
-          startDecorator={<KeyboardArrowLeftIcon />}
+          sx={{backgroundColor:'#136C13' , color:'#FFFFFF'}}
+          startDecorator={<KeyboardArrowLeftIcon sx={{color:'#FFFFFF'}} />}
         >
           Previous
         </Button>
@@ -368,8 +368,9 @@ export default function TasksTable() {
         <Button
           size="sm"
           variant="outlined"
-          color="neutral"
-          endDecorator={<KeyboardArrowRightIcon />}
+          
+          endDecorator={<KeyboardArrowRightIcon sx={{color:'#FFFFFF'}} />}
+          sx={{backgroundColor:'#136C13' , color:'#FFFFFF'}}
         >
           Next
         </Button>

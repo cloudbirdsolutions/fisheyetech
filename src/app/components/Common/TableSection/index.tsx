@@ -196,11 +196,11 @@ return (
         stickyHeader
         hoverRow
         sx={{
-          '--TableCell-headBackground': 'var(--joy-palette-background-level3)',
+          '--TableCell-headBackground': '#0A2744',
           '--Table-headerUnderlineThickness': '1px',
           '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
           '--TableCell-paddingY': '4px',
-          '--TableCell-paddingX': '8px',
+          '--TableCell-paddingX': '8px', backgroundColor:'var(--joy-palette-primary-50)'
         }}
       >
         <thead>
@@ -208,12 +208,12 @@ return (
             <th style={{ padding: '12px 6px' }}>
               <Link
                 underline="none"
-                color="primary"
+                
                 component="button"
                 onClick={() => setOrder(order === 'asc' ? 'desc' : 'asc')}
                 fontWeight="lg"
                 endDecorator={<ArrowDropDownIcon />}
-                sx={{
+                sx={{ color:'#FFFFFF',
                   '& svg': {
                     transition: '0.2s',
                     transform:
@@ -225,10 +225,10 @@ return (
               </Link>
             </th>
             {headers && headers.map((head, i)=>(
-                <th key={i} style={{ padding: '12px 6px' }} >{head}</th>
+                <th key={i} style={{ color:'#ffffff', padding: '12px 6px' }} >{head}</th>
             ))}
       
-            <th style={{padding: '12px 6px' }}>Action</th>
+            <th style={{color:'#ffffff',padding: '12px 6px' }}>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -281,13 +281,13 @@ return (
       }}
     >
       <Button
-        size="sm"
-        variant="outlined"
-        color="neutral"
-        startDecorator={<KeyboardArrowLeftIcon />}
-      >
-        Previous
-      </Button>
+          size="sm"
+          variant="outlined"
+          sx={{backgroundColor:'#136C13' , color:'#FFFFFF'}}
+          startDecorator={<KeyboardArrowLeftIcon sx={{color:'#FFFFFF'}} />}
+        >
+          Previous
+        </Button> 
 
       <Box sx={{ flex: 1 }} />
       {['1', '2', '3', '…', '8', '9', '10'].map((page) => (
@@ -303,13 +303,14 @@ return (
       <Box sx={{ flex: 1 }} />
 
       <Button
-        size="sm"
-        variant="outlined"
-        color="neutral"
-        endDecorator={<KeyboardArrowRightIcon />}
-      >
-        Next
-      </Button>
+          size="sm"
+          variant="outlined"
+          
+          endDecorator={<KeyboardArrowRightIcon sx={{color:'#FFFFFF'}} />}
+          sx={{backgroundColor:'#136C13' , color:'#FFFFFF'}}
+        >
+          Next
+        </Button>
     </Box>
   </React.Fragment>
 )
