@@ -35,9 +35,10 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 import { useDispatch, useSelector } from 'react-redux';
 import RowMenu from './RowMenu';
-import { AppDispatch } from '../Store/store';
+import { AppDispatch,RootState } from '../Store/store';
 import { useRouter } from 'next/navigation';
 import { deleteuser } from '../Reducers/DeleteUserSlice';
+import { API_BASE_URL } from '../config';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -80,9 +81,9 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
 }
 
 export default function OrderTable(props:any) {
-  const createuser = useSelector((state:any) => state?.createusers?.data);
-  const deleteusers = useSelector((state:any) => state?.deleteusers?.data);
-  const edituser = useSelector((state:any) => state?.editusers?.data);
+  const createuser = useSelector((state:RootState) => state?.createusers?.data);
+  const deleteusers = useSelector((state:RootState) => state?.deleteusers?.data);
+  const edituser = useSelector((state:RootState) => state?.editusers?.data);
 
   const [order, setOrder] = React.useState<Order>('desc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
@@ -111,7 +112,7 @@ export default function OrderTable(props:any) {
     const getData = async () => {
       try {
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/users/get`, {
+        const response = await fetch(`${API_BASE_URL}/users/get`, {
           method: 'GET',
           headers: {
             Accept: "application/json",
@@ -149,7 +150,7 @@ export default function OrderTable(props:any) {
           <Option value="Inactive">Inactive</Option>
         </Select>
       </FormControl>
-      <FormControl size="sm">
+      {/* <FormControl size="sm">
         <FormLabel>Category</FormLabel>
         <Select size="sm" placeholder="All">
           <Option value="all">All</Option>
@@ -169,7 +170,7 @@ export default function OrderTable(props:any) {
           <Option value="charles">Charles Fulton</Option>
           <Option value="jay">Jay Hoper</Option>
         </Select>
-      </FormControl>
+      </FormControl> */}
     </React.Fragment>
   );
   return (
@@ -286,8 +287,8 @@ export default function OrderTable(props:any) {
               </th>
               <th style={{ padding: '12px 6px' }}>Name</th>
               <th style={{ padding: '12px 6px' }}>User Name</th>
-              <th style={{ padding: '12px 6px' }}>Phone</th>
-              <th style={{ padding: '12px 6px' }}>Address</th>
+              {/* <th style={{ padding: '12px 6px' }}>Phone</th>
+              <th style={{ padding: '12px 6px' }}>Address</th> */}
               <th style={{ padding: '12px 6px' }}>Status</th>
               <th style={{ padding: '12px 6px' }}>Password</th>
               <th style={{ padding: '12px 6px' }}>Action</th>
@@ -305,12 +306,12 @@ export default function OrderTable(props:any) {
                 <td>
                   <Typography level="body-xs">{row.userName}</Typography>
                 </td>
-                <td>
+                {/* <td>
                   <Typography level="body-xs">{row.phone}</Typography>
                 </td>
                 <td>
                   <Typography level="body-xs">{row.address}</Typography>
-                </td>
+                </td> */}
                 <td>
                   <Chip
                     variant="soft"

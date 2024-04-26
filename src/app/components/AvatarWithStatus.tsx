@@ -4,6 +4,7 @@ import Avatar, { AvatarProps } from '@mui/joy/Avatar';
 
 type AvatarWithStatusProps = AvatarProps & {
   online?: boolean;
+  initals? : string;
 };
 
 export default function AvatarWithStatus(props: AvatarWithStatusProps) {

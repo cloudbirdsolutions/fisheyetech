@@ -337,16 +337,16 @@ const UserModalForm = (props:any) =>{
               </div>
             </div>
             <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
-              <div className='space-y-[2px] w-full'>
+              {/* <div className='space-y-[2px] w-full'>
                   <h3 className='text-textdull text-xs mb-2'>Address</h3>
                   <Input size="sm" placeholder="address" name="address" value={row!=null ? editformData.address : formData.address}
                               onChange={handleChange}/>
-              </div>
-              <div className='space-y-[2px] w-full'>
+              </div> */}
+              {/* <div className='space-y-[2px] w-full'>
                   <h3 className='text-textdull text-xs mb-2'>Phone</h3>
                   <Input size="sm" placeholder="phonenumber" name="phone" value={row!=null ? editformData.phone : formData.phone}
                               onChange={handleChange}/>
-              </div>
+              </div> */}
             </div>
           
           <Button type="submit"> {props.label}</Button>

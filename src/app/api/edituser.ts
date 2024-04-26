@@ -1,6 +1,6 @@
+import { API_BASE_URL } from "../config";
 
-
-const loginEndpoint = process.env.NEXT_PUBLIC_API_HOST+'/users/update';
+const loginEndpoint = API_BASE_URL+'/users/update';
 
 export async function edituserapi(userData:any) {
   try {

@@ -1,21 +1,20 @@
 "use client";
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import * as React from 'react';
+import * as React from "react";
 
-import Box from '@mui/joy/Box';
-import Typography from '@mui/joy/Typography';
-import TableSection from '../Common/TableSection';
-import Button from '@mui/joy/Button';
-import IconButton from '@mui/joy/IconButton/IconButton';
-import Chip from '@mui/joy/Chip';
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
-import BlockIcon from '@mui/icons-material/Block';
-import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
-import ListPermission from './ListPermission';
-import Link from '@mui/joy/Link';
-
-
+import Box from "@mui/joy/Box";
+import Typography from "@mui/joy/Typography";
+import TableSection from "../Common/TableSection";
+import Button from "@mui/joy/Button";
+import IconButton from "@mui/joy/IconButton/IconButton";
+import Chip from "@mui/joy/Chip";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+import BlockIcon from "@mui/icons-material/Block";
+import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
+import ListPermission from "./ListPermission";
+import Link from "@mui/joy/Link";
+import { API_BASE_URL } from "@/app/config";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -27,16 +26,16 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   return 0;
 }
 
-type Order = 'asc' | 'desc';
+type Order = "asc" | "desc";
 
 function getComparator<Key extends keyof any>(
   order: Order,
-  orderBy: Key,
+  orderBy: Key
 ): (
   a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string },
+  b: { [key in Key]: number | string }
 ) => number {
-  return order === 'desc'
+  return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
@@ -58,9 +57,11 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
 }
 
 export default function JoballocationTable() {
-  const [order, setOrder] = React.useState<Order>('desc');
-  const [rows, setRows] = React.useState([{id:"",createdAt:"",updatedAt:"",userName: "", statusName:''}]);
-  
+  const [order, setOrder] = React.useState<Order>("desc");
+  const [rows, setRows] = React.useState([
+    { id: "", createdAt: "", updatedAt: "", userName: "", statusName: "" },
+  ]);
+
   const [listsec, setListsec] = React.useState(false);
   const [selectedrow, setSelectedRow] = React.useState();
 
@@ -68,72 +69,89 @@ export default function JoballocationTable() {
   React.useEffect(() => {
     const getData = async () => {
       try {
-         
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/users/get`, {
-          method: 'GET',
-          headers: {
-            Accept : "application/json",
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `${API_BASE_URL}/users/get`,
+          // const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/users/get`,
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
           }
-        });
-  
+        );
+
         if (!response.ok) {
-          throw new Error('Failed to fetch user details: ' + response.statusText);
+          throw new Error(
+            "Failed to fetch user details: " + response.statusText
+          );
         }
-  
+
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         setRows(data.data);
       } catch (error) {
-        console.error('Error fetching user details:', error);
+        console.error("Error fetching user details:", error);
       }
     };
-  
-    getData(); 
 
+    getData();
   }, []);
-  const jobs = React.useCallback((row:any) => {
-    setListsec(true)
-      setSelectedRow(row);
-  }, [])
-
-
-  
+  const jobs = React.useCallback((row: any) => {
+    setListsec(true);
+    setSelectedRow(row);
+  }, []);
 
   const headers = ["Name", "Status"];
 
-  const tablerows =  stableSort(rows, getComparator(order, 'id')).map((row:any) => (
-    <tr key={row?.id}>
-      <td>
-        <Typography level="body-xs">{row?.id}</Typography>
-      </td>
-      <td>
-        <Typography level="body-xs">{row?.name}</Typography>
-      </td>
-      <td>
-      <Chip
-                    variant="soft"
-                    size="sm"
-                    startDecorator={row?.statusMaster?.statusName === 'ACTIVE' ? <CheckRoundedIcon /> : row?.statusMaster?.statusName === 'PENDING' ? <AutorenewRoundedIcon /> : <BlockIcon />}
-                    color={row?.statusMaster?.statusName === 'ACTIVE' ? 'success' : row?.statusMaster?.statusName === 'PENDING' ? 'neutral' : 'danger'}
-                  >
-                    {row?.statusMaster?.statusName}
-                  </Chip>
-      </td>
-      <td>
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>          
-         <Button onClick={() => jobs(row)}> Allocate Job</Button>
-        </Box>
-      </td>
-    </tr>
-  ))
- 
+  const tablerows = stableSort(rows, getComparator(order, "id")).map(
+    (row: any) => (
+      <tr key={row?.id}>
+        <td>
+          <Typography level="body-xs">{row?.id}</Typography>
+        </td>
+        <td>
+          <Typography level="body-xs">{row?.name}</Typography>
+        </td>
+        <td>
+          <Chip
+            variant="soft"
+            size="sm"
+            startDecorator={
+              row?.statusMaster?.statusName === "ACTIVE" ? (
+                <CheckRoundedIcon />
+              ) : row?.statusMaster?.statusName === "PENDING" ? (
+                <AutorenewRoundedIcon />
+              ) : (
+                <BlockIcon />
+              )
+            }
+            color={
+              row?.statusMaster?.statusName === "ACTIVE"
+                ? "success"
+                : row?.statusMaster?.statusName === "PENDING"
+                ? "neutral"
+                : "danger"
+            }
+          >
+            {row?.statusMaster?.statusName}
+          </Chip>
+        </td>
+        <td>
+          <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+            <Button onClick={() => jobs(row)}> Allocate Job</Button>
+          </Box>
+        </td>
+      </tr>
+    )
+  );
+
   return (
-
-        <>
-        {listsec === false && <TableSection tableHeaders={headers} tableRows={tablerows} /> }
-        {listsec === true && <ListPermission selectedrows={selectedrow}/> }
-        </>
-
+    <>
+      {listsec === false && (
+        <TableSection tableHeaders={headers} tableRows={tablerows} />
+      )}
+      {listsec === true && <ListPermission selectedrows={selectedrow} />}
+    </>
   );
 }

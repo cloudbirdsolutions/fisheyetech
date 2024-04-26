@@ -218,7 +218,7 @@ export default function Home() {
           </Box>
           <Box component="footer" sx={{ py: 3 }}>
             <Typography level="body-xs" textAlign="center">
-              © Your company {new Date().getFullYear()}
+              © FisheyeTech {new Date().getFullYear()}
             </Typography>
           </Box>
         </Box>

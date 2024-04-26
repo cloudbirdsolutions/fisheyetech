@@ -52,7 +52,7 @@ export default function ChatsPane(props: ChatsPaneProps) {
           }
           sx={{ mr: 'auto' }}
         >
-          Messages
+          Reviews
         </Typography>
         <IconButton
           variant="plain"
