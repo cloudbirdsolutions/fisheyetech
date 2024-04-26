@@ -35,8 +35,8 @@ import PeopleIcon from '@mui/icons-material/People';
 import ColorSchemeToggle from './ColorSchemeToggle';
 import { closeSidebar } from '../utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch,RootState } from '../Store/store';
-import {useRouter, usePathname, useSelectedLayoutSegment } from "next/navigation";
+import { AppDispatch, RootState } from '../Store/store';
+import { useRouter, usePathname, useSelectedLayoutSegment } from "next/navigation";
 import Link from 'next/link';
 
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
@@ -44,6 +44,43 @@ import ApartmentIcon from '@mui/icons-material/Apartment';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BadgeIcon from '@mui/icons-material/Badge';
 
+import { CssVarsProvider, ListItemDecorator, extendTheme } from "@mui/joy";
+
+
+const baseTheme = extendTheme();
+
+const darkOnlyTheme = extendTheme({
+  cssVarPrefix: "sidebar_",
+  colorSchemes: {
+    light: baseTheme.colorSchemes.dark,
+    dark: baseTheme.colorSchemes.dark,
+  },
+  components: {
+    // The component identifier always start with `Joy${ComponentName}`.
+    JoyListItem: {
+      styleOverrides: {
+        root: ({ ownerState, theme }) => ({
+          '&:hover': theme.variants.solidHover.primary,
+        }),
+      }
+    },
+    JoyListItemButton: {
+      defaultProps: {
+        color: 'primary'
+      },
+      styleOverrides: {
+
+        root: ({ ownerState, theme }) => ({
+          '&:hover': theme.variants.plainHover.primary,
+          ...(ownerState.selected && {
+            backgroundColor: theme.palette.primary[100]
+          }
+          )
+        }),
+      }
+    }
+  },
+});
 
 function Toggler({
   defaultExpanded = false,
@@ -77,325 +114,226 @@ function Toggler({
   );
 }
 
+const sidebarItems = [
+  {
+    label: 'Home',
+    navPath: '/home',
+    icon: <HomeRoundedIcon />,
+    roles: ['admin', 'user']
+  },
+  {
+    label: 'Dashboard',
+    navPath: '/dashboard',
+    icon: <DashboardRoundedIcon />,
+    roles: ['admin', 'user']
+  },
+  {
+    label: 'Users',
+    navPath: '/users',
+    icon: <PeopleIcon />,
+    roles: ['admin']
+  },
+  {
+    label: 'Department List',
+    navPath: '/departmentlist',
+    icon: <ApartmentIcon />,
+    roles: ['admin']
+  },
+  {
+    label: 'Entities',
+    navPath: '/entities',
+    icon: <SupportRoundedIcon />,
+    roles: ['admin']
+  },
+  {
+    label: 'Role List',
+    navPath: '/rolelist',
+    icon: <AdminPanelSettingsIcon />,
+    roles: ['admin']
+  },
+  {
+    label: 'Job Allocation',
+    navPath: '/joballocation',
+    icon: <AssignmentRoundedIcon />,
+    roles: ['admin']
+  },
+  {
+    label: 'Tasks',
+    navPath: '/tasks',
+    icon: <PendingActionsIcon />,
+    roles: ['admin', 'user']
+  },
+  {
+    label: 'Reviews',
+    navPath: '/reviews',
+    icon: <AssignmentRoundedIcon />,
+    roles: ['admin', 'user']
+  },
+  {
+    label: 'Comments',
+    navPath: '/messages',
+    icon: <QuestionAnswerRoundedIcon />,
+    roles: ['admin', 'user']
+  }
+
+]
+
+
 export default function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
-  const isActive = (href:any) => {
-    return pathname === href ? true : false;
+  const isActive = (href: any) => {
+    return pathname.includes(href) ;
   };
-  
-  const logintype = useSelector((state:RootState) => state?.user?.data);
+
+  const logintype = useSelector((state: RootState) => state?.user?.data);
 
   const dispatch = useDispatch<AppDispatch>();
-  const handleLogout = () => {           
+  const handleLogout = () => {
     localStorage.removeItem('accessToken');
-    dispatch({type: "USER_LOGOUT"});
+    dispatch({ type: "USER_LOGOUT" });
     //setuser('')
-    router.push("/", { scroll: false });        
+    router.push("/", { scroll: false });
   };
   return (
-    <Sheet
-      className="Sidebar"
-      sx={{
-        position: { xs: 'fixed', md: 'fixed' },
-        transform: {
-          xs: 'translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))',
-          md: 'none',
-        },
-        transition: 'transform 0.4s, width 0.4s',
-        zIndex: 10000,
-        height: '100dvh',
-        width: 'var(--Sidebar-width)',
-        top: 0,
-        p: 2,
-        flexShrink: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 2,
-        borderRight: '1px solid',
-        borderColor: 'divider',
-        background:'var(--joy-palette-background-level3)',
-        // color:'var(--joy-palette-common-white)'
-      }}
-    >
-      <GlobalStyles
-        styles={(theme) => ({
-          ':root': {
-            '--Sidebar-width': '220px',
-            [theme.breakpoints.up('lg')]: {
-              '--Sidebar-width': '240px',
-            },
-          },
-        })}
-      />
-      <Box
-        className="Sidebar-overlay"
+    <CssVarsProvider theme={darkOnlyTheme}>
+      <Sheet
+        className="Sidebar"
         sx={{
-          position: 'fixed',
-          zIndex: 9998,
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          opacity: 'var(--SideNavigation-slideIn)',
-          backgroundColor: 'var(--joy-palette-background-backdrop)',
-          transition: 'opacity 0.4s',
+          position: { xs: 'fixed', md: 'fixed' },
           transform: {
-            xs: 'translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1) + var(--SideNavigation-slideIn, 0) * var(--Sidebar-width, 0px)))',
-            lg: 'translateX(-100%)',
+            xs: 'translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))',
+            md: 'none',
           },
-        }}
-        onClick={() => closeSidebar()}
-      />
-      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-        <IconButton variant="soft" color="primary" size="sm">
-          <BrightnessAutoRoundedIcon />
-        </IconButton>
-        <Typography level="title-lg">Fisheyetech.</Typography>
-        <ColorSchemeToggle sx={{ ml: 'auto' }} />
-      </Box>
-      <Input size="sm" startDecorator={<SearchRoundedIcon />} placeholder="Search" />
-      <Box
-        sx={{
-          minHeight: 0,
-          overflow: 'hidden auto',
-          flexGrow: 1,
+          transition: 'transform 0.4s, width 0.4s',
+          zIndex: 10000,
+          height: '100dvh',
+          width: 'var(--Sidebar-width)',
+          top: 0,
+          p: 2,
+          flexShrink: 0,
           display: 'flex',
           flexDirection: 'column',
-          [`& .${listItemButtonClasses.root}`]: {
-            gap: 1,
-          },
+          gap: 2,
+          borderRight: '1px solid',
+          borderColor: 'divider',
+          background:'var(--joy-palette-primary-900)',
+          // color:'var(--joy-palette-common-white)'
         }}
       >
-        {logintype?.data?.roles?.roleName === 'admin' &&
-        <List
-          size="sm"
-          sx={{
-            gap: 1,
-            '--List-nestedInsetStart': '30px',
-            '--ListItem-radius': (theme) => theme.vars.radius.sm,
-          }}
-        >
-          <ListItem>
-            <ListItemButton href="/dashboard/" >
-              <HomeRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Home</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem>
-          <Link href="/dashboards" className={isActive('/dashboards') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}>
-              <DashboardRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Dashboard</Typography>
-              </ListItemContent>
-            </Link>
-          </ListItem>
-
-          <ListItem>
-            <Link href="/users" className={`${isActive('/users') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}`}>
-              <PeopleIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Users</Typography>
-              </ListItemContent>
-            </Link>
-          </ListItem>
-
-          <ListItem>
-            <Link href="/departmentlist" className={`${isActive('/departmentlist') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}`}>
-              <ApartmentIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Department List</Typography>
-              </ListItemContent>
-            </Link>
-          </ListItem>
-
-          <ListItem>
-            <Link href="/entities" className={`${isActive('/entities') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}`}>
-              <ApartmentIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Entities</Typography>
-              </ListItemContent>
-            </Link>
-          </ListItem>
-
-          <ListItem>
-            <Link href="/rolelist" className={`${isActive('/rolelist') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}`}>
-              <AdminPanelSettingsIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Role List</Typography>
-              </ListItemContent>
-            </Link>
-          </ListItem>
-          <ListItem>
-            <Link href="/joballocation" className={`${isActive('/joballocation') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}`}>
-              <BadgeIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Job Allocation</Typography>
-              </ListItemContent>
-            </Link>
-          </ListItem>
-          <ListItem>
-            <Link href="/tasks" className={`${isActive('/tasks') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}`}>
-              <PendingActionsIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Tasks</Typography>
-              </ListItemContent>
-            </Link>
-          </ListItem>
-
-          <ListItem nested>
-            <Toggler
-              renderToggle={({ open, setOpen }) => (
-                <ListItemButton onClick={() => setOpen(!open)}>
-                  <AssignmentRoundedIcon />
-                  <ListItemContent>
-                    <Typography level="title-sm">Reviews</Typography>
-                  </ListItemContent>
-                  <KeyboardArrowDownIcon
-                    sx={{ transform: open ? 'rotate(180deg)' : 'none' }}
-                  />
-                </ListItemButton>
-              )}
-            >
-              <List sx={{ gap: 0.5 }}>
-                <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton>All Reviews</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Backlog</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>In progress</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Done</ListItemButton>
-                </ListItem>
-              </List>
-            </Toggler>
-          </ListItem>
-
-          <ListItem>
-              <Link href="/messages" className={isActive('/messages') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}>
-              <QuestionAnswerRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Comments</Typography>
-              </ListItemContent>
-              <Chip size="sm" color="primary" variant="solid">
-                4
-              </Chip>
-            </Link>
-          </ListItem>
-
-          {/* <ListItem nested>
-            <Toggler
-              renderToggle={({ open, setOpen }) => (
-                <ListItemButton onClick={() => setOpen(!open)}>
-                  <GroupRoundedIcon />
-                  <ListItemContent>
-                    <Typography level="title-sm">Users</Typography>
-                  </ListItemContent>
-                  <KeyboardArrowDownIcon
-                    sx={{ transform: open ? 'rotate(180deg)' : 'none' }}
-                  />
-                </ListItemButton>
-              )}
-            >
-              <List sx={{ gap: 0.5 }}>
-                <ListItem sx={{ mt: 0.5 }}>
-                  <ListItemButton
-                    role="menuitem"
-                    component="a"
-                    href="/users/profiles"
-                  >
-                    My profile
-                  </ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Create a new user</ListItemButton>
-                </ListItem>
-                <ListItem>
-                  <ListItemButton>Roles & permission</ListItemButton>
-                </ListItem>
-              </List>
-            </Toggler>
-          </ListItem> */}
-        </List>
-        }
-        {logintype?.data?.roles?.roleName !== 'admin' &&
-        <List
-          size="sm"
-          sx={{
-            gap: 1,
-            '--List-nestedInsetStart': '30px',
-            '--ListItem-radius': (theme) => theme.vars.radius.sm,
-          }}
-        >
-          <ListItem>
-            <ListItemButton href="/dashboard/" >
-              <HomeRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Home</Typography>
-              </ListItemContent>
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem>
-          <Link href="/dashboards" className={isActive('/dashboards') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}>
-              <DashboardRoundedIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Dashboard</Typography>
-              </ListItemContent>
-            </Link>
-          </ListItem>
-
-          <ListItem>
-            <Link href="/tasks" className={`${isActive('/tasks') ? 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root Mui-selected' : 'MuiListItemButton-root MuiListItemButton-colorNeutral MuiListItemButton-variantPlain css-1xphdof-JoyListItemButton-root'}`}>
-              <PendingActionsIcon />
-              <ListItemContent>
-                <Typography level="title-sm">Tasks</Typography>
-              </ListItemContent>
-            </Link>
-          </ListItem>
-
-        </List>
-        }
-        <List
-          size="sm"
-          sx={{
-            mt: 'auto',
-            flexGrow: 0,
-            '--ListItem-radius': (theme) => theme.vars.radius.sm,
-            '--List-gap': '8px',
-            mb: 2,
-          }}
-        >
-          <ListItem>
-            <ListItemButton>
-              <SettingsRoundedIcon />
-              Settings
-            </ListItemButton>
-          </ListItem>
-        </List>
-        
-      </Box>
-      <Divider />
-      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-        <Avatar
-          variant="outlined"
-          size="sm"
-          src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
+        <GlobalStyles
+          styles={(theme) => ({
+            ':root': {
+              '--Sidebar-width': '220px',
+              [theme.breakpoints.up('lg')]: {
+                '--Sidebar-width': '240px',
+              },
+            },
+          })}
         />
-        <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Typography level="title-sm">{logintype && logintype?.data?.name}</Typography>
-          <Typography level="body-xs">{logintype?.data?.phone}</Typography>
+        <Box
+          className="Sidebar-overlay"
+          sx={{
+            position: 'fixed',
+            zIndex: 9998,
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            opacity: 'var(--SideNavigation-slideIn)',
+            backgroundColor: 'var(--joy-palette-background-backdrop)',
+            transition: 'opacity 0.4s',
+            transform: {
+              xs: 'translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1) + var(--SideNavigation-slideIn, 0) * var(--Sidebar-width, 0px)))',
+              lg: 'translateX(-100%)',
+            },
+          }}
+          onClick={() => closeSidebar()}
+        />
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <IconButton variant="soft" color="primary" size="sm">
+            <BrightnessAutoRoundedIcon />
+          </IconButton>
+          <Typography level="title-lg" sx={{ color: 'var(--joy-palette-common-white)' }}>Fisheyetech.</Typography>
+          {/* <ColorSchemeToggle sx={{ ml: 'auto' }} /> */}
         </Box>
-        <IconButton size="sm" variant="plain" color="neutral">
-          <LogoutRoundedIcon onClick={handleLogout}/>
-        </IconButton>
-      </Box>
-    </Sheet>
+        <Divider/>
+        {/* <Input size="sm" startDecorator={<SearchRoundedIcon />} placeholder="Search" /> */}
+        <Box
+          sx={{
+            minHeight: 0,
+            overflow: 'hidden auto',
+            flexGrow: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            [`& .${listItemButtonClasses.root}`]: {
+              gap: 1,
+            },
+
+          }}
+        >
+      
+            <List
+              size="sm"
+              sx={{
+                gap: 1,
+                '--List-nestedInsetStart': '30px',
+                '--ListItem-radius': (theme) => theme.vars.radius.sm,
+
+              }}
+            >
+              {
+                sidebarItems.map((eachItem) => (
+                  (eachItem.roles.includes(logintype.data.roles.roleName)&& <ListItem >
+                    <ListItemButton onClick={() => (router.push(eachItem.navPath))} selected={isActive(eachItem.navPath)} >
+                      <ListItemDecorator>
+                        {eachItem.icon}
+                      </ListItemDecorator>
+                      <Typography level="title-sm">{eachItem.label}</Typography>
+                      {/* {eachItem.label} */}
+                    </ListItemButton>
+                  </ListItem>)
+                ))
+              }
+
+            </List>
+          
+
+          <List
+            size="sm"
+            sx={{
+              mt: 'auto',
+              flexGrow: 0,
+              '--ListItem-radius': (theme) => theme.vars.radius.sm,
+              '--List-gap': '8px',
+              mb: 2,
+            }}
+          >
+            <ListItem>
+              <ListItemButton>
+                <SettingsRoundedIcon />
+                Settings
+              </ListItemButton>
+            </ListItem>
+          </List>
+
+        </Box>
+        <Divider />
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <Avatar
+            variant="outlined"
+            size="sm"
+            src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
+          />
+          <Box sx={{ minWidth: 0, flex: 1 }}>
+            <Typography level="title-sm">{logintype && logintype?.data?.name}</Typography>
+            <Typography level="body-xs">{logintype?.data?.phone}</Typography>
+          </Box>
+          <IconButton size="sm" variant="plain" color="neutral">
+            <LogoutRoundedIcon onClick={handleLogout} />
+          </IconButton>
+        </Box>
+      </Sheet>
+    </CssVarsProvider>
   );
 }
