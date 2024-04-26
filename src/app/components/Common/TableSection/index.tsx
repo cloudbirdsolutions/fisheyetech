@@ -163,6 +163,8 @@ return (
     <Box
       className="SearchAndFilters-tabletUp"
       sx={{
+        backgroundColor:"primary.50",
+        px:2,
         borderRadius: 'sm',
         py: 2,
         display: { xs: 'none', sm: 'flex' },
@@ -189,6 +191,7 @@ return (
         borderRadius: 'sm',
         flexShrink: 1,
         minHeight: 0,
+       
       }}
     >
       <Table

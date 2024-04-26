@@ -44,6 +44,7 @@ import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux';
 
 import { RootState } from '@/app/Store/store';
+import { table } from 'console';
 
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -225,7 +226,9 @@ export default function TasksTable() {
       <Box
         className="SearchAndFilters-tabletUp"
         sx={{
+          backgroundColor:"primary.50",
           borderRadius: 'sm',
+          px: 2,
           py: 2,
           display: { xs: 'none', sm: 'flex' },
           flexWrap: 'wrap',
@@ -243,8 +246,7 @@ export default function TasksTable() {
       </Box>
       <Sheet
         className="OrderTableContainer"
-        // variant="outlined"
-        color={'neutral'}
+        variant="outlined"
         sx={{
           display: { xs: 'none', sm: 'initial' },
           width: '100%',

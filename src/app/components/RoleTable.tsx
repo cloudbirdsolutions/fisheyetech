@@ -216,7 +216,9 @@ export default function RoleTable() {
       <Box
         className="SearchAndFilters-tabletUp"
         sx={{
+          backgroundColor:"primary.50",
           borderRadius: 'sm',
+          px: 2,
           py: 2,
           display: { xs: 'none', sm: 'flex' },
           flexWrap: 'wrap',
