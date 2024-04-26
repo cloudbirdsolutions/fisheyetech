@@ -144,16 +144,16 @@ const DepartmentModalForm = (props:any) =>{
         <form style={{display:'flex' , flexDirection: 'column', gap: '8'}} onSubmit={handleSubmit}>
             {row!=null &&
             <Box component="div" display="flex" alignItems="center" flexDirection={'row'} py={2}>
-                <div className='space-y-[2px] w-full'>
-                    <h3 className='text-textdull text-xs mb-2'>ID</h3>
+                <Box component="div" sx={{width:'100%'}}>
+                <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>ID</Typography>
                     <Input size="sm" disabled name="id" value={editformData.id} />
-                </div>
+                </Box>
             </Box>
             }
             <Box component="div" display="flex" alignItems="center" flexDirection={'column'} py={2}>
               <Box component="div" sx={{width:'100%'}}>
-                 <Typography level="h3" fontSize="xl" sx={{ mb: 0.5 }}>Name</Typography>
-                  <Input size="sm" placeholder="Department Name" name="departmentName" value={formData.departmentName} onChange={handleChange}/>
+                 <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Name</Typography>
+                  <Input size="sm" placeholder="Department Name" name="departmentName" value={row!= null?editformData.departmentName : formData.departmentName} onChange={handleChange}/>
                   {departmentError && <p>{departmentError}</p>}
               </Box>
             </Box>

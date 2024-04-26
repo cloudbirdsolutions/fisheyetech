@@ -4,7 +4,7 @@
 import { API_BASE_URL } from '../config';
 import userResponse from './userResponse';
 
-const loginEndpoint = `${API_BASE_URL}/auth/signin`;
+const loginEndpoint = process.env.NEXT_PUBLIC_API_HOST+'/auth/signin';
 
 export async function fetchUserDetails(userData:any) {
   try {
