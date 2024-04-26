@@ -8,10 +8,13 @@ import { ChatProps } from '../types';
 import { chats } from '../data';
 
 interface MyMessagesProps {
-  chats : ChatProps[]
+  chats : ChatProps[],
+  permissionId : number,
+  docId:number
 }
 
 export default function MyMessages(props:MyMessagesProps) {
+  const {permissionId,docId} = props
   const [selectedChat, setSelectedChat] = React.useState<ChatProps>(props.chats[0]);
   return (
     <Sheet
@@ -40,13 +43,18 @@ export default function MyMessages(props:MyMessagesProps) {
           top: 52,
         }}
       >
+        {/* { chats.length > 0 && <>
+        
+        </>} */}
         <ChatsPane
           chats={props.chats}
           selectedChatId={selectedChat.id}
           setSelectedChat={setSelectedChat}
+          permissionId={permissionId}
+          docId={docId}
         />
       </Sheet>
-      <MessagesPane chat={selectedChat} />
+     {props.chats.length > 0 && <MessagesPane chat={selectedChat} />}
     </Sheet>
   );
 }

@@ -5,7 +5,7 @@ import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
 import { useState } from 'react';
 import { useParams } from 'next/navigation'
-import { AccordionGroup, FormControl, FormLabel, Tab, TabList, TabPanel, Tabs, Typography, Table, Sheet, Button, Stack, Link, Divider, Card, CardContent, CardActions, ListItemDecorator } from '@mui/joy';
+import { AccordionGroup, FormControl, FormLabel, Tab, TabList, TabPanel, Tabs, Typography, Table, Sheet, Button, Stack, Link, Divider, Card, CardContent, CardActions, ListItemDecorator, Badge } from '@mui/joy';
 import { Accordion, AccordionDetails, AccordionSummary, Input } from '@mui/joy';
 import { tabClasses } from '@mui/joy/Tab';
 import { useSelector } from 'react-redux';
@@ -147,7 +147,7 @@ export default function Log() {
 
   const [index, setIndex] = React.useState(0);
   const [expandIndex, setExpandIndex] = React.useState<number | null>(0);
-  const [sheetPermissionId, setSheetPermissionId] = React.useState<number>(1);
+  const [sheetPermissionId, setSheetPermissionId] = React.useState<number>(0);
   const params = useParams<{ id: string, document: string }>()
   const [parameters, setParameters] = useState({ id: "", sheetName: "", description: "", parameterMaster: [{ id: "", parameterName: "", fieldMaster: [{ id: "", fieldName: "", fieldId: "" }] }] });
 
@@ -198,13 +198,13 @@ export default function Log() {
         "comments": [
             {
                 "id": 1,
-                "createdAt": "2024-04-26T05:26:59.637Z",
-                "updatedAt": "2024-04-26T05:26:59.637Z",
+                "createdAt": "",
+                "updatedAt": "",
                 "reviewId": 1,
-                "comments": "Temperature limit checked and updated",
+                "comments": "",
                 "createdBy": 1,
                 "users": {
-                    "userName": "Moses"
+                    "userName": ""
                 }
             }
         ]
@@ -215,6 +215,8 @@ export default function Log() {
 
     let fetchFromServer = async()=> {
       let reviewResp = await getDocumentReviews(params.document);
+      let permissionData = await getUserPermission(params.id, logintype.data.id)
+      setSheetPermissionId(permissionData.data[0].permissionType.id)
       setReivews(reviewResp.data)
     } 
     fetchFromServer()
@@ -320,6 +322,8 @@ export default function Log() {
         <Box>
           <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}>
             <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{parameters.sheetName}</Typography>
+            <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{sheetPermissionId}</Typography>
+           
             <Link
               underline="hover"
               color="primary"
@@ -397,7 +401,7 @@ export default function Log() {
                 </TabPanel>
               </Tabs>
             </CardContent>
-            <CardActions buttonFlex="0 1 200px">
+            <CardActions buttonFlex="0 1 220px">
               {/* <Stack direction={'row'} spacing={2} justifyContent="flex-end" alignItems="flex-end" marginTop={2}
                 marginBottom={2}>            <Button size='sm' color='primary' onClick={() => { saveRecordChnages(1) }}>
                   Save draft
@@ -446,11 +450,13 @@ export default function Log() {
               >
                 <TabList >
                   <Tab indicatorPlacement="top" variant='soft' color='neutral'>
-                   Reviews
+                  <Badge badgeContent={reviews.length} variant='solid' color='danger'>
+                   <Typography> Reviews</Typography>
+                   </Badge>
                   </Tab>
                 </TabList>
                 <TabPanel>
-                 {reviews.length > 0 && <MyMessages chats={reviews} />}
+                 <MyMessages chats={reviews} permissionId={sheetPermissionId} docId={parseInt(params.document)}/>
                 </TabPanel>
               </Tabs>
             </CardContent>

@@ -54,10 +54,10 @@ export default function Log() {
   const params = useParams<{ sheet: string, id: string }>()
   const [permision,setPermission] = useState({
     "permissionType": {
-        "id": 1,
-        "createdAt": "2024-04-20T08:38:18.589Z",
-        "updatedAt": "2024-04-20T08:38:18.589Z",
-        "permissionType": "Operator"
+        "id": 0,
+        "createdAt": "",
+        "updatedAt": "",
+        "permissionType": ""
     }
 })
   const [sheetName, setSheetName]= useState('');
@@ -177,9 +177,8 @@ export default function Log() {
       let sheetDetails = await getSheetDetails(params.id)
       let permissionResponse = await getUserPermission()
       setSheetName(sheetDetails.data[0].sheetName)
-        setPermission(permissionResponse.data[0])
+      setPermission(permissionResponse.data[0])
     }
-
     fetchData();
     
   },[])
@@ -189,15 +188,12 @@ export default function Log() {
 
     const fetchData = async () => {
       let resposne = await getDocumentList(params.id)
-      
-
       setDocumentList(resposne.data)
-      
     }
     fetchData()
 
   //eslint-disable-next-line
-  }, [params])
+  }, [params,permision,refreshListIndicator])
 
 
   return (
@@ -223,10 +219,9 @@ export default function Log() {
           >
             Go Back to Task List
           </Link>
-          <Button size='sm' color='primary' startDecorator={<Add />} onClick={() => createDocument(params.id, logintype.data.id, 1)}>
+         { [1].includes(permision.permissionType.id) && <Button size='sm' color='primary' startDecorator={<Add />} onClick={() => createDocument(params.id, logintype.data.id, 1)}>
             Create New Document
-          </Button>
-
+          </Button>}
         </Stack>
         </Stack>
         <Divider/>
