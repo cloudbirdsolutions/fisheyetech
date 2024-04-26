@@ -67,7 +67,7 @@ export default function ListPermission(props: any) {
       </td>
 
       <td>
-        <Button type="submit">Delete Job</Button>
+        {/* <Button type="submit">Delete Job</Button> */}
       </td>
     </tr>
   ))

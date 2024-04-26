@@ -27,7 +27,6 @@ interface LogProps {
 
 async function getSheetDetails(sheetid: string) {
   try {
-
     const response = await fetch(`${API_BASE_URL}/sheetmaster/get-sheets?id=${sheetid}`, {
       method: 'GET',
       headers: {
@@ -49,9 +48,18 @@ async function getSheetDetails(sheetid: string) {
 
 
 
+
+
 export default function Log() {
   const params = useParams<{ sheet: string, id: string }>()
-  const [permisionId,setPermissionId] = useState(null)
+  const [permision,setPermission] = useState({
+    "permissionType": {
+        "id": 1,
+        "createdAt": "2024-04-20T08:38:18.589Z",
+        "updatedAt": "2024-04-20T08:38:18.589Z",
+        "permissionType": "Operator"
+    }
+})
   const [sheetName, setSheetName]= useState('');
 
   const [documentList, setDocumentList] = useState([{
@@ -62,6 +70,28 @@ export default function Log() {
   const router = useRouter()
   const logintype = useSelector((state: RootState) => state?.user.data);
   const [refreshListIndicator, setRefreshListIndicator] = useState(Date.now())
+
+  async function getUserPermission() {
+    try {
+  
+      const response = await fetch(`${API_BASE_URL}/joballocation/get-permissions?sheetId=${parseInt(params.id)}&userId=${logintype.data.id}`, {
+        method: 'GET',
+        headers: {
+          Accept: "application/json",
+          'Content-Type': 'application/json',
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to fetch user details: ' + response.statusText);
+      }
+  
+      const data = await response.json();
+      return data
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    }
+  }
 
   async function createDocument(sheetId: string, userId: number, transitionId: number) {
 
@@ -93,7 +123,7 @@ export default function Log() {
   const getDocumentList:any = useCallback(async(sheetid: string) => {
     try {
 
-      const url = [2, 3].includes(2) ? `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}` : `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}&userId=${logintype.data.id}`
+      const url = [2, 3].includes(permision.permissionType.id) ? `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}` : `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}&userId=${logintype.data.id}`
 
       const response = await fetch(url, {
         method: 'GET',
@@ -146,8 +176,11 @@ export default function Log() {
     const fetchData = async () => {
       let resposne = await getDocumentList(params.id)
       let sheetDetails = await getSheetDetails(params.id)
+      let permissionResponse = await getUserPermission()
+
       setDocumentList(resposne.data)
       setSheetName(sheetDetails.data[0].sheetName)
+      setPermission(permissionResponse.data[0])
     }
     fetchData()
 
@@ -162,6 +195,7 @@ export default function Log() {
         <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full' >
           {/* <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}> */}
           <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{sheetName}</Typography>
+          <Typography level='title-sm' component="h1" sx={{ marginBottom: "12px" }}>{permision.permissionType.permissionType}</Typography>
           <Link
             underline="hover"
             color="primary"
