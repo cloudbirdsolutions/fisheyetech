@@ -14,6 +14,7 @@ import BlockIcon from "@mui/icons-material/Block";
 import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import ListPermission from "./ListPermission";
 import Link from "@mui/joy/Link";
+import { API_BASE_URL } from "@/app/config";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -69,7 +70,7 @@ export default function JoballocationTable() {
     const getData = async () => {
       try {
         const response = await fetch(
-          `http://51.79.147.139:3000/users/get`,
+          `${API_BASE_URL}/users/get`,
           // const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/users/get`,
           {
             method: "GET",

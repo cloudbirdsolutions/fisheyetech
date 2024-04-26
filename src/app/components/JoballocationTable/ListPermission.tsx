@@ -14,6 +14,7 @@ import { AppDispatch, RootState } from "@/app/Store/store";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { API_BASE_URL } from "@/app/config";
 
 export default function ListPermission(props: any) {
 
@@ -74,7 +75,7 @@ export default function ListPermission(props: any) {
   useEffect(() => {
     const getalljobs = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/joballocation/get-user-jobs?id=${props?.selectedrows?.id}`, {
+        const response = await fetch(`${API_BASE_URL}/joballocation/get-user-jobs?id=${props?.selectedrows?.id}`, {
           method: 'GET',
           headers: {
             Accept: "application/json",
@@ -98,7 +99,7 @@ export default function ListPermission(props: any) {
 
     const getdepartment = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/departments/get`, {
+        const response = await fetch(`${API_BASE_URL}/departments/get`, {
           method: 'GET',
           headers: {
             Accept: "application/json",
@@ -123,7 +124,7 @@ export default function ListPermission(props: any) {
 
     const getPermission = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/permissiontype/get`, {
+        const response = await fetch(`${API_BASE_URL}/permissiontype/get`, {
           method: 'GET',
           headers: {
             Accept: "application/json",
@@ -147,7 +148,7 @@ export default function ListPermission(props: any) {
 
     const getshift = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetshiftmaster/get-shift?id=${props?.selectedrows?.id}`, {
+        const response = await fetch(`${API_BASE_URL}/sheetshiftmaster/get-shift?id=${props?.selectedrows?.id}`, {
           method: 'GET',
           headers: {
             Accept: "application/json",
@@ -181,7 +182,7 @@ export default function ListPermission(props: any) {
     if (e.target.name === 'departmentId') {
       try {
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/departmentsheets/get-sheets?id=${parseInt(value)}`, {
+        const response = await fetch(`${API_BASE_URL}/departmentsheets/get-sheets?id=${parseInt(value)}`, {
           method: 'GET',
           headers: {
             Accept: "application/json",
@@ -207,7 +208,7 @@ export default function ListPermission(props: any) {
     if (e.target.name === 'sheetId') {
       try {
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetshiftmaster/get-shift?id=${parseInt(value)}`, {
+        const response = await fetch(`${API_BASE_URL}/sheetshiftmaster/get-shift?id=${parseInt(value)}`, {
           method: 'GET',
           headers: {
             Accept: "application/json",
