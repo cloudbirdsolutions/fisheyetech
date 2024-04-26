@@ -70,7 +70,7 @@ export default function JoballocationTable() {
     const getData = async () => {
       try {
         const response = await fetch(
-          `${API_BASE_URL}/users/get`,
+          `${process.env.NEXT_PUBLIC_API_HOST}/users/get`,
           // const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/users/get`,
           {
             method: "GET",

@@ -4,7 +4,6 @@ import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
 
 import JoballocationTable from '@/app/components/JoballocationTable/JoballocationTable';
-import { AnyIfEmpty } from 'react-redux';
 
 export default function Joballocation(props:any) {
   const [label, setLabel] = React.useState<string>('');
