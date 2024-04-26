@@ -292,7 +292,7 @@ export default function Log() {
                   <Accordion key={`paramater_${paramter.id}`}
                   expanded={index === expandIndex}
                   onChange={(event, expanded) => {
-                    setExpandIndex(expanded ? expandIndex : index);
+                    setExpandIndex(expanded ? index : null);
                   }}
                   >
                     <AccordionSummary sx={{ backgroundColor: 'var(--joy-palette-background-backdrop)' }}>
