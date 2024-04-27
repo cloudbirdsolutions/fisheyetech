@@ -7,6 +7,8 @@ import {useRouter} from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function RoleList() {
     const dispatch = useDispatch<AppDispatch>();
@@ -50,17 +52,16 @@ export default function RoleList() {
             return;
           }
 
-          try {
-            // const userData = Object.fromEntries();
-             
-            dispatch(deletedocument(formData)).then(() => {
-              router.push('/deletedocument');
+         
+            dispatch(deletedocument(formData)).then((res) => {
+                res.payload.statusCode == 200 ? (
+                    toast.success(res.payload.message),
+                    router.push('/deletedocument') 
+                ): (
+                    toast.error(res.payload.message)
+                )
             })
              
-           } catch (error) {
-             console.error('Failed to create user:', error);
-             // Handle error (e.g., display error message)
-           }
     }
 
           

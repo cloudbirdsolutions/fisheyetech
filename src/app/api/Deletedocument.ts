@@ -1,9 +1,6 @@
-
-
 const loginEndpoint = process.env.NEXT_PUBLIC_API_HOST+'/sheetdocid/delete';
 
 export async function deletedocumentapi(id:any) {
-  try {
     const response = await fetch(loginEndpoint, {
       method: 'POST',
       headers: {
@@ -13,19 +10,13 @@ export async function deletedocumentapi(id:any) {
     });
 
     if (!response.ok) {
-      try {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to Delete document');
-      } catch (error) {
-        throw new Error('Failed to Delete');
-      }
+        //toast.success(errorData.message);
+        return errorData;
     }
 
     const data = await response.json();  
-
+   // toast.success(data.message);
     return data;
-} catch (error) {
-    console.error('Error fetching document details:', error);
-    throw error;
-  }
+
 }
