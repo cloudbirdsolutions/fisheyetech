@@ -13,12 +13,12 @@ import { Add } from '@mui/icons-material';
 import { useRouter } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux';
 
-import { RootState } from '@/app/Store/store';
+import { AppDispatch, RootState } from '@/app/Store/store';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { API_BASE_URL } from '@/app/config'; 
- 
+import {createdocument} from '@/app/Reducers/CreateDocumentSlice';
 
 interface LogProps {
   sheetid: string
@@ -51,6 +51,9 @@ async function getSheetDetails(sheetid: string) {
 
 
 export default function Log() {
+  const createdocuments = useSelector((state:any) => state?.createdocuments?.data);
+
+  const dispatch:any = useDispatch<AppDispatch>();
   const params = useParams<{ sheet: string, id: string }>()
   const [permision,setPermission] = useState({
     "permissionType": {
@@ -94,30 +97,22 @@ export default function Log() {
   }
 
   async function createDocument(sheetId: string, userId: number, transitionId: number) {
-
-    try {
-
-      const response = await fetch(`${API_BASE_URL}/sheetdocid/create`, {
-        method: 'POST',
-        headers: {
-          Accept: "application/json",
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ "sheetId": parseInt(sheetId), "userId": userId, "transitionId": transitionId }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch user details: ' + response.statusText);
-      }
-
-      const data = await response.json();
-      setRefreshListIndicator(Date.now());
-      toast.success(data.message);
-      return data
-    } catch (error) {
-      console.error('Error fetching user details:', error);
+    const passData = {
+      'sheetId' : sheetId,
+      'userId' : userId,
+      'transitionId' : transitionId
     }
+    dispatch(createdocument(passData)).then((res:any) => {
+     
+      res.payload.status == 200 ? (
+        toast.success(res.payload.message),
+        setRefreshListIndicator(Date.now()),
+        router.push('/tasks') 
+      ) : (
+        toast.error(res.payload.message)
+      )
 
+    })
   }
 
   const getDocumentList = async(sheetid: string) => {
@@ -181,7 +176,7 @@ export default function Log() {
     }
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  },[createdocuments])
 
 
   React.useEffect(() => {
