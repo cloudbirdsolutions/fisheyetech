@@ -56,13 +56,13 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function JoballocationTable() {
+export default function JoballocationTable(props:any) {
   const [order, setOrder] = React.useState<Order>("desc");
   const [rows, setRows] = React.useState([
     { id: "", createdAt: "", updatedAt: "", userName: "", statusName: "" },
   ]);
 
-  const [listsec, setListsec] = React.useState(false);
+  
   const [selectedrow, setSelectedRow] = React.useState();
 
   // const data = await getData()
@@ -98,7 +98,7 @@ export default function JoballocationTable() {
     getData();
   }, []);
   const jobs = React.useCallback((row: any) => {
-    setListsec(true);
+    props.setListsec(true);
     setSelectedRow(row);
   }, []);
 
@@ -148,10 +148,10 @@ export default function JoballocationTable() {
 
   return (
     <>
-      {listsec === false && (
+      {props.listsec === false && (
         <TableSection tableHeaders={headers} tableRows={tablerows} />
       )}
-      {listsec === true && <ListPermission selectedrows={selectedrow} />}
+      {props.listsec === true && <ListPermission selectedrows={selectedrow} />}
     </>
   );
 }
