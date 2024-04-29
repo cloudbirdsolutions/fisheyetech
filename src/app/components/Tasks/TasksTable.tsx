@@ -45,7 +45,13 @@ import { useSelector } from "react-redux";
 
 import { API_BASE_URL } from '@/app/config';
 import { RootState } from "@/app/Store/store";
-import { Tooltip } from "@mui/joy";
+import { Stack, Tooltip } from "@mui/joy";
+import TableSection from "../Common/TableSection";
+
+
+
+
+
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -95,13 +101,127 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
 //   );
 // }
 
+
+
 export default function TasksTable() {
   const [order, setOrder] = React.useState<Order>("desc");
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [open, setOpen] = React.useState(false);
   const [rows, setRows] = React.useState();
 
+  const [userRemarks, setUserRemarks] = React.useState('');
+
+
+  const [departmentRemarks, setDepartmentRemark] = React.useState([
+    {
+      "id": 1,
+      "createdAt": "",
+      "updatedAt": "",
+      "createdBy": 1,
+      "departmentId": 1,
+      "remarks": "",
+      "departments": {
+        "id": 1,
+        "createdAt": "",
+        "updatedAt": "",
+        "departmentName": ""
+      }
+    }
+  ])
+
+  const [remarksDepartment, setRemarksDepartment] = React.useState(0);
+
+  const [departmentList, setDepartmentList] = React.useState([
+    {
+        "departments": {
+            "id": 1,
+            "createdAt": "2024-04-20T08:20:59.096Z",
+            "updatedAt": "2024-04-20T08:20:59.096Z",
+            "departmentName": "CHP"
+        }
+    }
+])
+
   const logintype = useSelector((state: RootState) => state?.user.data);
+
+
+  const getRemarksByUser = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/remarks/get-user-remarks?userId=${logintype.data.id}`, {
+        method: 'GET',
+        headers: {
+          Accept: "application/json",
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch user details: ' + response.statusText);
+      }
+
+      const data = await response.json();
+      return data
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    }
+  }
+  const getDepartmentsByUser = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/joballocation/get-user-departments?userId=${logintype.data.id}`, {
+        method: 'GET',
+        headers: {
+          Accept: "application/json",
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch user details: ' + response.statusText);
+      }
+
+      const data = await response.json();
+      return data
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    }
+  }
+  const savedepartmentRemarks = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/remarks/create`, {
+        method: 'POST',
+        headers: {
+          Accept: "application/json",
+          'Content-Type': 'application/json',
+        },
+        body : JSON.stringify({departmentId:remarksDepartment,remarks:userRemarks,createdBy:logintype.data.id})
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch user details: ' + response.statusText);
+      }
+
+      const data = await response.json();
+      return data
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    }
+  }
+
+  
+
+  const followUpHeader = ["Department", "CreatedAt", "UpdatedAt", "Remarks", "Status"]
+
+  const followUpRow = departmentRemarks.map(rem => (
+    <tr key={`document_id_${rem.id}`}>
+      <td><Typography level="body-xs">{rem?.id}</Typography></td>
+      <td><Typography level="body-xs">{rem?.departments.departmentName}</Typography></td>
+      <td><Typography level="body-xs">{rem?.createdAt}</Typography></td>
+      <td><Typography level="body-xs">{rem?.updatedAt}</Typography></td>
+      <td><Typography level="body-xs">{rem?.remarks}</Typography></td>
+      <td><Typography level="body-xs">New</Typography></td>
+    </tr>
+  ))
+
 
   const RowMenu = (props: { sheetid: any; sheetName: any }) => {
     return (
@@ -124,8 +244,8 @@ export default function TasksTable() {
   React.useEffect(() => {
     const getData = async () => {
       try {
-         
-        const url = [4].includes(logintype.data.rolesId) ? `${API_BASE_URL}/joballocation/get-all-jobs` :`${API_BASE_URL}/joballocation/get-user-jobs?id=${logintype.data.id}`
+
+        const url = [4].includes(logintype.data.rolesId) ? `${API_BASE_URL}/joballocation/get-all-jobs` : `${API_BASE_URL}/joballocation/get-user-jobs?id=${logintype.data.id}`
         // const url = `http://51.79.147.139:3000/joballocation/get-user-jobs?id=${logintype.data.id}`
         const response = await fetch(url, {
           method: "GET",
@@ -150,8 +270,24 @@ export default function TasksTable() {
     };
 
     getData();
+
+    const fetchRemarks = async () => {
+      let depRem = await getRemarksByUser()
+      let departments = await getDepartmentsByUser()
+      setDepartmentRemark(depRem.data)
+      setDepartmentList(departments.data)
+    }
+
+    fetchRemarks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleChange = (
+    event: React.SyntheticEvent | null,
+    newValue: string | null,
+  ) => {
+   setRemarksDepartment(parseInt(newValue?newValue:"0"));
+  };
 
   const renderFilters = () => (
     <React.Fragment>
@@ -192,6 +328,38 @@ export default function TasksTable() {
   );
   return (
     <React.Fragment>
+      <Sheet>
+        <Stack direction={'row'} marginBottom={1}>
+          <Typography level="h2">Follow Ups</Typography>
+
+        </Stack>
+
+        <Box margin={2}>
+          {/* <Typography level="title-sm" >Add New Remarks</Typography> */}
+          <Stack gap={2} >
+          <FormControl orientation="horizontal">
+            <FormLabel>Department</FormLabel>
+            <Select placeholder="Select a department" onChange={handleChange}>
+              {departmentList.map(dep=>(<Option value={dep.departments.id}>
+                  {dep.departments.departmentName}
+              </Option>))}
+            </Select>
+          </FormControl>
+          <FormControl orientation="horizontal">
+            <FormLabel>Remarks</FormLabel>
+            <Input value={userRemarks} onChange={(e) => { setUserRemarks(e.target.value) }} ></Input>
+            <Button variant="solid" sx={{ ml: 2 }} onClick={(e)=>{savedepartmentRemarks()}}>Add New Remarks</Button>
+          </FormControl>
+          
+          </Stack>
+        </Box>
+
+        <TableSection tableHeaders={followUpHeader} tableRows={followUpRow} />
+      </Sheet>
+      <Divider sx={{ my: 2 }} />
+      <Typography level="h2" component="h1">
+        Tasks
+      </Typography>
       <Sheet
         className="SearchAndFilters-mobile"
         sx={{
@@ -350,8 +518,8 @@ export default function TasksTable() {
                         row.permissionType.permissionType === "ACTIVE"
                           ? "success"
                           : row.permissionType.permissionType === "Operator"
-                          ? "success"
-                          : "danger"
+                            ? "success"
+                            : "danger"
                       }
                     >
                       {row.permissionType.permissionType}
