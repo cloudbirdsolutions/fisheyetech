@@ -75,9 +75,9 @@ export default function SubLayout({ children }: Readonly<{
             justifyContent: 'space-between',
           }}
         >
-          <Typography level="h2" component="h1">
+          {/* <Typography level="h2" component="h1">
             Tasks
-          </Typography>
+          </Typography> */}
         </Box>
 
         {children}
