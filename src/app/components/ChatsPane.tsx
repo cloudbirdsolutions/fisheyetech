@@ -19,7 +19,7 @@ import { ToastContainer, toast } from 'react-toastify';
 type ChatsPaneProps = {
   chats: ChatProps[];
   setSelectedChat: (chat: ChatProps) => void;
-  selectedChatId: number;
+  selectedChatId: string;
   permissionId: number;
   docId: number
 };
@@ -147,7 +147,7 @@ export default function ChatsPane(props: ChatsPaneProps) {
 
           </FormControl>
         </>}
-        {chats.map((chat) => (
+        {chats.map((chat) => (  
           <ChatListItem
             key={chat.id}
             {...chat}

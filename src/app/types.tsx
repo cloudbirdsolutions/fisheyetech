@@ -1,6 +1,9 @@
 export type UserProps = {
+  avatar: string;
+  online: any;
+  name: string;
   userName: string;
-  };
+};
 
 export type MessageProps = {
   id: number;
@@ -9,17 +12,20 @@ export type MessageProps = {
   createdAt: string;
   updatedAt: string;
   createdBy :number;
-  users: UserProps | 'You';
-  
+  users : {
+    userName: string;
+  } | "You"
 };
 
 export type ChatProps = {
-  id: number;
+  id: string;
   createdAt: string;
   updatedAt: string;
   docId:number;
   createdBy :number;
   summary:string;
-  users: UserProps;
+  users : {
+    userName: string;
+  }
   comments: MessageProps[];
 };

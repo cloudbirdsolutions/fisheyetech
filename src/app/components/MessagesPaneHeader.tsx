@@ -71,7 +71,7 @@ export default function MessagesPaneHeader(props: MessagesPaneHeaderProps) {
           >
             {sender.name}
           </Typography>
-          <Typography level="body-sm">{sender.username}</Typography>
+          <Typography level="body-sm">{sender.userName}</Typography>
         </div>
       </Stack>
       <Stack spacing={1} direction="row" alignItems="center">

@@ -3,8 +3,7 @@
 const loginEndpoint = process.env.NEXT_PUBLIC_API_HOST+'/departments/delete';
 
 export async function deletedepartmentapi(id:any) {
-  try {
-    const response = await fetch(loginEndpoint, {
+  const response = await fetch(loginEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -13,19 +12,11 @@ export async function deletedepartmentapi(id:any) {
     });
 
     if (!response.ok) {
-      try {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to Delete department');
-      } catch (error) {
-        throw new Error('Failed to Delete');
-      }
+        return errorData;
     }
 
     const data = await response.json();  
 
     return data;
-} catch (error) {
-    console.error('Error fetching department details:', error);
-    throw error;
-  }
 }

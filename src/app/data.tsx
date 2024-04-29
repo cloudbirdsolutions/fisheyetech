@@ -2,13 +2,16 @@ import { ChatProps, UserProps } from './types';
 
 export const users: UserProps[] = [
   {
-   userName: 'Anand',
+    userName: 'Anand',
+    avatar: '',
+    online: undefined,
+    name: ''
   }
 ];
 
 export const chats: ChatProps[] = [
   {
-    id: 1,
+    id: "1",
     users: users[0],
     createdAt : "Wednesday 9:00am",
     updatedAt : "Wednesday 9:00am",

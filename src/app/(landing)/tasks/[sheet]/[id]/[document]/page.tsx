@@ -1,13 +1,10 @@
 'use client';
 import * as React from 'react';
-import { CssVarsProvider } from '@mui/joy/styles';
-import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
 import { useState } from 'react';
 import { useParams } from 'next/navigation'
 import { AccordionGroup, FormControl, FormLabel, Tab, TabList, TabPanel, Tabs, Typography, Table, Sheet, Button, Stack, Link, Divider, Card, CardContent, CardActions, ListItemDecorator, Badge } from '@mui/joy';
 import { Accordion, AccordionDetails, AccordionSummary, Input } from '@mui/joy';
-import { tabClasses } from '@mui/joy/Tab';
 import { useSelector } from 'react-redux';
 
 import { RootState } from "@/app/Store/store";
@@ -186,7 +183,7 @@ export default function Log() {
 
   const [reviews,setReivews] = useState<ChatProps[]>([
     {
-        "id": 1,
+        "id": "1",
         "createdAt": "2024-04-26T05:26:59.637Z",
         "updatedAt": "2024-04-26T05:26:59.637Z",
         "docId": 232,
@@ -220,8 +217,8 @@ export default function Log() {
       setReivews(reviewResp.data)
     } 
     fetchFromServer()
-
-  },[])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[params])
 
 
   React.useEffect(() => {
@@ -236,16 +233,18 @@ export default function Log() {
       setSheetPermissionId(permissionData.data[0].permissionType.id)
     }
     fetchData();
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params])
 
   React.useEffect(() => {
     setCurrentShift(shiftDetails[index].shiftId)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index])
 
   React.useEffect(() => {
     let records = jmespath.search(parameters, "parameterMaster[].fieldMaster[].{fieldId:id,parameterId:parameterId}")
     setFieldRecord(records)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [parameters])
 
   React.useEffect(() => {
@@ -269,8 +268,7 @@ export default function Log() {
 
     }
     fetchData();
-
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentShift, fieldRecord, relaodData])
 
   const getFieldValue = (fieldId: string, parameterId: string) => {

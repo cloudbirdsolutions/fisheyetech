@@ -11,6 +11,7 @@ import DepartmentLists from '../../components/DepartmentLists';
 import Stack from '@mui/joy/Stack';
 import modalContext from '@/app/context/modalContext';
 import DepartmentModalForm from '@/app/components/DepartmentModalForm/DepartmentModalForm';
+import { ToastContainer } from 'react-toastify';
 
 export default function DepartmentList() {
   const [label, setLabel] = React.useState<string>('');
@@ -51,7 +52,7 @@ export default function DepartmentList() {
           <modalContext.Provider value={row}>
           <DepartmentModalForm open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
           </modalContext.Provider>
-      
+      <ToastContainer/>
       </>
   );
 }

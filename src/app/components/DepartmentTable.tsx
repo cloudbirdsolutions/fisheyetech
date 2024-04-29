@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../Store/store";
 import { useRouter } from "next/navigation";
 import { deletedepartment } from "@/app/Reducers/DeleteDepartmentSlice";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -73,24 +75,21 @@ export default function DepartmentTable(props: any) {
   const router = useRouter();
 
   const HandleDeleteFunction = (id: any) => {
-    try {
-      // const userData = Object.fromEntries();
-
-      dispatch(deletedepartment(id)).then(() => {
-        router.push("/departmentlist");
-      });
-    } catch (error) {
-      console.error("Failed to Delete user:", error);
-      // Handle error (e.g., display error message)
-    }
+    dispatch(deletedepartment(id)).then((res) => {
+      res.payload.statusCode == 200 ? (
+        toast.success(res.payload.message),
+      router.push("/departmentlist")
+      ) : (
+        toast.error(res.payload.message)
+      )
+    });
   };
 
   // const data = await getData()
   React.useEffect(() => {
     const getData = async () => {
-      try {
         const response = await fetch(
-          `http://51.79.147.139:3000/departments/get`,
+          `${process.env.NEXT_PUBLIC_API_HOST}/departments/get`,
           {
             // const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/departments/get`, {
             method: "GET",
@@ -102,18 +101,14 @@ export default function DepartmentTable(props: any) {
         );
 
         if (!response.ok) {
-          throw new Error(
-            "Failed to fetch user details: " + response.statusText
-          );
+          const errorData = await response.json();
+          toast.error(errorData.message)
         }
 
         const data = await response.json();
-
+       //toast.success(data.message)
         setRows(data.data);
-      } catch (error) {
-        console.error("Error fetching user details:", error);
-      }
-    };
+    }
 
     getData();
   }, [createdepartment, deletedepartments, editdepartment]);
@@ -147,5 +142,9 @@ export default function DepartmentTable(props: any) {
     )
   );
 
-  return <TableSection tableHeaders={headers} tableRows={tablerows} />;
+  return (
+  <>
+  <TableSection tableHeaders={headers} tableRows={tablerows} />
+  </>
+  )
 }

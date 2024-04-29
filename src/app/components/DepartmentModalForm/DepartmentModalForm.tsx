@@ -18,6 +18,8 @@ import Input from '@mui/joy/Input';
 import { useRouter } from 'next/navigation';
 import modalContext from "@/app/context/modalContext";
 import { Box, ModalDialog } from '@mui/joy';
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const DepartmentModalForm = (props:any) =>{
 
@@ -92,9 +94,14 @@ const DepartmentModalForm = (props:any) =>{
         try {
           // const userData = Object.fromEntries();
            
-          dispatch(editdepartment(editformData)).then(() => {
-            props.setOpen(false);
-            router.push('/departmentlist');
+          dispatch(editdepartment(editformData)).then((res) => {
+            res.payload.statusCode == 200 ? (
+              toast.success(res.payload.message),
+            props.setOpen(false),
+            router.push('/departmentlist') 
+            ) : (
+              toast.error(res.payload.message)
+            )
           })
            
          } catch (error) {
@@ -105,9 +112,14 @@ const DepartmentModalForm = (props:any) =>{
         try {
           // const userData = Object.fromEntries();
            
-          dispatch(createdepartment(formData)).then(() => {
-            props.setOpen(false);
-            router.push('/departmentlist');
+          dispatch(createdepartment(formData)).then((res) => {
+            res.payload.statusCode == 200 ? (
+              toast.success(res.payload.message),
+            props.setOpen(false),
+            router.push('/departmentlist')
+            ) : (
+              toast.error(res.payload.message)
+            )
           })
            
          } catch (error) {

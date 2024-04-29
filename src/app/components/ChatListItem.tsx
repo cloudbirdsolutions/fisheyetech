@@ -11,15 +11,17 @@ import { ChatProps, MessageProps, UserProps } from '../types';
 import { toggleMessagesPane } from '../utils';
 
 type ChatListItemProps = ListItemButtonProps & {
-  id: number;
+  id: string;
   createdAt: string;
   updatedAt: string;
   docId:number;
   createdBy :number;
   summary:string;
-  users: UserProps;
+  users: {
+    userName: string;
+  }
   comments: MessageProps[];
-  selectedChatId?: number;
+  selectedChatId?: string;
   setSelectedChat: (chat: ChatProps) => void;
 };
 

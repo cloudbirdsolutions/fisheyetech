@@ -180,7 +180,7 @@ export default function Log() {
       setPermission(permissionResponse.data[0])
     }
     fetchData();
-    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
 
@@ -192,7 +192,7 @@ export default function Log() {
     }
     fetchData()
 
-  //eslint-disable-next-line
+  //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params,permision,refreshListIndicator])
 
 

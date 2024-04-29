@@ -20,6 +20,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../Store/store";
 import { useRouter } from "next/navigation";
 import { deletedepartment } from "../Reducers/DeleteDepartmentSlice";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function DepartmentLists(props: any) {
   const [listItems, setlistItems] = React.useState([]);
   const createdepartment = useSelector(
@@ -34,21 +37,18 @@ export default function DepartmentLists(props: any) {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const HandleDeleteFunction = (id: any) => {
-    try {
-      // const userData = Object.fromEntries();
-
-      dispatch(deletedepartment(id)).then(() => {
-        router.push("/departmentlist");
+      dispatch(deletedepartment(id)).then((res) => {
+        res.payload.statusCode == 200 ? (
+          toast.success(res.payload.message),
+        router.push("/departmentlist")
+        ) : (
+          toast.error(res.payload.message)
+        )
       });
-    } catch (error) {
-      console.error("Failed to Delete user:", error);
-      // Handle error (e.g., display error message)
-    }
   };
 
   React.useEffect(() => {
     const getData = async () => {
-      try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_HOST}/departments/get`,
           {
@@ -62,23 +62,20 @@ export default function DepartmentLists(props: any) {
         );
 
         if (!response.ok) {
-          throw new Error(
-            "Failed to fetch department details: " + response.statusText
-          );
+          const errorData = await response.json();
+          toast.error(errorData.message)
         }
 
         const data = await response.json();
-
+        //toast.success(data.message)
         setlistItems(data.data);
-      } catch (error) {
-        console.error("Error fetching department details:", error);
-      }
-    };
-
+      } 
+    
     getData();
   }, [createdepartment, deletedepartments, editdepartment]);
 
   return (
+    <>
     <Box sx={{ display: { xs: "block", sm: "none" } }}>
       {listItems &&
         listItems.map((listItem: any) => (
@@ -160,5 +157,6 @@ export default function DepartmentLists(props: any) {
         </IconButton>
       </Box>
     </Box>
+  </>
   );
 }
