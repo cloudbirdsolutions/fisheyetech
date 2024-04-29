@@ -35,7 +35,7 @@ export default function MessagesPane(props: MessagesPaneProps) {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ reviewId:chat.id, createdBy:logintype.data.id,comments:textAreaValue})
+        body: JSON.stringify({ reviewId: parseInt(chat.id), createdBy: logintype.data.id ,comments:textAreaValue})
       });
       
       toast.success("Review Created successfully please add comments");
