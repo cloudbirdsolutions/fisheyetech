@@ -59,7 +59,8 @@ export default function Followups() {
 
     const getRemarksByUser = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/remarks/get-user-remarks?userId=${logintype.data.id}`, {
+            const response = await fetch(`${API_BASE_URL}/remarks/get-user-remarks?userId=${logintype.data.rolesId}`,
+             {
                 method: 'GET',
                 headers: {
                     Accept: "application/json",
@@ -124,7 +125,7 @@ export default function Followups() {
     const followUpRow = departmentRemarks.map(rem => (
         <tr key={`document_id_${rem.id}`}>
             <td><Typography level="body-xs">{rem?.id}</Typography></td>
-            {/* <td><Typography level="body-xs">{rem?.departments.departmentName}</Typography></td> */}
+            <td><Typography level="body-xs">{rem?.departments.departmentName}</Typography></td>
             <td><Typography level="body-xs">{rem?.createdAt}</Typography></td>
             <td><Typography level="body-xs">{rem?.updatedAt}</Typography></td>
             <td><Typography level="body-xs">{rem?.remarks}</Typography></td>

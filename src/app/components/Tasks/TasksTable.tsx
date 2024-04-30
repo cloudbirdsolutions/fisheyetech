@@ -103,9 +103,6 @@ export default function TasksTable() {
   const [open, setOpen] = React.useState(false);
   const [rows, setRows] = React.useState();
 
-  const [userRemarks, setUserRemarks] = React.useState('');
-
-
   const [departmentRemarks, setDepartmentRemark] = React.useState([
     {
       "id": 1,
@@ -123,7 +120,7 @@ export default function TasksTable() {
     }
   ])
 
-  const [remarksDepartment, setRemarksDepartment] = React.useState(0);
+ 
 
   const [departmentList, setDepartmentList] = React.useState([
     {
@@ -180,12 +177,6 @@ export default function TasksTable() {
     }
   }
  
-
-  
-
-  
-
-
   const RowMenu = (props: { sheetid: any; sheetName: any }) => {
     return (
       <Tooltip title="Documents" arrow color="primary" placement="right">
@@ -243,7 +234,8 @@ export default function TasksTable() {
 
     fetchRemarks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  },
+   []);
 
  
 
