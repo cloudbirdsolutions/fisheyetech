@@ -22,7 +22,11 @@ import createdepartmentSlice from '../Reducers/CreateDepartmentSlice';
 import deletedepartmentSlice from '../Reducers/DeleteDepartmentSlice';
 import editdepartmentSlice from '../Reducers/editDepartmentSlice';
 import deleteEntitySlice from '../Reducers/DeleteEntitySlice';
-
+import createroleSlice from '../Reducers/CreateRoleSlice';
+import deleteroleSlice from '../Reducers/DeleteRoleSlice';
+import editroleSlice from '../Reducers/editRoleSlice';
+import deletedocumentSlice from '../Reducers/DeleteDocumetSlice';
+import createdocumentSlice from '../Reducers/CreateDocumentSlice';
 const persistConfig = {
   key: 'root',
   storage,
@@ -36,11 +40,16 @@ const appReducer = combineReducers({
   editusers: editUserSlice,
   editentity: editentitySlice,
   createentity: createentitySlice,
+  createdocuments: createdocumentSlice,
   createjobs: createjobSlice,
   createdepartments: createdepartmentSlice,
   deletedepartments: deletedepartmentSlice,
   editdepartments: editdepartmentSlice,
-  deleteentity: deleteEntitySlice
+  deleteentity: deleteEntitySlice,
+  createroles: createroleSlice,
+  deleteroles: deleteroleSlice,
+  editroles: editroleSlice,
+  deletedocuments: deletedocumentSlice,
 });
 
 const rootReducer = (state:any, action:any) => {

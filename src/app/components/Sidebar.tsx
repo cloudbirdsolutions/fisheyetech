@@ -13,23 +13,15 @@ import LinearProgress from '@mui/joy/LinearProgress';
 import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton, { listItemButtonClasses } from '@mui/joy/ListItemButton';
-import ListItemContent from '@mui/joy/ListItemContent';
 import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
-import Stack from '@mui/joy/Stack';
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
-import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
 import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
-import QuestionAnswerRoundedIcon from '@mui/icons-material/QuestionAnswerRounded';
-import GroupRoundedIcon from '@mui/icons-material/GroupRounded';
 import SupportRoundedIcon from '@mui/icons-material/SupportRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import BrightnessAutoRoundedIcon from '@mui/icons-material/BrightnessAutoRounded';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import DeleteOutlineRounded from '@mui/icons-material/DeleteOutlineRounded';
 import PeopleIcon from '@mui/icons-material/People';
 
 import ColorSchemeToggle from './ColorSchemeToggle';
@@ -164,17 +156,23 @@ const sidebarItems = [
     roles: ['admin', 'user']
   },
   {
-    label: 'Reviews',
-    navPath: '/reviews',
-    icon: <AssignmentRoundedIcon />,
-    roles: ['admin', 'user']
+    label: 'Delete Document',
+    navPath: '/deletedocument',
+    icon: <DeleteOutlineRounded />,
+    roles: ['admin']
   },
-  {
-    label: 'Comments',
-    navPath: '/messages',
-    icon: <QuestionAnswerRoundedIcon />,
-    roles: ['admin', 'user']
-  }
+  // {
+  //   label: 'Reviews',
+  //   navPath: '/reviews',
+  //   icon: <AssignmentRoundedIcon />,
+  //   roles: ['admin', 'user']
+  // },
+  // {
+  //   label: 'Comments',
+  //   navPath: '/messages',
+  //   icon: <QuestionAnswerRoundedIcon />,
+  //   roles: ['admin', 'user']
+  // }
 
 ]
 
@@ -283,14 +281,13 @@ export default function Sidebar() {
               }}
             >
               {
-                sidebarItems.map((eachItem) => (
-                  eachItem.roles.includes(logintype.data.roles.roleName)&& (
-                  <ListItem >
-                    <ListItemButton onClick={() => {router.push(eachItem.navPath);closeSidebar();}} selected={isActive(eachItem.navPath)} >
+                sidebarItems.map((eachItem, i) => (
+                  (eachItem.roles.includes(logintype.data.roles.roleName)&& <ListItem key={i}>
+                    <ListItemButton onClick={() => (router.push(eachItem.navPath))} selected={isActive(eachItem.navPath)} >
                       <ListItemDecorator>
                         {eachItem.icon}
                       </ListItemDecorator>
-                      <Typography level="title-sm">{eachItem.label}</Typography>
+                      <Typography level="title-sm" sx={{fontWeight:600}}>{eachItem.label}</Typography>
                       {/* {eachItem.label} */}
                     </ListItemButton>
                   </ListItem>)
@@ -300,7 +297,7 @@ export default function Sidebar() {
             </List>
           
 
-          <List
+          {/* <List
             size="sm"
             sx={{
               mt: 'auto',
@@ -316,7 +313,7 @@ export default function Sidebar() {
                 Settings
               </ListItemButton>
             </ListItem>
-          </List>
+          </List> */}
 
         </Box>
         <Divider />

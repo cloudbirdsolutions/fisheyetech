@@ -33,6 +33,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { deleteuser } from '../Reducers/DeleteUserSlice';
 import { AppDispatch } from '../Store/store';
+import { API_BASE_URL } from '../config';
 
 
 export default function OrderList(props:any) {
@@ -62,7 +63,7 @@ export default function OrderList(props:any) {
     const getData = async () => {
       try {
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/users/get`, {
+        const response = await fetch(`${API_BASE_URL}/users/get`, {
           method: 'GET',
           headers: {
             Accept: "application/json",

@@ -14,6 +14,7 @@ import { AppDispatch, RootState } from "@/app/Store/store";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { API_BASE_URL } from "@/app/config";
 
 export default function ListPermission(props: any) {
 
@@ -66,7 +67,7 @@ export default function ListPermission(props: any) {
       </td>
 
       <td>
-        <Button type="submit">Delete Job</Button>
+        {/* <Button type="submit">Delete Job</Button> */}
       </td>
     </tr>
   ))
@@ -255,21 +256,21 @@ export default function ListPermission(props: any) {
   return (
     <>
     <ToastContainer/>
-      <form className='gap-8 flex flex-wrap flex-row' onSubmit={handleSubmit}>
-        <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full' >
-          <div className='space-y-[2px]'>
-            <h3 className='text-textdull text-xs mb-2'>ID</h3>
+      <form style={{gap: '8'}} onSubmit={handleSubmit}>
+      <Box component="div" display="flex" alignItems="center" width={'100%'} flexDirection={{xs: 'column', sm: 'column', md: 'row'}} py={1} gap={2}>
+          <Box component="div" width={{xs: '100%', sm: '100%', md: '25%'}}>
+          <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>ID</Typography>
             <Input size="sm" disabled name="id" value={props.selectedrows?.id} />
-          </div>
-          <div className='space-y-[2px]'>
-            <h3 className='text-textdull text-xs mb-2'>User Name</h3>
+          </Box>
+          <Box component="div" width={{xs: '100%', sm: '100%', md: '25%'}}>
+          <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>User Name</Typography>
             <Input size="sm" disabled placeholder="userName" name="userName" value={props.selectedrows?.userName} />
-          </div>
-          <div className='space-y-[2px]'>
-            <h3 className='text-textdull text-xs mb-2'>Department Name</h3>
+          </Box>
+          <Box component="div" width={{xs: '100%', sm: '100%', md: '25%'}}>
+          <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Department Name</Typography>
             {
               department &&
-              <select name="departmentId" onChange={handleChange}>
+              <select name="departmentId" onChange={handleChange} style={{padding: '8px', borderRadius: '5px', borderColor: '#ccc', width: '100%'}}>
                 <option value={0}>Select</option>
                 {department.map((r: any, i) => {
                   return <option key={i} value={r.id}>{r.departmentName}</option>
@@ -277,48 +278,46 @@ export default function ListPermission(props: any) {
                 }
               </select>
             }
-          </div>
+          </Box>
 
-          <div className='space-y-[2px]'>
-            <h3 className='text-textdull text-xs mb-2'>Permission</h3>
-            {
+          <Box component="div" width={{xs: '100%', sm: '100%', md: '25%'}}>
+              <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Permission</Typography>
+                 {
                     permission && 
-                    <select multiple={false} name="permissionId" onChange={handleChange}>
+                    <select multiple={false} name="permissionId" onChange={handleChange} style={{padding: '8px', borderRadius: '5px', borderColor: '#ccc', width: '100%'}}>
                         <option value={0}>Select</option>
                         {permission.map((r:any, i) =>(<option key={i} value={r.id}>{r.permissionType}</option>))                }   
                     </select>
                  }
+          </Box>
 
-            
-          </div>
-
-        </div>
-        <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
-        {sheets &&
-              <div className='space-y-[2px]'>
-                <h3 className='text-textdull text-xs mb-2'>Sheet Name</h3>
-                <select multiple={false} name="sheetId" onChange={handleChange}>
+        </Box>
+        <Box component="div" display="flex" alignItems="center" flexDirection={{xs: 'column', sm: 'column', md: 'row'}} py={1} gap={2}>
+              {sheets &&
+              <Box component="div" width={{xs: '100%', sm: '100%', md: '50%'}}>
+                <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Sheet Name</Typography>
+                <select multiple={false} name="sheetId" onChange={handleChange} style={{padding: '8px', borderRadius: '5px', borderColor: '#ccc', width: '100%'}}>
                   <option value={0}>Select</option>
                   {sheets.map((r: any, i) => {
                     return <option key={i} value={r.sheetMaster.id}>{r.sheetMaster?.sheetName}</option>
                   })
                   }
                 </select>
-              </div>
+              </Box>
             }
 
-            <div className='space-y-[2px] w-full'>
-              <h3 className='text-textdull text-xs mb-2'>Shift</h3>
-              <select multiple={false} name="shiftId" onChange={handleChange}>
+              <Box component="div" width={{xs: '100%', sm: '100%', md: '50%'}}>
+              <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Shift</Typography>
+              <select multiple={false} name="shiftId" onChange={handleChange} style={{padding: '8px', borderRadius: '5px', borderColor: '#ccc', width: '100%'}}>
                 <option value={0}>Select</option>
                 {shift?.map((r: any, i) => {
                   return <option key={i} value={r.shiftId}>{r.shiftMaster?.shiftType}</option>
                 })
                 }
               </select>
-            </div>
+            </Box>
 
-        </div>
+        </Box>
 
 
         <Button type="submit"> Add Job</Button>

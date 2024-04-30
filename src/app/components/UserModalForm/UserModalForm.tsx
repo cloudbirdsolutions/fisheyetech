@@ -19,6 +19,8 @@ import { useRouter } from 'next/navigation';
 import modalContext from "@/app/context/modalContext";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Box from '@mui/joy/Box';
+import Grid from '@mui/joy/Grid';
 
 const UserModalForm = (props:any) =>{
 
@@ -172,7 +174,7 @@ const UserModalForm = (props:any) =>{
     
     if(row!=null) {
       // Check if required fields are filled
-      if (!editformData.name || !editformData.password || !editformData.address || !editformData.phone || editformData.statusId === 0 || !editformData.userName) {
+      if (!editformData.name || !editformData.password || editformData.statusId === 0 || !editformData.userName) {
         // Display error message for missing fields
         if (!editformData.name) {
           setnameError('Name is required');
@@ -181,12 +183,12 @@ const UserModalForm = (props:any) =>{
         if (!editformData.password) {
           setpasswordError('Password is required');
         }
-        if (!editformData.address) {
+        /*if (!editformData.address) {
           setaddressError('Address is required');
         }
         if (!editformData.phone) {
           setPhonenoError('Phone Number is required');
-        }
+        }*/
         if (!editformData.statusId) {
           setstatusError('Status is required');
         }
@@ -210,7 +212,7 @@ const UserModalForm = (props:any) =>{
     } else {
 
       // Check if required fields are filled
-      if (!formData.name || !formData.password || !formData.address || !formData.phone || formData.statusId === 0 || !formData.userName) {
+      if (!formData.name || !formData.password || formData.statusId === 0 || !formData.userName) {
         // Display error message for missing fields
         if (!formData.name) {
           setnameError('Name is required');
@@ -219,12 +221,12 @@ const UserModalForm = (props:any) =>{
         if (!formData.password) {
           setpasswordError('Password is required');
         }
-        if (!formData.address) {
+        /*if (!formData.address) {
           setaddressError('Address is required');
         }
         if (!formData.phone) {
           setPhonenoError('Phone Number is required');
-        }
+        }*/
         if (!formData.statusId) {
           setstatusError('Status is required');
         }
@@ -260,7 +262,7 @@ const UserModalForm = (props:any) =>{
       aria-describedby="modal-desc"
       open={props.open}
       onClose={() => props.setOpen(false)}
-      sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: '9999' }}
     >  
       <Sheet
         variant="outlined"
@@ -281,23 +283,23 @@ const UserModalForm = (props:any) =>{
           fontWeight="lg"
           mb={1}
         >
-          {props.label}
+          {props.label} User
         </Typography>
         <Stack className='p-8'>
-        <form className='gap-8 flex flex-wrap w-[100%] flex-row' onSubmit={handleSubmit}>
-          <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
+        <form style={{display:'flex' , flexDirection: 'column', gap: '8'}} onSubmit={handleSubmit}>
+        <Box component="div" display="flex" alignItems="center" flexDirection={{xs: 'column', sm: 'column', md: 'row'}} py={1} gap={2}>
             {row!=null &&
             
-                <div className='space-y-[2px] w-full'>
-                    <h3 className='text-textdull text-xs mb-2'>ID</h3>
-                    <Input size="sm" disabled name="id" value={editformData.id} />
-                </div>
+              <Box component="div" width={{xs: '100%', sm: '100%', md: '50%'}}>
+                    <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>ID</Typography>
+                    <Input disabled name="id" value={editformData.id} style={{width:'100%'}}/>
+                </Box>
             }
-                  <div className='space-y-[2px] w-full'>
-                    <h3 className='text-textdull text-xs mb-2'>Role</h3>
+                <Box component="div" width={{xs: '100%', sm: '100%', md: '50%'}}>
+                  <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Role</Typography>
                     {
                     role && 
-                    <select multiple={false} name="rolesId" onChange={handleChange}>
+                    <select multiple={false} name="rolesId" onChange={handleChange} style={{padding: '8px', borderRadius: '5px', borderColor: '#ccc', width: '100%'}}>
                         <option value={0}>Select</option>
                         {role.map((r:any, i) => {
                             return <option key={i} value={r.id}>{r.roleName}</option>
@@ -305,51 +307,51 @@ const UserModalForm = (props:any) =>{
                         }   
                     </select>
                  }
-                </div>
-            </div>
+                </Box>
+            </Box>
           
-          <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
-              <div className='space-y-[2px] w-full'>
-                  <h3 className='text-textdull text-xs mb-2'>Name</h3>
+            <Box component="div" display="flex" alignItems="center" flexDirection={{xs: 'column', sm: 'column', md: 'row'}} py={1} gap={2}>
+              <Box component="div" width={{xs: '100%', sm: '100%', md: '50%'}}>
+                <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Name</Typography>
                   <Input size="sm" placeholder="name" name="name" value={row!=null ? editformData.name : formData.name} onChange={handleChange}/>
-              </div>
-              <div className='space-y-[2px] w-full'>
-                  <h3 className='text-textdull text-xs mb-2'>User Name</h3>
+              </Box>
+              <Box component="div" width={{xs: '100%', sm: '100%', md: '50%'}}>
+              <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>User Name</Typography>
                   <Input size="sm" placeholder="userName" name="userName" value={row!=null ? editformData.userName : formData.userName}
                               onChange={handleChange}/>
-              </div>
-            </div>
-            <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
+              </Box>
+            </Box>
+            <Box component="div" display="flex" alignItems="center" flexDirection={{xs: 'column', sm: 'column', md: 'row'}} py={1} gap={2}>
               
-              <div className='space-y-[2px] w-full'>
-                  <h3 className='text-textdull text-xs mb-2'>Password</h3>
+            <Box component="div" width={{xs: '100%', sm: '100%', md: '50%'}}>
+              <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Password</Typography>
                   <Input size="sm" placeholder="password" name="password" value={row!=null ? editformData.password : formData.password}
                               onChange={handleChange}/>
-              </div>
-              <div className='space-y-[2px] w-full'>
-                    <h3 className='text-textdull text-xs mb-2'>Status</h3>
-                    <select name="statusId" onChange={handleChange}>
+              </Box>
+              <Box component="div" width={{xs: '100%', sm: '100%', md: '50%'}}>
+              <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Status</Typography>
+                    <select name="statusId" onChange={handleChange} style={{padding: '8px', borderRadius: '5px', borderColor: '#ccc', width: '100%'}}>
                         <option value={0}>SELECT</option>
                         <option value={1}>ACTIVE</option>
                         <option value={2}>INACTIVE</option>
                         <option value={3}>PENDING</option>
                     </select>
-              </div>
-            </div>
-            <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
-              <div className='space-y-[2px] w-full'>
+              </Box>
+            </Box>
+            <Box component="div" display="flex" alignItems="center" flexDirection={'row'} py={1} gap={2}>
+              {/* <div className='space-y-[2px] w-full'>
                   <h3 className='text-textdull text-xs mb-2'>Address</h3>
                   <Input size="sm" placeholder="address" name="address" value={row!=null ? editformData.address : formData.address}
                               onChange={handleChange}/>
-              </div>
-              <div className='space-y-[2px] w-full'>
+              </div> */}
+              {/* <div className='space-y-[2px] w-full'>
                   <h3 className='text-textdull text-xs mb-2'>Phone</h3>
                   <Input size="sm" placeholder="phonenumber" name="phone" value={row!=null ? editformData.phone : formData.phone}
                               onChange={handleChange}/>
-              </div>
-            </div>
+              </div> */}
+            </Box>
           
-          <Button type="submit"> {props.label}</Button>
+          <Button type="submit"> {props.label} User</Button>
           </form>
         </Stack>
       </Sheet>

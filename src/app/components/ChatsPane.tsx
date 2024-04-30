@@ -2,7 +2,7 @@ import * as React from 'react';
 import Stack from '@mui/joy/Stack';
 import Sheet from '@mui/joy/Sheet';
 import Typography from '@mui/joy/Typography';
-import { Box, Chip, IconButton, Input } from '@mui/joy';
+import { Box, Button, Chip, FormControl, FormLabel, IconButton, Input, Textarea } from '@mui/joy';
 import List from '@mui/joy/List';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
@@ -10,15 +10,55 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ChatListItem from './ChatListItem';
 import { ChatProps } from '../types';
 import { toggleMessagesPane } from '../utils';
+import { useSelector } from 'react-redux';
+import { RootState } from '../Store/store';
+import { API_BASE_URL } from '../config';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 type ChatsPaneProps = {
   chats: ChatProps[];
   setSelectedChat: (chat: ChatProps) => void;
   selectedChatId: string;
+  permissionId: number;
+  docId: number
 };
 
 export default function ChatsPane(props: ChatsPaneProps) {
-  const { chats, setSelectedChat, selectedChatId } = props;
+  const { chats, setSelectedChat, selectedChatId, permissionId, docId } = props;
+  const logintype = useSelector((state: RootState) => state?.user.data);
+  const [newReviewSummary, setNewReviewSummary] = React.useState('');
+  const [showNewReviewForm, setShowNewReviewForm] = React.useState(false);
+
+  const updateSummary = (e: any) => {
+    setNewReviewSummary(e.target.value)
+  }
+
+  const saveReview = async ()=>{
+    try {
+      const response = await fetch(`${API_BASE_URL}/review/create`, {
+        method: 'POST',
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({docId,createdBy:logintype.data.id,summary:newReviewSummary})
+      });
+      
+      toast.success("Review Created successfully please add comments");
+      if (!response.ok) {
+        throw new Error(
+          "Failed to save record changes: " + response.statusText
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+  }
+
   return (
     <Sheet
       sx={{
@@ -28,6 +68,7 @@ export default function ChatsPane(props: ChatsPaneProps) {
         overflowY: 'auto',
       }}
     >
+      <ToastContainer/>
       <Stack
         direction="row"
         spacing={1}
@@ -47,12 +88,12 @@ export default function ChatsPane(props: ChatsPaneProps) {
               size="md"
               slotProps={{ root: { component: 'span' } }}
             >
-              4
+              {chats.length}
             </Chip>
           }
           sx={{ mr: 'auto' }}
         >
-          Messages
+          Reviews
         </Typography>
         <IconButton
           variant="plain"
@@ -63,7 +104,7 @@ export default function ChatsPane(props: ChatsPaneProps) {
         >
           <EditNoteRoundedIcon />
         </IconButton>
-        <IconButton
+        {/* <IconButton
           variant="plain"
           aria-label="edit"
           color="neutral"
@@ -74,7 +115,7 @@ export default function ChatsPane(props: ChatsPaneProps) {
           sx={{ display: { sm: 'none' } }}
         >
           <CloseRoundedIcon />
-        </IconButton>
+        </IconButton> */}
       </Stack>
       <Box sx={{ px: 2, pb: 1.5 }}>
         <Input
@@ -91,7 +132,22 @@ export default function ChatsPane(props: ChatsPaneProps) {
           '--ListItem-paddingX': '1rem',
         }}
       >
-        {chats.map((chat) => (
+        {/* {permissionId} */}
+        {
+          [2, 3].includes(permissionId) && <Box sx={{ px: 2, pb: 1.5 }}> <Button size="sm" onClick={() => { setShowNewReviewForm(true) }}>Add New Review</Button></Box>
+        }
+        {showNewReviewForm && <>
+          <FormControl>
+            <FormLabel> Review Summary  </FormLabel>
+            <Input value={newReviewSummary} onChange={(e) => updateSummary(e)} />
+            <Stack direction={'row'} spacing={1} marginTop={2} justifyContent={'flex-end'}>
+              <Button size='sm' variant='solid' color='success' onClick={()=>{saveReview()}}> Save Review </Button>
+              <Button size='sm' variant='outlined' color='neutral' onClick={() => { setShowNewReviewForm(false) }}> Cancel </Button>
+            </Stack>
+
+          </FormControl>
+        </>}
+        {chats.map((chat) => (  
           <ChatListItem
             key={chat.id}
             {...chat}

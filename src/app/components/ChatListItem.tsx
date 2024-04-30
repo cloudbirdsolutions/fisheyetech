@@ -12,15 +12,21 @@ import { toggleMessagesPane } from '../utils';
 
 type ChatListItemProps = ListItemButtonProps & {
   id: string;
-  unread?: boolean;
-  sender: UserProps;
-  messages: MessageProps[];
+  createdAt: string;
+  updatedAt: string;
+  docId:number;
+  createdBy :number;
+  summary:string;
+  users: {
+    userName: string;
+  }
+  comments: MessageProps[];
   selectedChatId?: string;
   setSelectedChat: (chat: ChatProps) => void;
 };
 
-export default function ChatListItem(props: ChatListItemProps) {
-  const { id, sender, messages, selectedChatId, setSelectedChat } = props;
+export default function ChatListItem (props: ChatListItemProps) {
+  const { id, users, comments,createdAt,updatedAt,docId,createdBy,summary,  selectedChatId, setSelectedChat } = props;
   const selected = selectedChatId === id;
   return (
     <React.Fragment>
@@ -28,7 +34,7 @@ export default function ChatListItem(props: ChatListItemProps) {
         <ListItemButton
           onClick={() => {
             toggleMessagesPane();
-            setSelectedChat({ id, sender, messages });
+            setSelectedChat({ id, users, comments,createdAt,updatedAt,docId,createdBy,summary });
           }}
           selected={selected}
           color="neutral"
@@ -39,10 +45,9 @@ export default function ChatListItem(props: ChatListItemProps) {
           }}
         >
           <Stack direction="row" spacing={1.5}>
-            <AvatarWithStatus online={sender.online} src={sender.avatar} />
+            <AvatarWithStatus online={false} src={users.userName} />
             <Box sx={{ flex: 1 }}>
-              <Typography level="title-sm">{sender.name}</Typography>
-              <Typography level="body-sm">{sender.username}</Typography>
+              <Typography level="body-sm">{users.userName}</Typography>
             </Box>
             <Box
               sx={{
@@ -50,9 +55,9 @@ export default function ChatListItem(props: ChatListItemProps) {
                 textAlign: 'right',
               }}
             >
-              {messages[0].unread && (
+              {/* {comments[0].unread && (
                 <CircleIcon sx={{ fontSize: 12 }} color="primary" />
-              )}
+              )} */}
               <Typography
                 level="body-xs"
                 display={{ xs: 'none', md: 'block' }}
@@ -72,7 +77,7 @@ export default function ChatListItem(props: ChatListItemProps) {
               textOverflow: 'ellipsis',
             }}
           >
-            {messages[0].content}
+            {summary}
           </Typography>
         </ListItemButton>
       </ListItem>

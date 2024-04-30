@@ -1,10 +1,10 @@
+// const loginEndpoint = process.env.NEXT_PUBLIC_API_HOST+'/auth/signin';
 
 
-//const loginEndpoint = process.env.NEXT_PUBLIC_API_HOST+'/auth/signin';
-
-const loginEndpoint = 'http://51.79.147.139:3000/auth/signin';
-
+import { API_BASE_URL } from '../config';
 import userResponse from './userResponse';
+
+const loginEndpoint = process.env.NEXT_PUBLIC_API_HOST+'/auth/signin';
 
 export async function fetchUserDetails(userData:any) {
   try {

@@ -17,6 +17,7 @@ import Sheet from '@mui/joy/Sheet';
 import Input from '@mui/joy/Input';
 import { useRouter } from 'next/navigation';
 import modalContext from "@/app/context/modalContext";
+import Box from '@mui/joy/Box';
 
 const EntityModalForm = (props:any) =>{
 
@@ -157,23 +158,23 @@ const EntityModalForm = (props:any) =>{
         >
           {props.label} Entity
         </Typography>
-        <Stack className='p-8'>
-        <form className='gap-8 flex flex-wrap w-[100%] flex-row' onSubmit={handleSubmit}>
-            {row != null &&
-            <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
-                <div className='space-y-[2px] w-full'>
-                    <h3 className='text-textdull text-xs mb-2'>ID</h3>
+        <Stack >
+        <form style={{display:'flex' , flexDirection: 'column', gap: '8'}} onSubmit={handleSubmit}>
+           { row != null &&
+                <Box component="div" display="flex" alignItems="center" flexDirection={'row'} py={2}>
+                <Box component="div" sx={{width:'100%'}}>
+                  <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>ID</Typography>
                     <Input size="sm" disabled name="id" value={editformData.id} />
-                </div>
-            </div>
-            }
-          <div className='flex justify-between items-center flex-col md:flex-row gap-4 w-full'>
-              <div className='space-y-[2px] w-full'>
-                  <h3 className='text-textdull text-xs mb-2'>Sheet Name</h3>
+                </Box>
+                </Box>
+          }
+                <Box component="div" display="flex" alignItems="center" flexDirection={'row'} py={2}>
+                <Box component="div" sx={{width:'100%'}}>
+                  <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Sheet Name</Typography>
                   <Input size="sm" placeholder="sheetName" name="sheetName" value={row!=null ? editformData.sheetName:formData.sheetName}
                               onChange={handleChange}/>
-              </div>
-            </div>
+                              </Box>
+              </Box>
           <Button type="submit"> {props.label} Entity</Button>
           </form>
         </Stack>

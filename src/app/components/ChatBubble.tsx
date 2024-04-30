@@ -15,7 +15,7 @@ type ChatBubbleProps = MessageProps & {
 };
 
 export default function ChatBubble(props: ChatBubbleProps) {
-  const { content, variant, timestamp, attachment = undefined, sender } = props;
+  const { comments, variant, createdAt,createdBy, users } = props;
   const isSent = variant === 'sent';
   const [isHovered, setIsHovered] = React.useState<boolean>(false);
   const [isLiked, setIsLiked] = React.useState<boolean>(false);
@@ -29,33 +29,11 @@ export default function ChatBubble(props: ChatBubbleProps) {
         sx={{ mb: 0.25 }}
       >
         <Typography level="body-xs">
-          {sender === 'You' ? sender : sender.name}
+          {users === 'You' ? users : users.userName}
         </Typography>
-        <Typography level="body-xs">{timestamp}</Typography>
+        <Typography level="body-xs">{createdAt}</Typography>
       </Stack>
-      {attachment ? (
-        <Sheet
-          variant="outlined"
-          sx={{
-            px: 1.75,
-            py: 1.25,
-            borderRadius: 'lg',
-            borderTopRightRadius: isSent ? 0 : 'lg',
-            borderTopLeftRadius: isSent ? 'lg' : 0,
-          }}
-        >
-          <Stack direction="row" spacing={1.5} alignItems="center">
-            <Avatar color="primary" size="lg">
-              <InsertDriveFileRoundedIcon />
-            </Avatar>
-            <div>
-              <Typography fontSize="sm">{attachment.fileName}</Typography>
-              <Typography level="body-sm">{attachment.size}</Typography>
-            </div>
-          </Stack>
-        </Sheet>
-      ) : (
-        <Box
+      <Box
           sx={{ position: 'relative' }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -81,7 +59,7 @@ export default function ChatBubble(props: ChatBubbleProps) {
                   : 'var(--joy-palette-text-primary)',
               }}
             >
-              {content}
+              {comments}
             </Typography>
           </Sheet>
           {(isHovered || isLiked || isCelebrated) && (
@@ -123,7 +101,7 @@ export default function ChatBubble(props: ChatBubbleProps) {
             </Stack>
           )}
         </Box>
-      )}
+     
     </Box>
   );
 }

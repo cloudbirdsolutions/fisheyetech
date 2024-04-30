@@ -4,14 +4,11 @@ import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
 
 import JoballocationTable from '@/app/components/JoballocationTable/JoballocationTable';
-import { AnyIfEmpty } from 'react-redux';
+import Link from 'next/link';
 
-export default function Joballocation(props:any) {
-  const [label, setLabel] = React.useState<string>('');
-  const [open, setOpen] = React.useState<boolean>(false);
-  const [row, setRow] = React.useState(null);
-
-  return (
+export default function Joballocation() {
+  const [listsec, setListsec] = React.useState(false);
+   return (
     <>
           <Box
             sx={{
@@ -27,8 +24,13 @@ export default function Joballocation(props:any) {
             <Typography level="h2" component="h1">
               Job Allocation
             </Typography>
+            {listsec === true &&
+            <Typography component="div">
+              <Link href="/joballocation" onClick={() => setListsec(false) }>Back</Link>
+            </Typography>
+            }
           </Box>
-          <JoballocationTable />
+          <JoballocationTable listsec={listsec} setListsec={setListsec}/>
          </>
   );
 }
