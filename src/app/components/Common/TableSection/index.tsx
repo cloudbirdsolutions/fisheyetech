@@ -193,6 +193,7 @@ return (
         borderRadius: 'sm',
         flexShrink: 1,
         minHeight: 0,
+        overflow: 'auto' 
       }}
     >
       <Table

@@ -36,20 +36,14 @@ import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
-
 import Add from "@mui/icons-material/Add";
-
 import { useRouter } from "next/navigation";
-
 import { useSelector } from "react-redux";
-
 import { API_BASE_URL } from '@/app/config';
 import { RootState } from "@/app/Store/store";
 import { Stack, Tooltip } from "@mui/joy";
 import TableSection from "../Common/TableSection";
-
-
-
+import Followups from "./Followups";
 
 
 
@@ -109,9 +103,6 @@ export default function TasksTable() {
   const [open, setOpen] = React.useState(false);
   const [rows, setRows] = React.useState();
 
-  const [userRemarks, setUserRemarks] = React.useState('');
-
-
   const [departmentRemarks, setDepartmentRemark] = React.useState([
     {
       "id": 1,
@@ -129,7 +120,7 @@ export default function TasksTable() {
     }
   ])
 
-  const [remarksDepartment, setRemarksDepartment] = React.useState(0);
+ 
 
   const [departmentList, setDepartmentList] = React.useState([
     {
@@ -185,44 +176,7 @@ export default function TasksTable() {
       console.error('Error fetching user details:', error);
     }
   }
-  const savedepartmentRemarks = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/remarks/create`, {
-        method: 'POST',
-        headers: {
-          Accept: "application/json",
-          'Content-Type': 'application/json',
-        },
-        body : JSON.stringify({departmentId:remarksDepartment,remarks:userRemarks,createdBy:logintype.data.id})
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch user details: ' + response.statusText);
-      }
-
-      const data = await response.json();
-      return data
-    } catch (error) {
-      console.error('Error fetching user details:', error);
-    }
-  }
-
-  
-
-  const followUpHeader = ["Department", "CreatedAt", "UpdatedAt", "Remarks", "Status"]
-
-  const followUpRow = departmentRemarks.map(rem => (
-    <tr key={`document_id_${rem.id}`}>
-      <td><Typography level="body-xs">{rem?.id}</Typography></td>
-      <td><Typography level="body-xs">{rem?.departments.departmentName}</Typography></td>
-      <td><Typography level="body-xs">{rem?.createdAt}</Typography></td>
-      <td><Typography level="body-xs">{rem?.updatedAt}</Typography></td>
-      <td><Typography level="body-xs">{rem?.remarks}</Typography></td>
-      <td><Typography level="body-xs">New</Typography></td>
-    </tr>
-  ))
-
-
+ 
   const RowMenu = (props: { sheetid: any; sheetName: any }) => {
     return (
       <Tooltip title="Documents" arrow color="primary" placement="right">
@@ -280,14 +234,10 @@ export default function TasksTable() {
 
     fetchRemarks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  },
+   []);
 
-  const handleChange = (
-    event: React.SyntheticEvent | null,
-    newValue: string | null,
-  ) => {
-   setRemarksDepartment(parseInt(newValue?newValue:"0"));
-  };
+ 
 
   const renderFilters = () => (
     <React.Fragment>
@@ -327,39 +277,11 @@ export default function TasksTable() {
     </React.Fragment>
   );
   return (
-    <React.Fragment>
-      <Sheet>
-        <Stack direction={'row'} marginBottom={1}>
-          <Typography level="h2">Follow Ups</Typography>
+    <React.Fragment>    
 
-        </Stack>
-
-        <Box margin={2}>
-          {/* <Typography level="title-sm" >Add New Remarks</Typography> */}
-          <Stack gap={2} >
-          <FormControl orientation="horizontal">
-            <FormLabel>Department</FormLabel>
-            <Select placeholder="Select a department" onChange={handleChange}>
-              {departmentList.map(dep=>(<Option value={dep.departments.id}>
-                  {dep.departments.departmentName}
-              </Option>))}
-            </Select>
-          </FormControl>
-          <FormControl orientation="horizontal">
-            <FormLabel>Remarks</FormLabel>
-            <Input value={userRemarks} onChange={(e) => { setUserRemarks(e.target.value) }} ></Input>
-            <Button variant="solid" sx={{ ml: 2 }} onClick={(e)=>{savedepartmentRemarks()}}>Add New Remarks</Button>
-          </FormControl>
-          
-          </Stack>
-        </Box>
-
-        <TableSection tableHeaders={followUpHeader} tableRows={followUpRow} />
-      </Sheet>
-      <Divider sx={{ my: 2 }} />
-      <Typography level="h2" component="h1">
+      {/* <Typography level="h2" component="h1">
         Tasks
-      </Typography>
+      </Typography> */}
       <Sheet
         className="SearchAndFilters-mobile"
         sx={{

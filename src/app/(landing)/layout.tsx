@@ -5,7 +5,7 @@ import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import { CssVarsProvider } from '@mui/joy/styles';
 import CssBaseline from '@mui/joy/CssBaseline';
-
+import { useTheme } from "@mui/material";
 
 
 import { Box } from "@mui/joy";
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   description: "powered by oplaminds",
 };
 
-export default function SubLayout({children}: Readonly<{
+export default function SubLayout({ children }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (

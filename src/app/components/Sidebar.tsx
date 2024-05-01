@@ -156,6 +156,12 @@ const sidebarItems = [
     roles: ['admin', 'user']
   },
   {
+    label:'Follow Ups',
+    navPath: '/followups',
+    icon: <PendingActionsIcon />,
+    roles: ['admin', 'user']
+  },
+  {
     label: 'Delete Document',
     navPath: '/deletedocument',
     icon: <DeleteOutlineRounded />,
