@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { API_BASE_URL } from "@/app/config";
+import ListPermissionSecLists from "./ListPermissionSecLists";
 
 export default function ListPermission(props: any) {
 
@@ -30,7 +31,7 @@ export default function ListPermission(props: any) {
 
   const [alljobs, setAlljobs] = useState([]);
   const [formData, setFormData] = useState({
-    userId: props.selectedrows.id,
+    userId: 0,
     departmentId: 0,
     permissionId: 0,
     sheetId: 0,
@@ -51,7 +52,7 @@ export default function ListPermission(props: any) {
   const jobstablerows = alljobs?.map((j: any) => (
     <tr key={j?.id}>
       <td>
-        <Typography level="body-xs">{props.selectedrows?.id}</Typography>
+        <Typography level="body-xs">{j?.id}</Typography>
       </td>
       <td>
         <Typography level="body-xs">{j?.users?.userName}</Typography>
@@ -323,6 +324,7 @@ export default function ListPermission(props: any) {
         <Button type="submit"> Add Job</Button>
       </form>
       <TableSection tableHeaders={headers} tableRows={jobstablerows} />
+      <ListPermissionSecLists alljobs={alljobs}/>
     </>
   )
 }

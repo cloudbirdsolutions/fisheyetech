@@ -12,9 +12,9 @@ import Chip from "@mui/joy/Chip";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import BlockIcon from "@mui/icons-material/Block";
 import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
-import ListPermission from "./ListPermission";
 import Link from "@mui/joy/Link";
 import { API_BASE_URL } from "@/app/config";
+import ListPermission from "./ListPermission";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -63,7 +63,6 @@ export default function JoballocationTable(props:any) {
   ]);
 
   
-  const [selectedrow, setSelectedRow] = React.useState();
 
   // const data = await getData()
   React.useEffect(() => {
@@ -99,7 +98,7 @@ export default function JoballocationTable(props:any) {
   }, []);
   const jobs = React.useCallback((row: any) => {
     props.setListsec(true);
-    setSelectedRow(row);
+    props.setSelectedRow(row);
   }, []);
 
   const headers = ["Name", "Status"];
@@ -151,7 +150,7 @@ export default function JoballocationTable(props:any) {
       {props.listsec === false && (
         <TableSection tableHeaders={headers} tableRows={tablerows} />
       )}
-      {props.listsec === true && <ListPermission selectedrows={selectedrow} />}
+      {props.listsec === true && <ListPermission selectedrows={props.selectedrow} />}
     </>
   );
 }

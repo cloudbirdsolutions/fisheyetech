@@ -5,9 +5,12 @@ import Typography from '@mui/joy/Typography';
 
 import JoballocationTable from '@/app/components/JoballocationTable/JoballocationTable';
 import Link from 'next/link';
+import JoballocationLists from '@/app/components/JoballocationTable/JoballocationLists';
 
 export default function Joballocation() {
   const [listsec, setListsec] = React.useState(false);
+  const [selectedrow, setSelectedRow] = React.useState();
+
    return (
     <>
           <Box
@@ -30,7 +33,8 @@ export default function Joballocation() {
             </Typography>
             }
           </Box>
-          <JoballocationTable listsec={listsec} setListsec={setListsec}/>
+          <JoballocationLists listsec={listsec} setListsec={setListsec} setSelectedRow={setSelectedRow} selectedrow={selectedrow}></JoballocationLists>
+          <JoballocationTable listsec={listsec} setListsec={setListsec} setSelectedRow={setSelectedRow} selectedrow={selectedrow}/>
          </>
   );
 }
