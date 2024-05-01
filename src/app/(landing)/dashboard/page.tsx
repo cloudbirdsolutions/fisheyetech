@@ -2,13 +2,13 @@
 import * as React from 'react';
 import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
-import DashboardCard from '@/app/components/dashboard/dashboardcard';
+// import DashboardCard from '@/app/components/dashboard/dashboardcard';
 import { Stack } from '@mui/joy';
 import Grid from '@mui/joy/Grid';
-import DashboardReviewCard from '@/app/components/dashboard/dashboardreviewcard';
-import DashboardFollowUpCard from '@/app/components/dashboard/dashboardfollowupcard';
-import DashboardDocumentCard from '@/app/components/dashboard/dashboarddocumentcard';
-import ChartsOverviewDemo from '@/app/components/dashboard/dashboardchart';
+// import DashboardReviewCard from '@/app/components/dashboard/dashboardreviewcard';
+// import DashboardFollowUpCard from '@/app/components/dashboard/dashboardfollowupcard';
+// import DashboardDocumentCard from '@/app/components/dashboard/dashboarddocumentcard';
+// import ChartsOverviewDemo from '@/app/components/dashboard/dashboardchart';
 
 
 export default function Dashboard() {
@@ -32,7 +32,7 @@ export default function Dashboard() {
           Dashboards
         </Typography>
           </Grid>
-          <Grid xs={3}>
+          {/* <Grid xs={3}>
             <DashboardCard />
           </Grid>
           <Grid xs={3}>
@@ -43,9 +43,9 @@ export default function Dashboard() {
           </Grid>
           <Grid xs={3}>
             <DashboardDocumentCard />
-          </Grid>
+          </Grid> */}
         </Grid>
-       <ChartsOverviewDemo />
+       {/* <ChartsOverviewDemo /> */}
   
 
       </Box>

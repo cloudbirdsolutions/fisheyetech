@@ -48,7 +48,7 @@ export default function MyMessages(props:MyMessagesProps) {
         </>} */}
         <ChatsPane
           chats={props.chats}
-          selectedChatId={selectedChat.id}
+          selectedChatId={selectedChat?.id}
           setSelectedChat={setSelectedChat}
           permissionId={permissionId}
           docId={docId}

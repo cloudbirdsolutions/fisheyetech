@@ -33,7 +33,7 @@ export default function ChatListItem (props: ChatListItemProps) {
       <ListItem>
         <ListItemButton
           onClick={() => {
-            toggleMessagesPane();
+            // toggleMessagesPane();
             setSelectedChat({ id, users, comments,createdAt,updatedAt,docId,createdBy,summary });
           }}
           selected={selected}

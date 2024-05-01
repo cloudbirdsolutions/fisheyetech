@@ -64,7 +64,7 @@ export default function ChatsPane(props: ChatsPaneProps) {
       sx={{
         borderRight: '1px solid',
         borderColor: 'divider',
-        height: 'calc(100dvh - var(--Header-height))',
+        // height: 'calc(100dvh - var(--Header-height))',
         overflowY: 'auto',
       }}
     >

@@ -107,7 +107,7 @@ export default function Log() {
       res.payload.status == 200 ? (
         toast.success(res.payload.message),
         setRefreshListIndicator(Date.now()),
-        router.push('/tasks') 
+        router.push(`/tasks/sheet/${sheetId}`) 
       ) : (
         toast.error(res.payload.message)
       )
