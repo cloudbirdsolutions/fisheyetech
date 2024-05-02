@@ -9,6 +9,7 @@ import DashboardReviewCard from '@/app/components/dashboard/dashboardreviewcard'
 import DashboardFollowUpCard from '@/app/components/dashboard/dashboardfollowupcard';
 import DashboardDocumentCard from '@/app/components/dashboard/dashboarddocumentcard';
 import ChartsOverviewDemo from '@/app/components/dashboard/dashboardchart';
+import DashboardChart from '@/app/components/dashboard/dashboardchart';
 
 
 export default function Dashboard() {
@@ -45,9 +46,7 @@ export default function Dashboard() {
             <DashboardDocumentCard />
           </Grid>
         </Grid>
-       <ChartsOverviewDemo />
-  
-
+     <DashboardChart />
       </Box>
 
     </>)
