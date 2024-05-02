@@ -2,13 +2,10 @@
 import * as React from 'react';
 import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
-// import DashboardCard from '@/app/components/dashboard/dashboardcard';
+import DashboardCard from '@/app/components/dashboard/dashboardcard';
 import { Stack } from '@mui/joy';
 import Grid from '@mui/joy/Grid';
-// import DashboardReviewCard from '@/app/components/dashboard/dashboardreviewcard';
-// import DashboardFollowUpCard from '@/app/components/dashboard/dashboardfollowupcard';
-// import DashboardDocumentCard from '@/app/components/dashboard/dashboarddocumentcard';
-// import ChartsOverviewDemo from '@/app/components/dashboard/dashboardchart';
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
 
 
 export default function Dashboard() {
@@ -16,39 +13,62 @@ export default function Dashboard() {
     <>
       <Box
         sx={{
-          display: 'flex',
+          // display: 'flex',
           mb: 1,
           gap: 1,
-          flexDirection: { xs: 'column', sm: 'row' },
+          flexDirection: 'row',
           alignItems: { xs: 'start', sm: 'center' },
           flexWrap: 'wrap',
           justifyContent: 'space-between',
         }}
       >
-       
+
         <Grid container spacing={2} sx={{ flexGrow: 1 }}>
           <Grid xs={12}>
-          <Typography level="h2" component="h1">
-          Dashboards
-        </Typography>
+            <Typography level="h2" component="h1">
+              Dashboards
+            </Typography>
           </Grid>
-          {/* <Grid xs={3}>
-            <DashboardCard />
-          </Grid>
-          <Grid xs={3}>
-            <DashboardReviewCard />
-          </Grid>
-          <Grid xs={3}>
-            <DashboardFollowUpCard />
-          </Grid>
-          <Grid xs={3}>
-            <DashboardDocumentCard />
-          </Grid> */}
         </Grid>
-       {/* <ChartsOverviewDemo /> */}
-  
-
-      </Box>
+       </Box>
+        <Grid container spacing={2} sx={{ flexGrow: 1,flexDirection : {xs:'column',md:'row'} }} >
+          <Grid xs={12}>
+            <Typography level="h3" component="h1">
+              Tasks
+            </Typography>
+          </Grid>
+          <Grid xs={3}>
+            <DashboardCard icon={PendingActionsIcon} title={'Total'} value={75} color='primary' />
+          </Grid>
+          <Grid xs={3}>
+            <DashboardCard icon={PendingActionsIcon} title={'Inprogress'} value={10} color='neutral' />
+          </Grid>
+          <Grid xs={3}>
+            <DashboardCard icon={PendingActionsIcon} title={'Pending Approval'} value={60} color='warning' />
+          </Grid>
+          <Grid xs={3}>
+            <DashboardCard icon={PendingActionsIcon} title={'Approved'} value={5} color='success' />
+          </Grid>
+        </Grid>
+        <Grid container spacing={2} sx={{ flexGrow: 1,flexDirection : {xs:'column',md:'row'} }} >
+          <Grid xs={12}>
+            <Typography level="h3" component="h1">
+              Reviews
+            </Typography>
+          </Grid>
+          <Grid xs={3}>
+            <DashboardCard icon={PendingActionsIcon} title={'Total'} value={75} color='primary' />
+          </Grid>
+          <Grid xs={3}>
+            <DashboardCard icon={PendingActionsIcon} title={'Inprogress'} value={10} color='neutral' />
+          </Grid>
+          <Grid xs={3}>
+            <DashboardCard icon={PendingActionsIcon} title={'Pending Approval'} value={60} color='warning' />
+          </Grid>
+          <Grid xs={3}>
+            <DashboardCard icon={PendingActionsIcon} title={'Approved'} value={5} color='success' />
+          </Grid>
+        </Grid>
 
     </>)
 
