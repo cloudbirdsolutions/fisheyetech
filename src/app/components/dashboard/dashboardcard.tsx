@@ -6,8 +6,35 @@ import CardActions from '@mui/joy/CardActions';
 import CircularProgress from '@mui/joy/CircularProgress';
 import Typography from '@mui/joy/Typography';
 import SvgIcon from '@mui/joy/SvgIcon';
+import { useState  } from 'react'
+import { useEffect } from 'react';
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/Store/store";
+
 
 export default function DashboardCard() {
+  const [jobAllocationcount, setJobAllocationcount] = useState(null);
+  const[loading, setLoading] = useState(true)
+
+  const logintype = useSelector((state: RootState) => state?.user.data);
+
+  useEffect(()=>{
+    fetch(`http://51.79.147.139:3001/dashboard/count?userId=${logintype.data.id}`)
+    .then(response=>response.json())
+    .then(data => {
+      if(data.status === 200){
+        setJobAllocationcount(data.data._count.joballocation)
+      }
+      setLoading(false)
+    })
+    .catch(error => {
+      console.error('Error fetching data : ', error);
+      setLoading(false)
+    })
+  }, [])
+
+  
+
   return (
     <Card variant="solid" color="primary" invertedColors sx={{ height: 200 }}>
       <CardContent orientation="horizontal">
@@ -30,7 +57,10 @@ export default function DashboardCard() {
         </CircularProgress>
         <CardContent>
           <Typography level="body-md">Tasks</Typography>
-          <Typography level="h2">13</Typography>
+
+          {!loading &&  (
+            <Typography level='h2'>{jobAllocationcount}</Typography>
+          )}
         </CardContent>
       </CardContent>
       <CardActions>

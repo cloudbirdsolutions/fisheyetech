@@ -8,6 +8,9 @@ import Typography from '@mui/joy/Typography';
 import SvgIcon from '@mui/joy/SvgIcon';
 
 export default function DashboardReviewCard() {
+
+  const ReviewCount=[121]
+
   return (
     <Card variant="solid" color="success" invertedColors sx={{ height: 200 }}>
       <CardContent orientation="horizontal">
@@ -30,7 +33,7 @@ export default function DashboardReviewCard() {
         </CircularProgress>
         <CardContent>
           <Typography level="body-md">Reviews</Typography>
-          <Typography level="h2">100 +</Typography>
+          <Typography level="h2">{ReviewCount}</Typography>
         </CardContent>
       </CardContent>
       <CardActions>
