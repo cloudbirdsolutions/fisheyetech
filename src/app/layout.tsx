@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./Provider/provider";
-import { CssVarsProvider } from '@mui/joy/styles';
-import CssBaseline from '@mui/joy/CssBaseline';
 
+import { Experimental_CssVarsProvider as MaterialCssVarsProvider } from '@mui/material/styles';
+import { CssVarsProvider as JoyCssVarsProvider  } from '@mui/joy/styles';
+import CssBaseline from '@mui/material/CssBaseline'; // Import CssBaseline from Material UI
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,10 +23,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
       <Providers>
-          <CssVarsProvider disableTransitionOnChange>
-            <CssBaseline />
-              {children}
-        </CssVarsProvider>
+      <MaterialCssVarsProvider
+  defaultMode="system"
+>
+  <JoyCssVarsProvider defaultMode="system">
+   
+    {children}
+  </JoyCssVarsProvider>
+</MaterialCssVarsProvider>
         </Providers>
       </body>
     </html>

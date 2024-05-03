@@ -29,3 +29,51 @@ export type ChatProps = {
   }
   comments: MessageProps[];
 };
+
+
+export type Field = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "parameterId": number,
+  "fieldId": string,
+  "fieldName": string,
+  "fieldValue": string,
+  "filedValueType": string,
+  "readingMaster": Reading[]
+}
+
+export type Reading = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "fieldId": number,
+  "readingName": string,
+}
+
+export type Parameter = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "groupId": number,
+  "parameterName": string,
+  "fieldMaster": Field[]
+}
+
+export type Group = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "sheetId": number,
+  "groupName": string,
+  "parameterMaster": Parameter[]
+}
+
+export type FormData = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "sheetName": string,
+  "description": string,
+  "groupMaster": Group[]
+}

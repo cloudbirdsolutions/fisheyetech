@@ -241,11 +241,12 @@ export default function OrderTable(props:any) {
         className="OrderTableContainer"
         variant="outlined"
         sx={{
+          height: '60vh', overflow: 'auto' ,
           display: { xs: 'none', sm: 'initial' },
           width: '100%',
           borderRadius: 'sm',
           flexShrink: 1,
-          overflow: 'hidden',
+          
           minHeight: 0,
         }}
       >
@@ -355,7 +356,7 @@ export default function OrderTable(props:any) {
           color="neutral"
           startDecorator={<KeyboardArrowLeftIcon />}
         >
-          Previous
+          Previousee
         </Button>
 
         <Box sx={{ flex: 1 }} />

@@ -15,6 +15,10 @@ import MyMessages from '@/app/components/MyMessages';
 import { API_BASE_URL } from '@/app/config';
 import { ChatProps } from '@/app/types';
 
+import LogForm from '@/app/components/Forms/LogForm'
+import { FormData } from '@/app/types';
+import { formDataInitalState } from '@/app/InitialStates/formData';
+
 var jmespath = require("jmespath");
 
 interface LogProps {
@@ -138,6 +142,26 @@ async function getUserPermission(sheetId: string, userId: number) {
     console.error('Error fetching user details:', error);
   }
 }
+async function getDocumentTransitionId(documentId: string) {
+  try {
+
+    const response = await fetch(`${API_BASE_URL}/sheetdocid/get-transition?docId=${documentId}`, {
+      method: 'GET',
+      headers: {
+        Accept: "application/json",
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch document Transition: ' + response.statusText);
+    }
+    const data = await response.json();
+    return data
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+  }
+}
 
 
 export default function Log() {
@@ -145,12 +169,28 @@ export default function Log() {
   const [index, setIndex] = React.useState(0);
   const [expandIndex, setExpandIndex] = React.useState<number | null>(0);
   const [sheetPermissionId, setSheetPermissionId] = React.useState<number>(0);
+
+  const [formData, setFormData] = React.useState<FormData>(formDataInitalState);
+
   const params = useParams<{ id: string, document: string }>()
+  const [documentTransitionId,setDocumentTransistionId] = useState({
+    "id": 0,
+    "createdAt": "",
+    "updatedAt": "",
+    "sheetId": 0,
+    "userId": 0,
+    "transitionId": 1,
+    "transitionMaster": {
+        "transitionName": "Draft"
+    }
+});
   const [parameters, setParameters] = useState({ id: "", sheetName: "", description: "", parameterMaster: [{ id: "", parameterName: "", fieldMaster: [{ id: "", fieldName: "", fieldId: "" }] }] });
 
   const logintype = useSelector((state: RootState) => state?.user.data);
 
   const [relaodData, setReloadData] = useState(Date.now());
+
+  const [showReview,setShowReview]= useState(false);
 
 
   const [shiftDetails, setShiftDetails] = useState([{
@@ -208,33 +248,59 @@ export default function Log() {
     }
 ])
 
+  const decideShowReview = ()=>{
+
+    // Permission operator and review length < 1 don't show
+    // operator 1, // shift 2 // sec 3
+      let show = false;
+      show = [2,3].includes(sheetPermissionId) ? true : [1].includes(sheetPermissionId) && reviews.length > 0 ? true : false
+      setShowReview(show)
+
+  }
+
+  React.useEffect(()=>{
+    decideShowReview();
+  },[sheetPermissionId])
+
   React.useEffect(()=>{
 
     let fetchFromServer = async()=> {
       let reviewResp = await getDocumentReviews(params.document);
+      // let permissionData = await getUserPermission(params.id, logintype.data.id)
+
+      let fieldResp = await getSheetFields(params.id)
+      let shiftResp = await getDocumentShift(params.document)
       let permissionData = await getUserPermission(params.id, logintype.data.id)
+
+      let documentTransitioResp = await getDocumentTransitionId(params.document)
+
+      // setParameters(fieldResp.data)
+      setFormData(fieldResp.data)
+      setShiftDetails(shiftResp.data)
       setSheetPermissionId(permissionData.data[0].permissionType.id)
+
       setReivews(reviewResp.data)
+      setDocumentTransistionId(documentTransitioResp.data[0])
     } 
     fetchFromServer()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[params])
 
 
-  React.useEffect(() => {
+  // React.useEffect(() => {
 
-    const fetchData = async () => {
-      let fieldResp = await getSheetFields(params.id)
-      let shiftResp = await getDocumentShift(params.document)
-      let permissionData = await getUserPermission(params.id, logintype.data.id)
+  //   const fetchData = async () => {
+  //     let fieldResp = await getSheetFields(params.id)
+  //     let shiftResp = await getDocumentShift(params.document)
+  //     let permissionData = await getUserPermission(params.id, logintype.data.id)
 
-      setParameters(fieldResp.data)
-      setShiftDetails(shiftResp.data)
-      setSheetPermissionId(permissionData.data[0].permissionType.id)
-    }
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params])
+  //     setParameters(fieldResp.data)
+  //     setShiftDetails(shiftResp.data)
+  //     setSheetPermissionId(permissionData.data[0].permissionType.id)
+  //   }
+  //   fetchData();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [params])
 
   React.useEffect(() => {
     setCurrentShift(shiftDetails[index].shiftId)
@@ -319,8 +385,8 @@ export default function Log() {
         <ToastContainer />
         <Box>
           <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}>
-            <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{parameters.sheetName}</Typography>
-            <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{sheetPermissionId}</Typography>
+            <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{formData.sheetName}</Typography>
+            {/* <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{sheetPermissionId}</Typography> */}
            
             <Link
               underline="hover"
@@ -351,7 +417,7 @@ export default function Log() {
                   }
                 </TabList>
                 <TabPanel value={index} variant='soft' color='primary' >
-                  {parameters.parameterMaster && <AccordionGroup size='sm' sx={{ minWidth: "60dvw", borderRadius: 'md', }} variant="outlined"
+                  {/* {parameters.parameterMaster && <AccordionGroup size='sm' sx={{ minWidth: "60dvw", borderRadius: 'md', }} variant="outlined"
                     transition="0.2s" color='neutral' >
                     {
                       parameters.parameterMaster.map((paramter, index) => (
@@ -379,7 +445,7 @@ export default function Log() {
                                           {field.fieldName}
                                         </td>
                                         <td>
-                                          <Input key={`input_key_${field.id}`} size='sm' value={getFieldValue(field.id, paramter.id)} onChange={(e) => updateValue(e, field.id, paramter.id)} disabled={getMatchedFieldRecord(field.id, paramter.id)?.transitionId != sheetPermissionId} />
+                                          <Input key={`input_key_${field.id}`} size='sm' value={getFieldValue(field.id, paramter.id)} onChange={(e) => updateValue(e, field.id, paramter.id)} disabled={documentTransitionId.transitionId!=1} />
                                         </td>
                                       </tr>
 
@@ -395,36 +461,24 @@ export default function Log() {
                     }
 
                   </AccordionGroup>
-                  }
+                  } */}
+
+                  <LogForm formData={formData}/>
                 </TabPanel>
               </Tabs>
             </CardContent>
             <CardActions buttonFlex="0 1 220px">
-              {/* <Stack direction={'row'} spacing={2} justifyContent="flex-end" alignItems="flex-end" marginTop={2}
-                marginBottom={2}>            <Button size='sm' color='primary' onClick={() => { saveRecordChnages(1) }}>
-                  Save draft
-                </Button>
-                {logintype.data.rolesId == 1 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(2) }}>
-                  Send for Supervisor Approval
-                </Button>}
-                {logintype.data.rolesId == 2 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(3) }}>
-                  Send for Engineer Approval
-                </Button>}
-                {logintype.data.rolesId == 3 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(4) }}>
-                  Approve Document
-                </Button>}
-              </Stack> */}
-
-              <Button size='sm' variant='outlined' color='primary' onClick={() => { saveRecordChnages(1) }} sx={{ ml: 'auto' }}>
+             
+             {[1].includes(documentTransitionId.transitionId) && <Button size='sm' variant='outlined' color='primary' onClick={() => { saveRecordChnages(1) }} sx={{ ml: 'auto' }}>
                 Save draft
-              </Button>
-              {logintype.data.rolesId == 1 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(2) }}>
+              </Button>}
+              {sheetPermissionId == 1 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(2) }} disabled={documentTransitionId.transitionId!=1} sx={{ ml: 'auto' }}>
                 Send for Supervisor Approval
               </Button>}
-              {logintype.data.rolesId == 2 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(3) }}>
+              {sheetPermissionId == 2 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(3) }} disabled={documentTransitionId.transitionId!=2} sx={{ ml: 'auto' }}>
                 Send for Engineer Approval
               </Button>}
-              {logintype.data.rolesId == 3 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(4) }}>
+              {sheetPermissionId == 3 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(4) }} sx={{ ml: 'auto' }}>
                 Approve Document
               </Button>}
             </CardActions>
@@ -448,13 +502,13 @@ export default function Log() {
               >
                 <TabList >
                   <Tab indicatorPlacement="top" variant='soft' color='neutral'>
-                  <Badge badgeContent={reviews.length} variant='solid' color='danger'>
+                  {/* <Badge badgeContent={reviews.length} variant='solid' color='danger'> */}
                    <Typography> Reviews</Typography>
-                   </Badge>
+                   {/* </Badge> */}
                   </Tab>
                 </TabList>
                 <TabPanel>
-                 <MyMessages chats={reviews} permissionId={sheetPermissionId} docId={parseInt(params.document)}/>
+                 {showReview && <MyMessages chats={reviews} permissionId={sheetPermissionId} docId={parseInt(params.document)}/>}
                 </TabPanel>
               </Tabs>
             </CardContent>

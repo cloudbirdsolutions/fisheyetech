@@ -8,6 +8,9 @@ import Typography from '@mui/joy/Typography';
 import SvgIcon from '@mui/joy/SvgIcon';
 
 export default function DashboardDocumentCard() {
+
+const document= ["draft","Bending","Approval"]
+
   return (
     <Card variant="solid" color="primary" invertedColors sx={{ height: 200 }}>
       <CardContent orientation="horizontal">
@@ -29,11 +32,16 @@ export default function DashboardDocumentCard() {
           </SvgIcon>
         </CircularProgress>
         <CardContent>
+
           <Typography  level="h2">Document</Typography>
+
+        
+      {document.map((status,index)=>(
+        <Typography key={index} level="body-md">
+          {status.charAt(0).toUpperCase()+status.slice(1)}
+        </Typography>
+      ))}
           
-          <Typography  level="body-md">Draft</Typography>
-          <Typography level="body-md">Bending </Typography>
-          <Typography level="body-md">Approved</Typography>
         </CardContent>
       </CardContent>
       <CardActions>

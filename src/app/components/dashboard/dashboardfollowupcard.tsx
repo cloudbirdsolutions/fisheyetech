@@ -8,6 +8,8 @@ import Typography from '@mui/joy/Typography';
 import SvgIcon from '@mui/joy/SvgIcon';
 
 export default function DashboardFollowUpCard() {
+
+  const FollowUpscount =[14]
   return (
     <Card variant="solid" color="warning" invertedColors sx={{ height: 200 }}>
       <CardContent orientation="horizontal">
@@ -30,7 +32,7 @@ export default function DashboardFollowUpCard() {
         </CircularProgress>
         <CardContent>
           <Typography level="body-md">Follow Ups</Typography>
-          <Typography level="h2">7</Typography>
+          <Typography level="h2">{FollowUpscount}</Typography>
         </CardContent>
       </CardContent>
       <CardActions>
