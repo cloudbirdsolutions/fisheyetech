@@ -108,6 +108,7 @@ useEffect(() => {
   // Fetch or process data here
   const formattedData = Tasks.map(item => item.value);
   setChartData(formattedData);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 }, []);
 
 const TasksData = getChartData(Tasks, months);

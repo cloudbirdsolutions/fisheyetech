@@ -70,7 +70,7 @@ export default function LogForm(props: LogFormProps) {
                                                                     <td>{field.fieldValue}</td>
                                                                     {
                                                                         field.readingMaster.map((reading,index) => (
-                                                                            <td>
+                                                                            <td key={index}>
                                                                                 <FormControl>
                                                                                    { findex == 0 && <FormLabel>
                                                                                         {reading.readingName}

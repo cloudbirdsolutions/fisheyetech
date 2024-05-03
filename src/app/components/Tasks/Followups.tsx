@@ -169,8 +169,9 @@ export default function Followups() {
 
         fetchRemarks();
 
-    },
-        []);
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, []);
 
     return (
         <React.Fragment>
@@ -186,7 +187,7 @@ export default function Followups() {
                         <FormControl orientation="horizontal">
                             <FormLabel>Department</FormLabel>
                             <Select placeholder="Select a department" onChange={handleChange}>
-                                {departmentList.map(dep => (<Option value={dep.departments.id}>
+                                {departmentList.map(dep => (<Option key={dep.departments.id} value={dep.departments.id}>
                                     {dep.departments.departmentName}
                                 </Option>))}
                             </Select>

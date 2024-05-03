@@ -234,8 +234,7 @@ export default function TasksTable() {
 
     fetchRemarks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },
-   []);
+  },[]);
 
  
 

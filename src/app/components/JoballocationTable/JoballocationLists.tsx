@@ -109,6 +109,7 @@ export default function JoballocationLists(props:any) {
   const jobs = React.useCallback((listItem: any) => {
     props.setListsec(true);
     props.setSelectedRow(listItem);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 

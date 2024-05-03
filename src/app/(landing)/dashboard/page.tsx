@@ -60,6 +60,7 @@ export default function Dashboard() {
         console.error('Error fetching data : ', error);
         setLoading(false)
       })
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const charts: ChartType[] = [
@@ -114,8 +115,8 @@ export default function Dashboard() {
       <Grid container spacing={2} sx={{ flexGrow: 1, flexDirection: { xs: 'column', md: 'row' } }} >
 
         {
-          charts.map(c => (
-            <Grid xs={3}>
+          charts.map((c, i) => (
+            <Grid key={i} xs={3}>
               <DashboardCard icon={c.icon} title={c.title} value={c.value} color={c.color} />
             </Grid>
           ))
