@@ -170,7 +170,7 @@ const EntityModalForm = (props:any) =>{
           }
                 <Box component="div" display="flex" alignItems="center" flexDirection={'row'} py={2}>
                 <Box component="div" sx={{width:'100%'}}>
-                  <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Sheet Name</Typography>
+                  <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Sheet Nameee</Typography>
                   <Input size="sm" placeholder="sheetName" name="sheetName" value={row!=null ? editformData.sheetName:formData.sheetName}
                               onChange={handleChange}/>
                               </Box>

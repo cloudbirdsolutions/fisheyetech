@@ -353,13 +353,12 @@ export default function TasksTable() {
         className="OrderTableContainer"
         // variant="outlined"
         color={"neutral"}
-        sx={{
+        sx={{ maxHeight: '60vh', overflow: 'auto' ,
           display: { xs: "none", sm: "initial" },
           width: "100%",
           borderRadius: "sm",
           flexShrink: 1,
-          overflow: "auto",
-          minHeight: 0,
+         
         }}
       >
         <Table

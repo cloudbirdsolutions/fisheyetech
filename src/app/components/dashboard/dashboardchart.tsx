@@ -3,6 +3,7 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
+import { DefaultColorPalette } from '@mui/joy/styles/types';
 
 const currentMonth = new Date().getMonth() + 1;
 const currentYear = new Date().getFullYear();
@@ -11,7 +12,16 @@ interface DataItem {
   date: string;
   value: number;
 }
-
+interface LineChartsParams {
+  series: {
+    label: string;
+    data: number[];
+    showMark?: boolean;
+    color: DefaultColorPalette;
+  }[];
+  width: number;
+  height: number;
+}
 export default function DashboardChart() {
 
   const [chartData, setChartData] = useState<any[]>([]);
@@ -108,10 +118,10 @@ const TasksData = getChartData(Tasks, months);
   // Line chart parameters
   const lineChartsParams = {
     series: [
-      { label: 'Tasks ', data: TasksData, showMark: false },
-      { label: 'Reviews  ', data: ReviewsData, showMark: false },
-      { label: 'Follow Ups ', data: FollowupsData, showMark: false },
-      { label: 'Bending ', data: BendingData, showMark: false },
+      { label: 'Tasks ', data: TasksData, showMark: false, color: '#1F7A1F' },
+      { label: 'Reviews  ', data: ReviewsData, showMark: false , color: '#0B6BCB'},
+      { label: 'Follow Ups ', data: FollowupsData, showMark: false , color: '#9A5B13'},
+      { label: 'Bending ', data: BendingData, showMark: false , color: '#C41C1C '},
     ],
     width: 1000,
     height: 400,

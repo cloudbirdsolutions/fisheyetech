@@ -135,8 +135,8 @@ export default function RoleTable(props: any) {
           width: '100%',
           borderRadius: 'sm',
           flexShrink: 1,
-          overflow: 'auto',
-          minHeight: 0,
+          maxHeight: '60vh', overflow: 'auto' ,
+         
         }}
       >
         <Table

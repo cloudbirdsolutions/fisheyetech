@@ -120,6 +120,7 @@ export default function TableSection(props:TableSectionProops){
     //       </FormControl>
     //     </React.Fragment>
     //   );
+
 return (
     <React.Fragment>
     <Sheet
@@ -128,6 +129,7 @@ return (
         display: { xs: 'flex', sm: 'none' },
         my: 1,
         gap: 1,
+        
       }}
     >
       <Input
@@ -192,8 +194,7 @@ return (
         width: '100%',
         borderRadius: 'sm',
         flexShrink: 1,
-        minHeight: 0,
-        overflow: 'auto' 
+        maxHeight: '60vh', overflow: 'auto' 
       }}
     >
       <Table
@@ -270,7 +271,11 @@ return (
             </tr>
           ))} */}
           {
-            tableRows && tableRows.map((EachRowReactElement)=>(<>{EachRowReactElement}</>))
+            tableRows && tableRows.map((EachRowReactElement)=>(
+            <>
+            {EachRowReactElement}
+            </>
+          ))
           }
         </tbody>
       </Table>
