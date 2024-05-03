@@ -15,6 +15,10 @@ import MyMessages from '@/app/components/MyMessages';
 import { API_BASE_URL } from '@/app/config';
 import { ChatProps } from '@/app/types';
 
+import LogForm from '@/app/components/Forms/LogForm'
+import { FormData } from '@/app/types';
+import { formDataInitalState } from '@/app/InitialStates/formData';
+
 var jmespath = require("jmespath");
 
 interface LogProps {
@@ -165,6 +169,9 @@ export default function Log() {
   const [index, setIndex] = React.useState(0);
   const [expandIndex, setExpandIndex] = React.useState<number | null>(0);
   const [sheetPermissionId, setSheetPermissionId] = React.useState<number>(0);
+
+  const [formData, setFormData] = React.useState<FormData>(formDataInitalState);
+
   const params = useParams<{ id: string, document: string }>()
   const [documentTransitionId,setDocumentTransistionId] = useState({
     "id": 0,
@@ -267,7 +274,8 @@ export default function Log() {
 
       let documentTransitioResp = await getDocumentTransitionId(params.document)
 
-      setParameters(fieldResp.data)
+      // setParameters(fieldResp.data)
+      setFormData(fieldResp.data)
       setShiftDetails(shiftResp.data)
       setSheetPermissionId(permissionData.data[0].permissionType.id)
 
@@ -377,7 +385,7 @@ export default function Log() {
         <ToastContainer />
         <Box>
           <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}>
-            <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{parameters.sheetName}</Typography>
+            <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{formData.sheetName}</Typography>
             {/* <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{sheetPermissionId}</Typography> */}
            
             <Link
@@ -409,7 +417,7 @@ export default function Log() {
                   }
                 </TabList>
                 <TabPanel value={index} variant='soft' color='primary' >
-                  {parameters.parameterMaster && <AccordionGroup size='sm' sx={{ minWidth: "60dvw", borderRadius: 'md', }} variant="outlined"
+                  {/* {parameters.parameterMaster && <AccordionGroup size='sm' sx={{ minWidth: "60dvw", borderRadius: 'md', }} variant="outlined"
                     transition="0.2s" color='neutral' >
                     {
                       parameters.parameterMaster.map((paramter, index) => (
@@ -437,7 +445,7 @@ export default function Log() {
                                           {field.fieldName}
                                         </td>
                                         <td>
-                                          <Input key={`input_key_${field.id}`} size='sm' value={getFieldValue(field.id, paramter.id)} onChange={(e) => updateValue(e, field.id, paramter.id)} disabled={getMatchedFieldRecord(field.id, paramter.id)?.transitionId != 1} />
+                                          <Input key={`input_key_${field.id}`} size='sm' value={getFieldValue(field.id, paramter.id)} onChange={(e) => updateValue(e, field.id, paramter.id)} disabled={documentTransitionId.transitionId!=1} />
                                         </td>
                                       </tr>
 
@@ -453,7 +461,9 @@ export default function Log() {
                     }
 
                   </AccordionGroup>
-                  }
+                  } */}
+
+                  <LogForm formData={formData}/>
                 </TabPanel>
               </Tabs>
             </CardContent>
