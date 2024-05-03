@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../Store/store';
 import { useRouter } from 'next/navigation';
 import { deleteentity } from '../Reducers/DeleteEntitySlice';
+import EntityListSection from './EntityListSection';
 
 
 
@@ -129,8 +130,9 @@ export default function EntityTable(props:any) {
   ))
  
   return (
-
+      <>
         <TableSection tableHeaders={headers} tableRows={tablerows}/>
-
+        <EntityListSection listItems={rows} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel} parentFunction={HandleDeleteFunction}/>
+        </>
   );
 }

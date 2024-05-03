@@ -48,7 +48,7 @@ export default function DepartmentList() {
 
           </Box>
           <EntityTable open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
-          
+         
           <modalContext.Provider value={row}>
           <EntityModalForm open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
           </modalContext.Provider>
