@@ -31,7 +31,7 @@ export default function ListPermission(props: any) {
 
   const [alljobs, setAlljobs] = useState([]);
   const [formData, setFormData] = useState({
-    userId: 0,
+    userId: props?.selectedrows?.id,
     departmentId: 0,
     permissionId: 0,
     sheetId: 0,
