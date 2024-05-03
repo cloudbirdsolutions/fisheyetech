@@ -14,6 +14,8 @@ import Stack from '@mui/joy/Stack';
 import UserModalForm from '@/app/components/UserModalForm/UserModalForm';
 import { createContext, useContext, useState } from 'react';
 import modalContext from '@/app/context/modalContext';
+import { ToastContainer } from 'react-toastify';
+
 
 export default function Users() {
 
@@ -64,6 +66,7 @@ export default function Users() {
           <modalContext.Provider value={row}>
           <UserModalForm open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
           </modalContext.Provider>
+            <ToastContainer/>
       
     </>
   );

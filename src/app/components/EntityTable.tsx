@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import { deleteentity } from '../Reducers/DeleteEntitySlice';
 import EntityListSection from './EntityListSection';
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -60,9 +61,9 @@ export default function EntityTable(props:any) {
   const [order, setOrder] = React.useState<Order>('desc');
   const [rows, setRows] = React.useState([{id:"",createdAt:"",updatedAt:"",departmentName: ""}]);
   
-  const createentity = useSelector((state:any) => state?.createentitys?.data);
-  const deleteentitys = useSelector((state:any) => state?.deleteentitys?.data);
-  const editentity = useSelector((state:any) => state?.editentitys?.data);
+  const createentity = useSelector((state:any) => state?.createentity?.data);
+  const deleteentitys = useSelector((state:any) => state?.deleteentity?.data);
+  const editentity = useSelector((state:any) => state?.editentity?.data);
 
 
   const dispatch = useDispatch<AppDispatch>();

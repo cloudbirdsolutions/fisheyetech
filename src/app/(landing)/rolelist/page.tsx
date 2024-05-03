@@ -15,6 +15,8 @@ import RoleLists from '../../components/RoleLists';
 import Stack from '@mui/joy/Stack';
 import modalContext from '@/app/context/modalContext';
 import RoleModalForm from '@/app/components/RoleListModalForm/RoleListModalForm';
+import { ToastContainer } from 'react-toastify';
+
 
 import { useState } from 'react';
 
@@ -59,7 +61,7 @@ export default function RoleList() {
           <modalContext.Provider value={row}>
           <RoleModalForm open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
           </modalContext.Provider>
-
+          <ToastContainer/>
       </>
   );
 }

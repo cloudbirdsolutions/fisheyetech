@@ -34,6 +34,9 @@ import { useRouter } from 'next/navigation';
 import { deleteuser } from '../Reducers/DeleteUserSlice';
 import { AppDispatch } from '../Store/store';
 import { API_BASE_URL } from '../config';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 export default function OrderList(props:any) {
@@ -49,8 +52,14 @@ export default function OrderList(props:any) {
     try {
       // const userData = Object.fromEntries();
        
-      dispatch(deleteuser(id)).then(() => {
-        router.push('/users');
+      dispatch(deleteuser(id)).then((res) => {
+        res.payload.statusCode === 200 ? (
+          toast.success(res.payload.message),
+        router.push('/users')
+          ) : 
+          (
+            toast.error(res.payload.message)
+          )
       })
        
      } catch (error) {

@@ -200,9 +200,16 @@ const UserModalForm = (props:any) =>{
         try {
           // const userData = Object.fromEntries();
            
-          dispatch(edituser(editformData)).then(() => {
-            props.setOpen(false);
-            router.push('/users');
+          dispatch(edituser(editformData)).then((res) => {
+           
+            res.payload.statusCode === 200 ? (
+              toast.success(res.payload.message),
+              props.setOpen(false),
+            router.push('/users')
+              ) : 
+              (
+                toast.error(res.payload.message)
+              )
           })
            
          } catch (error) {
@@ -239,11 +246,15 @@ const UserModalForm = (props:any) =>{
         try {
           // const userData = Object.fromEntries();
            
-          dispatch(createuser(formData)).then(() => {
-            
-            props.setOpen(false);
-            toast.success("User Created Successfully");
-            router.push('/users');
+          dispatch(createuser(formData)).then((res) => {
+            res.payload.statusCode === 200 ? (
+              toast.success(res.payload.message),
+              props.setOpen(false),
+            router.push('/users')
+              ) : 
+              (
+                toast.error(res.payload.message)
+              )
           })
            
          } catch (error) {

@@ -32,6 +32,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../Store/store";
 import { useRouter } from "next/navigation";
 import { deleterole } from "../Reducers/DeleteRoleSlice";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function RoleLists(props:any) {
   const [listItems, setlistItems] = React.useState([]);
@@ -51,8 +54,14 @@ export default function RoleLists(props:any) {
     try {
       // const userData = Object.fromEntries();
 
-      dispatch(deleterole(id)).then(() => {
-        router.push("/rolelist");
+      dispatch(deleterole(id)).then((res) => {
+        res.payload.statusCode === 200 ? (
+          toast.success(res.payload.message),
+          router.push("/rolelist")
+        ) : 
+          (
+            toast.error(res.payload.message)
+          )
       });
     } catch (error) {
       console.error("Failed to Delete user:", error);

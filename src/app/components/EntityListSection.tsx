@@ -36,6 +36,8 @@ import { AppDispatch } from '../Store/store';
 import { API_BASE_URL } from '../config';
 import { deleteentity } from '../Reducers/DeleteEntitySlice';
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function EntityListSection (props:any) {
 

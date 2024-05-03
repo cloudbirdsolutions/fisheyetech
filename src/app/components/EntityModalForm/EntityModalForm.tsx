@@ -19,6 +19,8 @@ import { useRouter } from 'next/navigation';
 import modalContext from "@/app/context/modalContext";
 import Box from '@mui/joy/Box';
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const EntityModalForm = (props:any) =>{
 
@@ -105,7 +107,7 @@ const EntityModalForm = (props:any) =>{
            
           dispatch(editentity(editformData)).then((res) => {
            
-            res.payload.statusCode === "200" ? (
+            res.payload.statusCode === 200 ? (
               toast.success(res.payload.message),
               props.setOpen(false),
               router.push('/entities')
