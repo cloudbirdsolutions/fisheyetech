@@ -5,34 +5,37 @@ import CardContent from '@mui/joy/CardContent';
 import CardActions from '@mui/joy/CardActions';
 import CircularProgress from '@mui/joy/CircularProgress';
 import Typography from '@mui/joy/Typography';
-import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { SvgIconTypeMap } from '@mui/joy';
-
+import SvgIcon from '@mui/joy/SvgIcon';
+import { ColorPaletteProp } from '@mui/joy';
 
 interface DashboardCardProps {
   icon : any,
-  title : String,
+  title : string,
   value : number,
-  color: 'primary'|'warning'| 'danger'|'success'|'neutral',
+  color : ColorPaletteProp
 }
 
-export default function DashboardCard(props:DashboardCardProps) {
 
+
+export default function DashboardCard(props:DashboardCardProps) {
+   
   const IconComponent = props.icon
 
   return (
-    <Card variant="solid" color={props.color} invertedColors sx={{ height: 150 }}>
+    <Card variant="solid" color={props.color} invertedColors sx={{ height: 200 }}>
       <CardContent orientation="horizontal">
         <CircularProgress size="lg" determinate value={props.value}>
           <IconComponent/>
         </CircularProgress>
         <CardContent>
-          <Typography level="title-lg">{props.title}</Typography>
-          <Typography level="h2">{props.value}</Typography>
+          <Typography level="body-md">{props.title}</Typography>
+          <Typography level='h2'>{props.value}</Typography>
         </CardContent>
       </CardContent>
       <CardActions>
-
+      <Button variant="solid" size="sm">
+          See breakdown
+        </Button>
       </CardActions>
     </Card>
   );
