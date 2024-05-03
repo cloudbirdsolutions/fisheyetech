@@ -12,6 +12,7 @@ import { AppDispatch } from '../Store/store';
 import { useRouter } from 'next/navigation';
 import { deleteentity } from '../Reducers/DeleteEntitySlice';
 import EntityListSection from './EntityListSection';
+import { toast } from 'react-toastify';
 
 
 
@@ -71,8 +72,15 @@ export default function EntityTable(props:any) {
     try {
       // const userData = Object.fromEntries();
        
-      dispatch(deleteentity(id)).then(() => {
-        router.push('/entities');
+      dispatch(deleteentity(id)).then((res) => {
+        
+        res.payload.statusCode === 200 ? (
+          toast.success(res.payload.message),
+          router.push('/entities')
+          ) : 
+          (
+            toast.error(res.payload.message)
+          )
       })
        
      } catch (error) {

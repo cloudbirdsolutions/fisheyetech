@@ -15,7 +15,7 @@ export async function deleteentityapi(id:any) {
     if (!response.ok) {
       try {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to Delete department');
+        return errorData;
       } catch (error) {
         throw new Error('Failed to Delete');
       }

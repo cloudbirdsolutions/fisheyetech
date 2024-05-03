@@ -14,12 +14,9 @@ export async function createjobapi(userData:any) {
     });
 
     if (!response.ok) {
-      try {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to Create user');
-      } catch (error) {
-        throw new Error('Failed to login');
-      }
+        return errorData;
+      
     }
 
     const data = await response.json();  

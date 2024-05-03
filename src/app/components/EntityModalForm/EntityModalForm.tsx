@@ -18,6 +18,7 @@ import Input from '@mui/joy/Input';
 import { useRouter } from 'next/navigation';
 import modalContext from "@/app/context/modalContext";
 import Box from '@mui/joy/Box';
+import { toast } from 'react-toastify';
 
 const EntityModalForm = (props:any) =>{
 
@@ -102,22 +103,35 @@ const EntityModalForm = (props:any) =>{
         try {
           // const userData = Object.fromEntries();
            
-          dispatch(editentity(editformData)).then(() => {
-            props.setOpen(false);
-            router.push('/entities');
+          dispatch(editentity(editformData)).then((res) => {
+           
+            res.payload.statusCode === "200" ? (
+              toast.success(res.payload.message),
+              props.setOpen(false),
+              router.push('/entities')
+            ) : 
+              (
+                toast.error(res.payload.message)
+              )
           })
            
-         } catch (error) {
-           console.error('Failed to create user:', error);
+         } catch (error:any) {
+           toast.error(error)
            // Handle error (e.g., display error message)
          }
     } else {
         try {
           // const userData = Object.fromEntries();
            
-          dispatch(createEntity(formData)).then(() => {
-            props.setOpen(false);
-            router.push('/entities');
+          dispatch(createEntity(formData)).then((res) => {
+            res.payload.statusCode === 200 ? (
+              toast.success(res.payload.message),
+              props.setOpen(false),
+              router.push('/entities')
+            ) : 
+              (
+                toast.error(res.payload.message)
+              )
           })
            
          } catch (error) {

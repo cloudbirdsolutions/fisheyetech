@@ -15,7 +15,7 @@ export async function editentityapi(userData:any) {
     if (!response.ok) {
       try {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to Create user');
+        return errorData;
       } catch (error) {
         throw new Error('Failed to login');
       }

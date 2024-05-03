@@ -14,7 +14,6 @@ import { AppDispatch, RootState } from "@/app/Store/store";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { API_BASE_URL } from "@/app/config";
 import ListPermissionSecLists from "./ListPermissionSecLists";
 
 export default function ListPermission(props: any) {
@@ -240,10 +239,15 @@ export default function ListPermission(props: any) {
     try {
       // const userData = Object.fromEntries();
 
-      dispatch(createjob(formData)).then(() => {
-        router.push('/joballocation');
-      }).then(() => {
-        toast.success("Job Created Successfully");
+      dispatch(createjob(formData)).then((res) => {
+        
+        res.payload.statusCode === 200 ? (
+          toast.success(res.payload.message),
+          router.push('/joballocation')
+          ) : 
+          (
+            toast.error(res.payload.message)
+          )
       })
 
     } catch (error) {

@@ -34,6 +34,8 @@ import { useRouter } from 'next/navigation';
 import { deleteuser } from '../Reducers/DeleteUserSlice';
 import { AppDispatch } from '../Store/store';
 import { API_BASE_URL } from '../config';
+import { deleteentity } from '../Reducers/DeleteEntitySlice';
+import { toast } from 'react-toastify';
 
 export default function EntityListSection (props:any) {
 
@@ -41,18 +43,25 @@ export default function EntityListSection (props:any) {
     const router = useRouter();
   
     const HandleDeleteFunction = (id:any) => {
-      try {
-        // const userData = Object.fromEntries();
-         
-        dispatch(deleteuser(id)).then(() => {
-          router.push('/users');
-        })
-         
-       } catch (error) {
-         console.error('Failed to Delete user:', error);
-         // Handle error (e.g., display error message)
-       }
-    }
+        try {
+          // const userData = Object.fromEntries();
+           
+          dispatch(deleteentity(id)).then((res) => {
+            
+            res.payload.statusCode === 200 ? (
+              toast.success(res.payload.message),
+              router.push('/entities')
+              ) : 
+              (
+                toast.error(res.payload.message)
+              )
+          })
+           
+         } catch (error) {
+           console.error('Failed to Delete user:', error);
+           // Handle error (e.g., display error message)
+         }
+      }
   
 
     return (
