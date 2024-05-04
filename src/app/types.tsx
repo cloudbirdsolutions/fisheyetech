@@ -77,3 +77,19 @@ export type FormData = {
   "description": string,
   "groupMaster": Group[]
 }
+
+export type  Reccod = {
+  id?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy: number;
+  updatedBy: number;
+  documentId: number;
+  groupId:number;
+  readingId:number;
+  shiftId: number;
+  fieldId: number;
+  fieldValue: string;
+  transitionId: number;
+  parameterId: number;
+}

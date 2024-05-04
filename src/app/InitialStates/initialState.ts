@@ -1412,3 +1412,17 @@ export const formDataInitalState = {
         }
     ]
 }
+
+export const recordMasterInitialState = [{
+    "id": 5,
+    "createdBy": 2,
+    "updatedBy": 2,
+    "documentId": 1,
+    "shiftId": 1,
+    "fieldId": 287,
+    "groupId":1,
+    "readingId":2,
+    "fieldValue": "test value 287",
+    "transitionId": 1,
+    "parameterId": 24
+  }]

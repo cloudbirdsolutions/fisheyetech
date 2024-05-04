@@ -29,16 +29,35 @@ import {
 } from '@mui/joy';
 
 
-import { FormData } from '@/app/types';
+import { FormData,Reccod } from '@/app/types';
 
 
 interface LogFormProps {
 
-    formData: FormData
+    formData: FormData,
+    recordMasterData : Reccod[],
+    setDocumentRecord : React.Dispatch<React.SetStateAction<Reccod[]>>
 
 }
 
 export default function LogForm(props: LogFormProps) {
+
+    const getFieldValue = (fieldId: string, readingId: string) => {
+        const matchedRecord = props.recordMasterData.find((rec:Reccod) => rec.fieldId === parseInt(fieldId) && rec.readingId === parseInt(readingId))
+        return matchedRecord?.fieldValue
+      }
+
+    const getMatchedFieldRecord = (fieldId: string, readingId: string) => {
+        const matchedRecord = props.recordMasterData.find((rec:Reccod) => rec.fieldId === parseInt(fieldId) && rec.readingId === parseInt(readingId))
+        return matchedRecord
+      }
+
+    const updateValue = (e: React.ChangeEvent<HTMLInputElement>, fieldId: string, readingId: string) => {
+        console.log("Value Updated")
+        let newDocumentRecord = props.recordMasterData.map((rec:Reccod) => (rec.fieldId === parseInt(fieldId) && rec.readingId === parseInt(readingId) ? Object.assign({}, rec, { "fieldValue": e.target.value }) : rec))
+        props.setDocumentRecord(newDocumentRecord)
+        // console.log(e.target.value)
+      }
 
     return (
         <Box>

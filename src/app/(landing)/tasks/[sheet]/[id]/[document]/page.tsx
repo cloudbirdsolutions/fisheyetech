@@ -16,8 +16,8 @@ import { API_BASE_URL } from '@/app/config';
 import { ChatProps } from '@/app/types';
 
 import LogForm from '@/app/components/Forms/LogForm'
-import { FormData } from '@/app/types';
-import { formDataInitalState } from '@/app/InitialStates/formData';
+import { FormData,Reccod } from '@/app/types';
+import { formDataInitalState, recordMasterInitialState } from '@/app/InitialStates/initialState';
 
 var jmespath = require("jmespath");
 
@@ -25,19 +25,7 @@ interface LogProps {
   sheetid: string;
 }
 
-interface Reccod {
-  id?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  createdBy: number;
-  updatedBy: number;
-  documentId: number;
-  shiftId: number;
-  fieldId: number;
-  fieldValue: string;
-  transitionId: number;
-  parameterId: number;
-}
+
 
 async function getSheetFields(sheetid: string) {
   try {
@@ -207,19 +195,9 @@ export default function Log() {
   }])
 
   const [currentShift, setCurrentShift] = useState(shiftDetails[0].shiftId)
-  const [documentRecord, setDocumentRecord] = useState([{
-    "id": 5,
-    "createdBy": 2,
-    "updatedBy": 2,
-    "documentId": 1,
-    "shiftId": 1,
-    "fieldId": 287,
-    "fieldValue": "test value 287",
-    "transitionId": 1,
-    "parameterId": 24
-  }])
+  const [documentRecord, setDocumentRecord] = useState<Reccod[]>(recordMasterInitialState)
 
-  const [fieldRecord, setFieldRecord] = useState(jmespath.search(parameters, "parameterMaster[].fieldMaster[].{fieldId:id,parameterId:parameterId}"))
+  const [fieldRecord, setFieldRecord] = useState(jmespath.search(formData, "groupMaster[].parameterMaster[].fieldMaster[].readingMaster[].{fieldId:fieldId,readingId:id}"))
 
   const [reviews,setReivews] = useState<ChatProps[]>([
     {
@@ -324,7 +302,7 @@ export default function Log() {
       let mergedFiledDocumentRecord = fieldRecord.map((f: any) => {
         let initialObject = { "createdBy": 2, "updatedBy": 2, "transitionId": 1, "fieldValue": "", "documentId": parseInt(params.document), "shiftId": currentShift }
         let combinedInitialFiled = Object.assign(initialObject, f)
-        let matchedRecord = documentRecordResp.data.find((rec: Reccod) => rec.fieldId === parseInt(f.fieldId) && rec.parameterId === parseInt(f.parameterId))
+        let matchedRecord = documentRecordResp.data.find((rec: Reccod) => rec.readingId === parseInt(f.readingId) && rec.fieldId === parseInt(f.fieldId))
         let finalFiledDocumentRecord = Object.assign(combinedInitialFiled, matchedRecord)
         return finalFiledDocumentRecord
       })
@@ -337,14 +315,8 @@ export default function Log() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentShift, fieldRecord, relaodData])
 
-  const getFieldValue = (fieldId: string, parameterId: string) => {
-    const matchedRecord = documentRecord.find((rec) => rec.fieldId === parseInt(fieldId) && rec.parameterId === parseInt(parameterId))
-    return matchedRecord?.fieldValue
-  }
-  const getMatchedFieldRecord = (fieldId: string, parameterId: string) => {
-    const matchedRecord = documentRecord.find((rec) => rec.fieldId === parseInt(fieldId) && rec.parameterId === parseInt(parameterId))
-    return matchedRecord
-  }
+
+
 
   const updateValue = (e: React.ChangeEvent<HTMLInputElement>, fieldId: string, paramerterId: string) => {
     console.log("Value Updated")
@@ -463,7 +435,7 @@ export default function Log() {
                   </AccordionGroup>
                   } */}
 
-                  <LogForm formData={formData}/>
+                  <LogForm formData={formData} recordMasterData={documentRecord} setDocumentRecord={setDocumentRecord}/>
                 </TabPanel>
               </Tabs>
             </CardContent>
