@@ -22,6 +22,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../Store/store";
 import { useRouter } from "next/navigation";
 import { deleterole } from "@/app/Reducers/DeleteRoleSlice";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -85,8 +88,14 @@ export default function RoleTable(props: any) {
     try {
       // const userData = Object.fromEntries();
 
-      dispatch(deleterole(id)).then(() => {
-        router.push("/rolelist");
+      dispatch(deleterole(id)).then((res) => {
+        res.payload.statusCode === 200 ? (
+          toast.success(res.payload.message),
+          router.push("/rolelist")
+        ) : 
+          (
+            toast.error(res.payload.message)
+          )
       });
     } catch (error) {
       console.error("Failed to Delete user:", error);
@@ -135,8 +144,8 @@ export default function RoleTable(props: any) {
           width: '100%',
           borderRadius: 'sm',
           flexShrink: 1,
-          overflow: 'auto',
-          minHeight: 0,
+          maxHeight: '60vh', overflow: 'auto' ,
+         
         }}
       >
         <Table

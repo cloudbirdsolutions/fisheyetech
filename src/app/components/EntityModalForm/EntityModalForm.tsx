@@ -18,6 +18,9 @@ import Input from '@mui/joy/Input';
 import { useRouter } from 'next/navigation';
 import modalContext from "@/app/context/modalContext";
 import Box from '@mui/joy/Box';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const EntityModalForm = (props:any) =>{
 
@@ -102,22 +105,35 @@ const EntityModalForm = (props:any) =>{
         try {
           // const userData = Object.fromEntries();
            
-          dispatch(editentity(editformData)).then(() => {
-            props.setOpen(false);
-            router.push('/entities');
+          dispatch(editentity(editformData)).then((res) => {
+           
+            res.payload.statusCode === 200 ? (
+              toast.success(res.payload.message),
+              props.setOpen(false),
+              router.push('/entities')
+            ) : 
+              (
+                toast.error(res.payload.message)
+              )
           })
            
-         } catch (error) {
-           console.error('Failed to create user:', error);
+         } catch (error:any) {
+           toast.error(error)
            // Handle error (e.g., display error message)
          }
     } else {
         try {
           // const userData = Object.fromEntries();
            
-          dispatch(createEntity(formData)).then(() => {
-            props.setOpen(false);
-            router.push('/entities');
+          dispatch(createEntity(formData)).then((res) => {
+            res.payload.statusCode === 200 ? (
+              toast.success(res.payload.message),
+              props.setOpen(false),
+              router.push('/entities')
+            ) : 
+              (
+                toast.error(res.payload.message)
+              )
           })
            
          } catch (error) {
@@ -170,7 +186,7 @@ const EntityModalForm = (props:any) =>{
           }
                 <Box component="div" display="flex" alignItems="center" flexDirection={'row'} py={2}>
                 <Box component="div" sx={{width:'100%'}}>
-                  <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Sheet Name</Typography>
+                  <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Sheet Nameee</Typography>
                   <Input size="sm" placeholder="sheetName" name="sheetName" value={row!=null ? editformData.sheetName:formData.sheetName}
                               onChange={handleChange}/>
                               </Box>

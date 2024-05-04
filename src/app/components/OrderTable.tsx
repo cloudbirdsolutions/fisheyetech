@@ -39,6 +39,9 @@ import { AppDispatch,RootState } from '../Store/store';
 import { useRouter } from 'next/navigation';
 import { deleteuser } from '../Reducers/DeleteUserSlice';
 import { API_BASE_URL } from '../config';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -97,8 +100,14 @@ export default function OrderTable(props:any) {
     try {
       // const userData = Object.fromEntries();
        
-      dispatch(deleteuser(id)).then(() => {
-        router.push('/users');
+      dispatch(deleteuser(id)).then((res) => {
+        res.payload.statusCode === 200 ? (
+          toast.success(res.payload.message),
+        router.push('/users')
+          ) : 
+          (
+            toast.error(res.payload.message)
+          )
       })
        
      } catch (error) {
@@ -241,11 +250,12 @@ export default function OrderTable(props:any) {
         className="OrderTableContainer"
         variant="outlined"
         sx={{
+          height: '60vh', overflow: 'auto' ,
           display: { xs: 'none', sm: 'initial' },
           width: '100%',
           borderRadius: 'sm',
           flexShrink: 1,
-          overflow: 'hidden',
+          
           minHeight: 0,
         }}
       >
@@ -355,7 +365,7 @@ export default function OrderTable(props:any) {
           color="neutral"
           startDecorator={<KeyboardArrowLeftIcon />}
         >
-          Previous
+          Previousee
         </Button>
 
         <Box sx={{ flex: 1 }} />

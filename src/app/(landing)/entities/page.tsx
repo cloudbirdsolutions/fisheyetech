@@ -11,6 +11,7 @@ import Stack from '@mui/joy/Stack';
 import EntityTable from '@/app/components/EntityTable';
 import EntityModalForm from '@/app/components/EntityModalForm/EntityModalForm';
 import modalContext from '@/app/context/modalContext';
+import { ToastContainer } from 'react-toastify';
 
 
 export default function DepartmentList() {  
@@ -48,10 +49,11 @@ export default function DepartmentList() {
 
           </Box>
           <EntityTable open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
-          
+         
           <modalContext.Provider value={row}>
           <EntityModalForm open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
           </modalContext.Provider>
+          <ToastContainer/>
           </>
   );
 }

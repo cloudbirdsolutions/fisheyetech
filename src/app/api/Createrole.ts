@@ -16,7 +16,7 @@ export async function createroleapi(roleData:any) {
     if (!response.ok) {
       try {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to Create role');
+        return errorData;
       } catch (error) {
         throw new Error('Failed to login');
       }

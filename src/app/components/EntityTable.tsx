@@ -11,6 +11,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../Store/store';
 import { useRouter } from 'next/navigation';
 import { deleteentity } from '../Reducers/DeleteEntitySlice';
+import EntityListSection from './EntityListSection';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -58,9 +61,9 @@ export default function EntityTable(props:any) {
   const [order, setOrder] = React.useState<Order>('desc');
   const [rows, setRows] = React.useState([{id:"",createdAt:"",updatedAt:"",departmentName: ""}]);
   
-  const createentity = useSelector((state:any) => state?.createentitys?.data);
-  const deleteentitys = useSelector((state:any) => state?.deleteentitys?.data);
-  const editentity = useSelector((state:any) => state?.editentitys?.data);
+  const createentity = useSelector((state:any) => state?.createentity?.data);
+  const deleteentitys = useSelector((state:any) => state?.deleteentity?.data);
+  const editentity = useSelector((state:any) => state?.editentity?.data);
 
 
   const dispatch = useDispatch<AppDispatch>();
@@ -70,8 +73,15 @@ export default function EntityTable(props:any) {
     try {
       // const userData = Object.fromEntries();
        
-      dispatch(deleteentity(id)).then(() => {
-        router.push('/entities');
+      dispatch(deleteentity(id)).then((res) => {
+        
+        res.payload.statusCode === 200 ? (
+          toast.success(res.payload.message),
+          router.push('/entities')
+          ) : 
+          (
+            toast.error(res.payload.message)
+          )
       })
        
      } catch (error) {
@@ -116,7 +126,7 @@ export default function EntityTable(props:any) {
         <Typography level="body-xs">{row?.id}</Typography>
       </td>
       <td>
-        <Typography level="body-xs">{row?.sheetName}</Typography>
+        <Typography level="body-xs">{row?.sheetName}ddd</Typography>
       </td>
       
       <td>
@@ -129,8 +139,9 @@ export default function EntityTable(props:any) {
   ))
  
   return (
-
+      <>
         <TableSection tableHeaders={headers} tableRows={tablerows}/>
-
+        <EntityListSection listItems={rows} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel} parentFunction={HandleDeleteFunction}/>
+        </>
   );
 }

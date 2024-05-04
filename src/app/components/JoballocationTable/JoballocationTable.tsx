@@ -99,6 +99,7 @@ export default function JoballocationTable(props:any) {
   const jobs = React.useCallback((row: any) => {
     props.setListsec(true);
     props.setSelectedRow(row);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const headers = ["Name", "Status"];

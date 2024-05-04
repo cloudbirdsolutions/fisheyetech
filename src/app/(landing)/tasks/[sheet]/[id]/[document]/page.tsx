@@ -238,6 +238,7 @@ export default function Log() {
 
   React.useEffect(()=>{
     decideShowReview();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[sheetPermissionId])
 
   React.useEffect(()=>{

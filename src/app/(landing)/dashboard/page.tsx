@@ -15,12 +15,26 @@ import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import DashboardChart from '@/app/components/dashboard/dashboardchart';
 
+
 interface ChartType {
   title: string,
-    color: DefaultColorPalette,
-    icon: any,
-    value : number
+  color: DefaultColorPalette,
+  icon: any,
+  value: number
 }
+interface ChartSeries {
+  label: string;
+  data: number[];
+  showMark?: boolean;
+  color: DefaultColorPalette;
+}
+
+interface LineChartsParams {
+  series: ChartSeries[];
+  width: number;
+  height: number;
+}
+
 
 export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState({
@@ -28,51 +42,53 @@ export default function Dashboard() {
     "review": 0,
     "remarks": 3,
     "sheetDocumentId": 10
-});
-  const[loading, setLoading] = useState(true)
+  });
+  const [loading, setLoading] = useState(true)
 
   const logintype = useSelector((state: RootState) => state?.user.data);
 
-  useEffect(()=>{
+  useEffect(() => {
     fetch(`http://51.79.147.139:3001/dashboard/count?userId=${logintype.data.id}`)
-    .then(response=>response.json())
-    .then(data => {
-      if(data.status === 200){
-        setDashboardData(data.data._count)
-      }
-      setLoading(false)
-    })
-    .catch(error => {
-      console.error('Error fetching data : ', error);
-      setLoading(false)
-    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 200) {
+          setDashboardData(data.data._count)
+        }
+        setLoading(false)
+      })
+      .catch(error => {
+        console.error('Error fetching data : ', error);
+        setLoading(false)
+      })
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const charts:ChartType[] = [{
-    title: 'Tasks',
-    color:'success',
-    icon: PendingActionsIcon,
-    value : dashboardData.joballocation
- },
- {
-  title: 'Review',
-  color:'primary',
-  icon: ReviewsIcon,
-  value : dashboardData.review
-},
-{
-  title: 'Remarks',
-  color:'warning',
-  icon: ReportProblemIcon,
-  value : dashboardData.remarks
-},
-{
-  title: 'Documents',
-  color:'danger',
-  icon: AssignmentIcon,
-  value : dashboardData.sheetDocumentId
-},
-]
+  const charts: ChartType[] = [
+    {
+      title: 'Tasks',
+      color: 'success',
+      icon: PendingActionsIcon,
+      value: dashboardData.joballocation
+    },
+    {
+      title: 'Review',
+      color: 'primary',
+      icon: ReviewsIcon,
+      value: dashboardData.review
+    },
+    {
+      title: 'Remarks',
+      color: 'warning',
+      icon: ReportProblemIcon,
+      value: dashboardData.remarks
+    },
+    {
+      title: 'Documents',
+      color: 'danger',
+      icon: AssignmentIcon,
+      value: dashboardData.sheetDocumentId
+    },
+  ]
 
   return (
     <>
@@ -95,20 +111,21 @@ export default function Dashboard() {
             </Typography>
           </Grid>
         </Grid>
-       </Box>
-        <Grid container spacing={2} sx={{ flexGrow: 1,flexDirection : {xs:'column',md:'row'} }} >
-         
-         {
-          charts.map(c=>(
-            <Grid xs={3}>
-            <DashboardCard icon={c.icon} title={c.title} value={c.value} color={c.color} />
-          </Grid>
+      </Box>
+      <Grid container spacing={2} sx={{ flexGrow: 1, flexDirection: { xs: 'column', md: 'row' } }} >
+
+        {
+          charts.map((c, i) => (
+            <Grid key={i} xs={3}>
+              <DashboardCard icon={c.icon} title={c.title} value={c.value} color={c.color} />
+            </Grid>
           ))
-         }
-        </Grid>
-        <DashboardChart/>
+        }
+      </Grid>
+      <DashboardChart />
+      
     </>
-    
+
   )
 
 }

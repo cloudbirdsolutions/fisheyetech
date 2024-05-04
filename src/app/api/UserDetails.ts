@@ -19,7 +19,7 @@ export async function fetchUserDetails(userData:any) {
     if (!response.ok) {
       try {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to login');
+        return errorData;
       } catch (error) {
         throw new Error('Failed to login');
       }

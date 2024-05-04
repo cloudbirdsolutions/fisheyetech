@@ -18,6 +18,9 @@ import ModalDialog from '@mui/joy/ModalDialog/ModalDialog';
 import Box from '@mui/joy/Box';
 import Input from '@mui/joy/Input/Input';
 import modalContext from '@/app/context/modalContext';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const RoleModalForm = (props:any) =>{
 
@@ -106,9 +109,16 @@ const RoleModalForm = (props:any) =>{
         try {
           // const userData = Object.fromEntries();
            
-          dispatch(editrole(editformData)).then(() => {
-            props.setOpen(false);
-            router.push('/rolelist');
+          dispatch(editrole(editformData)).then((res) => {
+            
+            res.payload.statusCode === 200 ? (
+              toast.success(res.payload.message),
+              props.setOpen(false),
+              router.push('/rolelist')
+            ) : 
+              (
+                toast.error(res.payload.message)
+              )
           })
            
          } catch (error) {
@@ -119,9 +129,15 @@ const RoleModalForm = (props:any) =>{
         try {
           // const userData = Object.fromEntries();
            
-          dispatch(createrole(formData)).then(() => {
-            props.setOpen(false);
-            router.push('/rolelist');
+          dispatch(createrole(formData)).then((res) => {
+            res.payload.statusCode === 200 ? (
+              toast.success(res.payload.message),
+              props.setOpen(false),
+              router.push('/rolelist')
+            ) : 
+              (
+                toast.error(res.payload.message)
+              )
           })
            
          } catch (error) {
