@@ -31,7 +31,7 @@ export default function DepartmentList() {
               display: 'flex',
               mb: 1,
               gap: 1,
-              flexDirection: { xs: 'column', sm: 'row' },
+              flexDirection: "row",
               alignItems: { xs: 'start', sm: 'center' },
               flexWrap: 'wrap',
               justifyContent: 'space-between',

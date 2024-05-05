@@ -22,8 +22,13 @@ import { useRouter } from "next/navigation";
 import { deletedepartment } from "../Reducers/DeleteDepartmentSlice";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {stableSort, getComparator} from '@/app/helper/sorting';
+
+
+type Order = "asc" | "desc";
 
 export default function DepartmentLists(props: any) {
+  const [order, setOrder] = React.useState<Order>("desc");
   const [listItems, setlistItems] = React.useState([]);
   const createdepartment = useSelector(
     (state: any) => state?.createdepartments?.data
@@ -78,7 +83,7 @@ export default function DepartmentLists(props: any) {
     <>
     <Box sx={{ display: { xs: "block", sm: "none" } }}>
       {listItems &&
-        listItems.map((listItem: any) => (
+        stableSort(listItems, getComparator(order, "id")).map((listItem: any) => (
           <List
             key={listItem.id}
             size="sm"
@@ -99,7 +104,15 @@ export default function DepartmentLists(props: any) {
                 <ListItemDecorator>
                   <Avatar size="sm">{listItem.id}</Avatar>
                 </ListItemDecorator>
-                <div>
+                <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      gap: 1,
+                      mb: 1,
+                      width:"100%"
+                    }}
+                  >
                   <Typography fontWeight={600} gutterBottom>
                     {listItem.departmentName}
                   </Typography>
@@ -122,7 +135,7 @@ export default function DepartmentLists(props: any) {
                       parentFunction={HandleDeleteFunction}
                     />
                   </Box>
-                </div>
+                </Box>
               </ListItemContent>
             </ListItem>
             <ListDivider />
