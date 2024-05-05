@@ -18,11 +18,21 @@ import Input from '@mui/joy/Input';
 import { useRouter } from 'next/navigation';
 import modalContext from "@/app/context/modalContext";
 import Box from '@mui/joy/Box';
+import { useForm, FormProvider, useFormContext } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
+const schema = z.object({
+  sheetName: z.string().min(1, {message: 'Please Enter the Sheet Name'}),
+  });
 const EntityModalForm = (props:any) =>{
+
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    reValidateMode: 'onChange',
+  });
 
     const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
@@ -39,8 +49,6 @@ const EntityModalForm = (props:any) =>{
       });
     
       
-    
-      const [sheetName, setsheetNameError] = useState('');
       useEffect(() => {
         if(row != null) {
             seteditFormData({
@@ -69,77 +77,58 @@ const EntityModalForm = (props:any) =>{
         }));
       }
     
-        
-    
-        // Clear corresponding error message when input changes
-        switch (name) {
-          case 'sheetName':
-            setsheetNameError('');
-            break;
-          default:
-            break;
-        }
       };
     
       const handleSubmit = async (e:any) => {
-        e.preventDefault();
     
-        // Check if required fields are filled
-          // Display error message for missing fields
+    
           if(row != null) {
-            if (!editformData.sheetName) {
-              setsheetNameError('Sheet Name is required');
-            
-              return;
-            }
+            e = {...e, "id" : editformData.id};
+              try {
+                // const userData = Object.fromEntries();
+                
+                dispatch(editentity(e)).then((res) => {
+                
+                  res.payload.statusCode === 200 ? (
+                    toast.success(res.payload.message),
+                    props.setOpen(false),
+                    methods.reset(),
+                    router.push('/entities')
+                  ) : 
+                    (
+                      toast.error(res.payload.message)
+                    )
+                })
+                
+              } catch (error:any) {
+                toast.error(error)
+                // Handle error (e.g., display error message)
+              }
           } else {
-            if (!formData.sheetName) {
-            setsheetNameError('Sheet Name is required');
-          
-            return;
-          }
-        }
+            e = {...e, "description": ""};
+              try {
+                // const userData = Object.fromEntries();
+                
+                dispatch(createEntity(e)).then((res) => {
+                  res.payload.statusCode === 200 ? (
+                    toast.success(res.payload.message),
+                    props.setOpen(false),
+                    setFormData({
+                      sheetName: ''
+                    }),
+                    methods.reset(),
 
-    
-    if(row != null) {
-        try {
-          // const userData = Object.fromEntries();
-           
-          dispatch(editentity(editformData)).then((res) => {
-           
-            res.payload.statusCode === 200 ? (
-              toast.success(res.payload.message),
-              props.setOpen(false),
-              router.push('/entities')
-            ) : 
-              (
-                toast.error(res.payload.message)
-              )
-          })
-           
-         } catch (error:any) {
-           toast.error(error)
-           // Handle error (e.g., display error message)
-         }
-    } else {
-        try {
-          // const userData = Object.fromEntries();
-           
-          dispatch(createEntity(formData)).then((res) => {
-            res.payload.statusCode === 200 ? (
-              toast.success(res.payload.message),
-              props.setOpen(false),
-              router.push('/entities')
-            ) : 
-              (
-                toast.error(res.payload.message)
-              )
-          })
-           
-         } catch (error) {
-           console.error('Failed to create user:', error);
-           // Handle error (e.g., display error message)
-         }
+                    router.push('/entities')
+                  ) : 
+                    (
+                      toast.error(res.payload.message)
+                    )
+                })
+                
+              } catch (error) {
+                console.error('Failed to create user:', error);
+                // Handle error (e.g., display error message)
+              }
     }
        
     
@@ -175,24 +164,28 @@ const EntityModalForm = (props:any) =>{
           {props.label} Entity
         </Typography>
         <Stack >
-        <form style={{display:'flex' , flexDirection: 'column', gap: '8'}} onSubmit={handleSubmit}>
+        <FormProvider {...methods}>
+        <form style={{display:'flex' , flexDirection: 'column', gap: '8'}} onSubmit={methods.handleSubmit(handleSubmit )}>
            { row != null &&
                 <Box component="div" display="flex" alignItems="center" flexDirection={'row'} py={2}>
                 <Box component="div" sx={{width:'100%'}}>
                   <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>ID</Typography>
-                    <Input size="sm" disabled name="id" value={editformData.id} />
+                    <Input size="sm" disabled {...methods.register("id")} value={row!=null ? editformData.id: ''}  />
                 </Box>
                 </Box>
           }
                 <Box component="div" display="flex" alignItems="center" flexDirection={'row'} py={2}>
                 <Box component="div" sx={{width:'100%'}}>
-                  <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Sheet Nameee</Typography>
-                  <Input size="sm" placeholder="sheetName" name="sheetName" value={row!=null ? editformData.sheetName:formData.sheetName}
-                              onChange={handleChange}/>
+                  <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Sheet Name</Typography>
+                  <Input size="sm" placeholder="sheetName" {...methods.register("sheetName")}  value={row!=null ? editformData.sheetName:formData.sheetName}
+                              onChangeCapture={handleChange}/>
+                                                {methods.formState.errors.sheetName?.message && <Typography fontSize="xs" color="danger">{`${methods.formState.errors.sheetName?.message}`}</Typography>}
+
                               </Box>
               </Box>
           <Button type="submit"> {props.label} Entity</Button>
           </form>
+          </FormProvider>
         </Stack>
       </Sheet>
     </Modal>

@@ -5,57 +5,19 @@ import * as React from 'react';
 
 import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
-import TableSection from './Common/TableSection';
 import RowMenu from './RowMenu';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../Store/store';
 import { useRouter } from 'next/navigation';
 import { deleteentity } from '../Reducers/DeleteEntitySlice';
 import EntityListSection from './EntityListSection';
+import TableSection from './Common/TableSection';
+import {stableSort, getComparator} from '@/app/helper/sorting';
+
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
-
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-type Order = 'asc' | 'desc';
-
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key,
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string },
-) => number {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
-function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
+type Order = "asc" | "desc";
 
 export default function EntityTable(props:any) {
   const [order, setOrder] = React.useState<Order>('desc');

@@ -12,16 +12,22 @@ import EntityTable from '@/app/components/EntityTable';
 import EntityModalForm from '@/app/components/EntityModalForm/EntityModalForm';
 import modalContext from '@/app/context/modalContext';
 import { ToastContainer } from 'react-toastify';
+import { useSelector } from 'react-redux';
+import Loader from '@/app/components/Loader/Loader';
 
 
-export default function DepartmentList() {  
+
+export default function Entity() {  
 
   const [label, setLabel] = React.useState<string>('');
   const [open, setOpen] = React.useState<boolean>(false);
   const [row, setRow] = React.useState(null!);
 
+  const loadingState = useSelector((state:any) => state?.createentity?.status === 'loading' || state?.deleteentity?.status === 'loading' || state?.editentity?.status === 'loading' ? 'loading' : '');
+
   return (
     <>
+      <Loader open={loadingState === 'loading'? true : false}/>
           <Box
             sx={{
               display: 'flex',

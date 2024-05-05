@@ -84,12 +84,13 @@ const DepartmentModalForm = (props:any) =>{
       const handleSubmit = async (e:any) => {
         //e.preventDefault();
     
-       e = {...e, "id" : editformData.id};
+       
 
     if(row!=null) {
+      e = {...e, "id" : editformData.id};
         try {
           
-          dispatch(editdepartment(editformData)).then((res) => {
+          dispatch(editdepartment(e)).then((res) => {
             res.payload.statusCode == 200 ? (
               toast.success(res.payload.message),
               props.setOpen(false),
@@ -108,7 +109,7 @@ const DepartmentModalForm = (props:any) =>{
       e = {...e};
         try {
           
-          dispatch(createdepartment(formData)).then((res) => {
+          dispatch(createdepartment(e)).then((res) => {
             res.payload.statusCode == 200 ? (
               toast.success(res.payload.message),
               props.setOpen(false),

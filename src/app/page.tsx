@@ -210,12 +210,12 @@ export default function Home() {
                 <FormControl>
                   <FormLabel>User Name</FormLabel>
                   <Input type="text" {...methods.register("userName")}/>
-                  {methods.formState.errors.userName?.message && <Typography>{`${methods.formState.errors.userName.message}`}</Typography>}
+                  {methods.formState.errors.userName?.message && <Typography fontSize="xs" color="danger">{`${methods.formState.errors.userName.message}`}</Typography>}
                 </FormControl>
                 <FormControl>
                   <FormLabel>Password</FormLabel>
                   <Input type="password" {...methods.register("password")}/>
-                  {methods.formState.errors.password?.message && <Typography>{`${methods.formState.errors.password.message}`}</Typography>}
+                  {methods.formState.errors.password?.message && <Typography fontSize="xs" color="danger">{`${methods.formState.errors.password.message}`}</Typography>}
                 </FormControl>
                 <Stack gap={4} sx={{ mt: 2 }}>
                   <Box
