@@ -2,45 +2,23 @@
 
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from 'react';
-import { ColorPaletteProp } from '@mui/joy/styles';
-import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
 import Chip from '@mui/joy/Chip';
-import Divider from '@mui/joy/Divider';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Link from '@mui/joy/Link';
-import Input from '@mui/joy/Input';
-import Modal from '@mui/joy/Modal';
-import ModalDialog from '@mui/joy/ModalDialog';
-import ModalClose from '@mui/joy/ModalClose';
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
-import Table from '@mui/joy/Table';
-import Sheet from '@mui/joy/Sheet';
-import Checkbox from '@mui/joy/Checkbox';
-import IconButton, { iconButtonClasses } from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
 
 
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import SearchIcon from '@mui/icons-material/Search';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import BlockIcon from '@mui/icons-material/Block';
 import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 import { useDispatch, useSelector } from 'react-redux';
 import RowMenu from './RowMenu';
 import { AppDispatch,RootState } from '../Store/store';
 import { useRouter } from 'next/navigation';
 import { deleteuser } from '../Reducers/DeleteUserSlice';
-import { API_BASE_URL } from '../config';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import TableSection from './Common/TableSection';
 
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -89,16 +67,16 @@ export default function OrderTable(props:any) {
   const edituser = useSelector((state:RootState) => state?.editusers?.data);
 
   const [order, setOrder] = React.useState<Order>('desc');
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [open, setOpen] = React.useState(false);
-  const [rows, setRows] = React.useState();
+  const [rows, setRows] = React.useState([
+    { id: "", name: "", userName: "", status: "", password: "", action :"" },
+  ]);
   
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
   const HandleDeleteFunction = (id:any) => {
     try {
-      // const userData = Object.fromEntries();
        
       dispatch(deleteuser(id)).then((res) => {
         res.payload.statusCode === 200 ? (
@@ -121,7 +99,7 @@ export default function OrderTable(props:any) {
     const getData = async () => {
       try {
 
-        const response = await fetch(`${API_BASE_URL}/users/get`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/users/get`, {
           method: 'GET',
           headers: {
             Accept: "application/json",
@@ -145,251 +123,45 @@ export default function OrderTable(props:any) {
 
   }, [createuser, deleteusers, edituser])
 
-  const renderFilters = () => (
-    <React.Fragment>
-      <FormControl size="sm">
-        <FormLabel>Status</FormLabel>
-        <Select
+  const headers = [ "Name", "User Name", "Status", "Password"];
+
+  const tablerows = stableSort(rows, getComparator(order, "id")).map(
+    (row: any) => (
+      <tr key={row?.id}>
+      <td>
+        <Typography level="body-xs">{row?.id}</Typography>
+      </td>
+      <td>
+        <Typography level="body-xs">{row?.name}</Typography>
+      </td>
+      <td>
+        <Typography level="body-xs">{row.userName}</Typography>
+      </td>
+      <td>
+        <Chip
+          variant="soft"
           size="sm"
-          placeholder="Filter by status"
-          slotProps={{ button: { sx: { whiteSpace: 'nowrap' } } }}
+          startDecorator={row?.statusMaster?.statusName === 'ACTIVE' ? <CheckRoundedIcon /> : row?.statusMaster?.statusName === 'PENDING' ? <AutorenewRoundedIcon /> : <BlockIcon />}
+          color={row?.statusMaster?.statusName === 'ACTIVE' ? 'success' : row?.statusMaster?.statusName === 'PENDING' ? 'neutral' : 'danger'}
         >
-          <Option value="Active">Active</Option>
-          <Option value="pending">Pending</Option>
-          <Option value="Inactive">Inactive</Option>
-        </Select>
-      </FormControl>
-      {/* <FormControl size="sm">
-        <FormLabel>Category</FormLabel>
-        <Select size="sm" placeholder="All">
-          <Option value="all">All</Option>
-          <Option value="refund">Refund</Option>
-          <Option value="purchase">Purchase</Option>
-          <Option value="debit">Debit</Option>
-        </Select>
-      </FormControl>
-      <FormControl size="sm">
-        <FormLabel>Customer</FormLabel>
-        <Select size="sm" placeholder="All">
-          <Option value="all">All</Option>
-          <Option value="olivia">Olivia Rhye</Option>
-          <Option value="steve">Steve Hampton</Option>
-          <Option value="ciaran">Ciaran Murray</Option>
-          <Option value="marina">Marina Macdonald</Option>
-          <Option value="charles">Charles Fulton</Option>
-          <Option value="jay">Jay Hoper</Option>
-        </Select>
-      </FormControl> */}
-    </React.Fragment>
+          {row?.statusMaster?.statusName}
+        </Chip>
+      </td>
+
+      <td>
+        <Typography level="body-xs">{row.password}</Typography>
+      </td>
+      <td>
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+
+          <RowMenu row={row} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel} parentFunction={HandleDeleteFunction}/>
+        </Box>
+      </td>
+    </tr>
+    )
   );
-  return (
-    <React.Fragment>
-      <Sheet
-        className="SearchAndFilters-mobile"
-        sx={{
-          display: { xs: 'flex', sm: 'none' },
-          my: 1,
-          gap: 1,
-          
-        }}
-      >
-        <Input
-          size="sm"
-          placeholder="Search"
-          startDecorator={<SearchIcon />}
-          sx={{ flexGrow: 1 }}
-        />
-        <IconButton
-          size="sm"
-          variant="outlined"
-          color="neutral"
-          onClick={() => setOpen(true)}
-        >
-          <FilterAltIcon />
-        </IconButton>
-        <Modal open={open} onClose={() => setOpen(false)}>
-          <ModalDialog aria-labelledby="filter-modal" layout="fullscreen">
-            <ModalClose />
-            <Typography id="filter-modal" level="h2">
-              Filters
-            </Typography>
-            <Divider sx={{ my: 2 }} />
-            <Sheet sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {renderFilters()}
-              <Button color="primary" onClick={() => setOpen(false)}>
-                Submit
-              </Button>
-            </Sheet>
-          </ModalDialog>
-        </Modal>
-      </Sheet>
-      <Sheet variant='outlined' sx={{borderRadius: 'sm',}}>
-      <Box
-        className="SearchAndFilters-tabletUp"
-        sx={{
-          backgroundColor : 'var(--joy-palette-primary-100)',
-          borderRadius: 'sm',
-          px:2,
-          py: 2,
-          display: { xs: 'none', sm: 'flex' },
-          flexWrap: 'wrap',
-          gap: 1.5,
-          '& > *': {
-            minWidth: { xs: '120px', md: '160px' },
-          },
-        }}
-      >
-        <FormControl sx={{ flex: 1 }} size="sm">
-          <FormLabel>Search for user</FormLabel>
-          <Input size="sm" placeholder="Search" startDecorator={<SearchIcon />} />
-        </FormControl>
-        {renderFilters()}
-      </Box>
-      </Sheet>
-      <Sheet
-        className="OrderTableContainer"
-        variant="outlined"
-        sx={{
-          height: '60vh', overflow: 'auto' ,
-          display: { xs: 'none', sm: 'initial' },
-          width: '100%',
-          borderRadius: 'sm',
-          flexShrink: 1,
-          
-          minHeight: 0,
-        }}
-      >
-        <Table
-          aria-labelledby="tableTitle"
-          stickyHeader
-          hoverRow
-          sx={{
-            // '--TableCell-headBackground': 'var(--joy-palette-background-level1)',
-            '--TableCell-headBackground': 'var(--joy-palette-primary-800)',
-            '--Table-headerUnderlineThickness': '1px',
-            '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
-            '--TableCell-paddingY': '4px',
-            '--TableCell-paddingX': '8px',
-            '& th ': {color:"white"},
-            backgroundColor : 'var(--joy-palette-primary-50)'
-          }}
-        >
-          <thead >
-            <tr >
-              <th style={{ padding: '12px 6px' }}>
-                <Link
-                  underline="none"
-                  color="primary"
-                  component="button"
-                  onClick={() => setOrder(order === 'asc' ? 'desc' : 'asc')}
-                  fontWeight="lg"
-                  endDecorator={<ArrowDropDownIcon />}
-                  sx={{
-                    '& svg': {
-                      transition: '0.2s',
-                      transform:
-                        order === 'desc' ? 'rotate(0deg)' : 'rotate(180deg)',
-                    },
-                  }}
-                >
-                  S.No
-                </Link>
-              </th>
-              <th style={{ padding: '12px 6px' }}>Name</th>
-              <th style={{ padding: '12px 6px' }}>User Name</th>
-              {/* <th style={{ padding: '12px 6px' }}>Phone</th>
-              <th style={{ padding: '12px 6px' }}>Address</th> */}
-              <th style={{ padding: '12px 6px' }}>Status</th>
-              <th style={{ padding: '12px 6px' }}>Password</th>
-              <th style={{ padding: '12px 6px' }}>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows && stableSort(rows, getComparator(order, 'id')).map((row: any) => (
-              <tr key={row?.id}>
-                <td>
-                  <Typography level="body-xs">{row?.id}</Typography>
-                </td>
-                <td>
-                  <Typography level="body-xs">{row?.name}</Typography>
-                </td>
-                <td>
-                  <Typography level="body-xs">{row.userName}</Typography>
-                </td>
-                {/* <td>
-                  <Typography level="body-xs">{row.phone}</Typography>
-                </td>
-                <td>
-                  <Typography level="body-xs">{row.address}</Typography>
-                </td> */}
-                <td>
-                  <Chip
-                    variant="soft"
-                    size="sm"
-                    startDecorator={row?.statusMaster?.statusName === 'ACTIVE' ? <CheckRoundedIcon /> : row?.statusMaster?.statusName === 'PENDING' ? <AutorenewRoundedIcon /> : <BlockIcon />}
-                    color={row?.statusMaster?.statusName === 'ACTIVE' ? 'success' : row?.statusMaster?.statusName === 'PENDING' ? 'neutral' : 'danger'}
-                  >
-                    {row?.statusMaster?.statusName}
-                  </Chip>
-                </td>
 
-                <td>
-                  <Typography level="body-xs">{row.password}</Typography>
-                </td>
-                <td>
-                  <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-
-                    <RowMenu row={row} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel} parentFunction={HandleDeleteFunction}/>
-                  </Box>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      </Sheet>
-      <Box
-        className="Pagination-laptopUp"
-        sx={{
-          pt: 2,
-          gap: 1,
-          [`& .${iconButtonClasses.root}`]: { borderRadius: '50%' },
-          display: {
-            xs: 'none',
-            md: 'flex',
-          },
-        }}
-      >
-        <Button
-          size="sm"
-          variant="outlined"
-          color="neutral"
-          startDecorator={<KeyboardArrowLeftIcon />}
-        >
-          Previousee
-        </Button>
-
-        <Box sx={{ flex: 1 }} />
-        {['1', '2', '3', '…', '8', '9', '10'].map((page) => (
-          <IconButton
-            key={page}
-            size="sm"
-            variant={Number(page) ? 'outlined' : 'plain'}
-            color="neutral"
-          >
-            {page}
-          </IconButton>
-        ))}
-        <Box sx={{ flex: 1 }} />
-
-        <Button
-          size="sm"
-          variant="outlined"
-          color="neutral"
-          endDecorator={<KeyboardArrowRightIcon />}
-        >
-          Next
-        </Button>
-      </Box>
-    </React.Fragment>
+   return (
+    <TableSection tableHeaders={headers} tableRows={tablerows} />
   );
 }
