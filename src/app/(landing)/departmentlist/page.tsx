@@ -12,14 +12,20 @@ import Stack from '@mui/joy/Stack';
 import modalContext from '@/app/context/modalContext';
 import DepartmentModalForm from '@/app/components/DepartmentModalForm/DepartmentModalForm';
 import { ToastContainer } from 'react-toastify';
+import { useSelector } from 'react-redux';
+import Loader from '@/app/components/Loader/Loader';
 
 export default function DepartmentList() {
   const [label, setLabel] = React.useState<string>('');
   const [open, setOpen] = React.useState<boolean>(false);
   const [row, setRow] = React.useState(null!);
-  
+  const loadingState = useSelector((state:any) => state?.createdepartments?.status === 'loading' || state?.deletedepartments?.status === 'loading' || state?.editdepartments?.status === 'loading' ? 'loading' : '');
+
+
    return (
     <>
+    <Loader open={loadingState === 'loading'? true : false}/>
+
           <Box
             sx={{
               display: 'flex',

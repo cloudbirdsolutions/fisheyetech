@@ -271,10 +271,10 @@ return (
             </tr>
           ))} */}
           {
-            tableRows && tableRows.map((EachRowReactElement)=>(
-            <>
+            tableRows && tableRows.map((EachRowReactElement, i)=>(
+            <React.Fragment key={i}>
             {EachRowReactElement}
-            </>
+            </React.Fragment>
           ))
           }
         </tbody>

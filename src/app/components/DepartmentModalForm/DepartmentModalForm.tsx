@@ -43,7 +43,7 @@ const DepartmentModalForm = (props:any) =>{
         if(row!=null) {
           seteditFormData({
                 id: row?.id,
-                departmentName: row?.name
+                departmentName: row?.departmentName
               });
         } else {
             setFormData({
@@ -82,19 +82,19 @@ const DepartmentModalForm = (props:any) =>{
       const handleSubmit = async (e:any) => {
         e.preventDefault();
     
-        // Check if required fields are filled
-        if (!formData.departmentName) {
-          // Display error message for missing fields
-          setdepartmentError('Department Name is required');
-          
-          return;
-        }
-    
+       
     if(row!=null) {
         try {
-          // const userData = Object.fromEntries();
-           
+          // Check if required fields are filled
+          if (!editformData.departmentName) {
+            // Display error message for missing fields
+            setdepartmentError('Department Name is required');
+            
+            return;
+          }
+        
           dispatch(editdepartment(editformData)).then((res) => {
+            setdepartmentError('');
             res.payload.statusCode == 200 ? (
               toast.success(res.payload.message),
             props.setOpen(false),
@@ -111,12 +111,19 @@ const DepartmentModalForm = (props:any) =>{
     } else {
         try {
           // const userData = Object.fromEntries();
+          if (!formData.departmentName) {
+            // Display error message for missing fields
+            setdepartmentError('Department Name is required');
+            
+            return;
+          }
            
           dispatch(createdepartment(formData)).then((res) => {
             res.payload.statusCode == 200 ? (
               toast.success(res.payload.message),
-            props.setOpen(false),
-            router.push('/departmentlist')
+              props.setOpen(false),
+              setFormData({departmentName: ''}),
+              router.push('/departmentlist')
             ) : (
               toast.error(res.payload.message)
             )
@@ -166,7 +173,7 @@ const DepartmentModalForm = (props:any) =>{
               <Box component="div" sx={{width:'100%'}}>
                  <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Name</Typography>
                   <Input size="sm" placeholder="Department Name" name="departmentName" value={row!= null?editformData.departmentName : formData.departmentName} onChange={handleChange}/>
-                  {departmentError && <p>{departmentError}</p>}
+                  {departmentError && <Typography color='danger'>{departmentError}</Typography>}
               </Box>
             </Box>
           

@@ -20,12 +20,18 @@ import {useDispatch, useSelector} from 'react-redux';
 import { AppDispatch } from './Store/store';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Loader from './components/Loader/Loader';
+import { useForm, FormProvider, useFormContext } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+import * as z from "zod";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-interface FormElements extends HTMLFormControlsCollection {
-  userName: HTMLInputElement;
-  password: HTMLInputElement;
-}
+const schema = z.object({
+  userName: z.string().trim().nonempty({ message: "User name is required" }),
+  password: z.string().min(1, {message: 'Password is required'})
+});
 
 
 function ColorSchemeToggle(props: IconButtonProps) {
@@ -53,10 +59,17 @@ function ColorSchemeToggle(props: IconButtonProps) {
 }
 
 export default function Home() {
+
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    reValidateMode: 'onChange',
+});
+
   const dispatch = useDispatch<AppDispatch>();
   const [error, setError] = React.useState(''); 
 
   const data = useSelector((state:any) => state?.user?.data);
+  const loadingState = useSelector((state:any) => state?.user?.status);
   const router = useRouter();
   
   useEffect(() => {
@@ -65,24 +78,30 @@ export default function Home() {
           router.push('/users', { scroll: false })
           :
           router.push('/tasks', { scroll: false })
-    } else {
-      setError('Invalid username or password')
-    }
+    } 
     // eslint-disable-next-line
   }, [data]);
 
-  const handleSubmit = (e:any) => {
-    e.preventDefault();
-    var formData = new FormData(e.target);
-        const userData:any = Object.fromEntries(formData);
-        console.log('form values', userData)
-        dispatch(fetchUserData(userData));      
+  const handleSubmit = (formData:any) => {
+        //e.preventDefault();
+        formData = {...formData};
+        //const userData:any = Object.fromEntries(formData);
+        //console.log('form values', userData)
+        dispatch(fetchUserData(formData)).then((res) => {
+          methods.reset();
+          res.payload.statusCode === 404 ? 
+            toast.error(res.payload.message) : ''
+        });
   }
     
 
   return (
+    <>
+    <Loader open={loadingState === 'loading'? true : false}/>
+
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
       <CssBaseline />
+
       <GlobalStyles
         styles={{
           ':root': {
@@ -186,16 +205,17 @@ export default function Home() {
               or
             </Divider> */}
             <Stack gap={4} sx={{ mt: 2 }}>
-              <form
-                onSubmit={handleSubmit}
-              >
-                <FormControl required>
+            <FormProvider {...methods}>
+              <form onSubmit={methods.handleSubmit(handleSubmit )}>
+                <FormControl>
                   <FormLabel>User Name</FormLabel>
-                  <Input type="text" name="userName" />
+                  <Input type="text" {...methods.register("userName")}/>
+                  {methods.formState.errors.userName?.message && <Typography>{`${methods.formState.errors.userName.message}`}</Typography>}
                 </FormControl>
-                <FormControl required>
+                <FormControl>
                   <FormLabel>Password</FormLabel>
-                  <Input type="password" name="password" />
+                  <Input type="password" {...methods.register("password")}/>
+                  {methods.formState.errors.password?.message && <Typography>{`${methods.formState.errors.password.message}`}</Typography>}
                 </FormControl>
                 <Stack gap={4} sx={{ mt: 2 }}>
                   <Box
@@ -214,6 +234,7 @@ export default function Home() {
                   </Button>
                 </Stack>
               </form>
+              </FormProvider>
             </Stack>
           </Box>
           <Box component="footer" sx={{ py: 3 }}>
@@ -246,6 +267,8 @@ export default function Home() {
           },
         })}
       />
+      <ToastContainer/>
     </CssVarsProvider>
+    </>
   );
 }
