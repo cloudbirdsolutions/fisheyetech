@@ -20,26 +20,31 @@ import modalContext from "@/app/context/modalContext";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Box from '@mui/joy/Box';
-import Grid from '@mui/joy/Grid';
+import { useForm, FormProvider, useFormContext } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import * as z from "zod";
+const schema = z.object({
+  rolesId: z.preprocess((a) => parseInt(z.string().parse(a)), z.number().min(1, { message: "Please Select the Roles" })),
+  name: z.string().min(1, {message: 'Please Enter the Name'}),
+  userName: z.string().trim().nonempty({ message: "Please Enter the User Name" }),
+  password: z.string().min(1, {message: 'Please Enter the Password'}),
+  statusId: z.preprocess((a) => parseInt(z.string().parse(a)), z.number().min(1, { message: "Please Select the Status" })),
+});
 
 const UserModalForm = (props:any) =>{
+    
+  const methods = useForm({
+      resolver: zodResolver(schema),
+      reValidateMode: 'onChange',
+  });
+
 
     const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
 
     const row:any = useContext(modalContext);
 
-    const [formData, setFormData] = useState({
-        name: "",
-        userName: "",
-        address: "",
-        phone: "",
-        password: "",
-        statusId: 0,
-        rolesId: 0
-      });
-
-      
     const [editformData, seteditFormData] = useState({
       id:0,
       name: "",
@@ -50,17 +55,18 @@ const UserModalForm = (props:any) =>{
       statusId: 0,
       rolesId: 0
     });
-    
-      
-    
-      const [nameError, setnameError] = useState('');
-       const [phonenoError, setPhonenoError] = useState('');
-      const [userName, setuserNameError] = useState('');
-      const [addressError, setaddressError] = useState('');
-      const [passwordError, setpasswordError] = useState('');
-      const [statusError, setstatusError] = useState('');
 
-      const [role, setRole] = useState([{
+    const [checkformData, setFormData] = useState({
+      name: "",
+      userName: "",
+      address: "",
+      phone: "",
+      password: "",
+      statusId: 0,
+      rolesId: 0
+    });
+    
+    const [role, setRole] = useState([{
         "id": 4,
       "createdAt": "2024-04-20T08:42:38.910Z",
       "updatedAt": "2024-04-20T08:42:38.910Z",
@@ -75,30 +81,28 @@ const UserModalForm = (props:any) =>{
       }
 
     }])
-      useEffect(() => {
-        if(row!=null) {
+
+    const [status, setStatus] = useState([{
+      "id": 1,
+      "createdAt": "2024-04-20T07:51:59.687Z",
+      "updatedAt": "2024-04-20T07:51:59.687Z",
+      "statusName": "ACTIVE"
+  }])
+
+
+    useEffect(() => {
+       if(row!=null) {
             seteditFormData({
                 id: row?.id,
                 name: row?.name,
                 userName: row?.userName,
-                address: row?.address,
                 phone: row?.phone,
+                address: row?.address,
                 password: row?.password,
                 statusId: row?.statusId,
                 rolesId: row?.rolesId
               });
-        } else {
-            setFormData({
-                name: "",
-                userName: "",
-                address: "",
-                phone: "",
-                password: "",
-                statusId: 0,
-                rolesId: 0
-              })
-        }
-
+        } 
         const getrole = async () => {
           try {
           const response = await fetch('http://51.79.147.139:3000/roles/get', {
@@ -123,7 +127,31 @@ const UserModalForm = (props:any) =>{
       }
       getrole();
 
-      },[row])
+      const getstatus = async () => {
+        try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/statusMaster/get`, {
+            method: 'GET',
+            headers: {
+              Accept : "application/json",
+              'Content-Type': 'application/json',
+            }
+          });
+    
+          if (!response.ok) {
+            throw new Error('Failed to fetch user details: ' + response.statusText);
+          }
+    
+          const data = await response.json();
+          
+          setStatus(data.data);
+        } catch (error) {
+          console.error('Error fetching user details:', error);
+        }
+        
+    }
+    getstatus();
+
+  },[row])
       
     
       const handleChange = (e:any) => {
@@ -134,136 +162,55 @@ const UserModalForm = (props:any) =>{
             [name]: e.target.name === 'id' || e.target.name === 'statusId' || e.target.name === 'rolesId' ? parseInt(value) : value     
           }));
         } else {
-        setFormData(prevState => ({
-          ...prevState,
-          [name]: e.target.name === 'statusId' || e.target.name === 'rolesId' ? parseInt(value) : value     
-        }));
-      }
-    
-        
-    
-        // Clear corresponding error message when input changes
-        switch (name) {
-          case 'name':
-            setnameError('');
-            break;
-          case 'userName':
-            setuserNameError('');
-            break;
-            case 'phone':
-              setPhonenoError('');
-            break;
-          case 'address':
-            setaddressError('');
-            break;
-          case 'password':
-            setpasswordError('');
-            break;
-            case 'statusId':
-            setstatusError('');
-            break;
-          default:
-            break;
+          setFormData(prevState => ({
+            ...prevState,
+            [name]: e.target.name === 'statusId' || e.target.name === 'rolesId' ? parseInt(value) : value     
+          }));
         }
       };
     
-      const handleSubmit = async (e:any) => {
-        e.preventDefault();
-    
-        
-    
-    if(row!=null) {
-      // Check if required fields are filled
-      if (!editformData.name || !editformData.password || editformData.statusId === 0 || !editformData.userName) {
-        // Display error message for missing fields
-        if (!editformData.name) {
-          setnameError('Name is required');
-        }
-        
-        if (!editformData.password) {
-          setpasswordError('Password is required');
-        }
-        /*if (!editformData.address) {
-          setaddressError('Address is required');
-        }
-        if (!editformData.phone) {
-          setPhonenoError('Phone Number is required');
-        }*/
-        if (!editformData.statusId) {
-          setstatusError('Status is required');
-        }
-        if (!editformData.userName) {
-          setuserNameError('User Name is required');
-        }
-        return;
-      }
-        try {
-          // const userData = Object.fromEntries();
-           
-          dispatch(edituser(editformData)).then((res) => {
-           
-            res.payload.statusCode === 200 ? (
-              toast.success(res.payload.message),
-              props.setOpen(false),
-            router.push('/users')
-              ) : 
-              (
-                toast.error(res.payload.message)
-              )
-          })
-           
-         } catch (error) {
-           console.error('Failed to create user:', error);
-           // Handle error (e.g., display error message)
-         }
-    } else {
-
-      // Check if required fields are filled
-      if (!formData.name || !formData.password || formData.statusId === 0 || !formData.userName) {
-        // Display error message for missing fields
-        if (!formData.name) {
-          setnameError('Name is required');
-        }
-        
-        if (!formData.password) {
-          setpasswordError('Password is required');
-        }
-        /*if (!formData.address) {
-          setaddressError('Address is required');
-        }
-        if (!formData.phone) {
-          setPhonenoError('Phone Number is required');
-        }*/
-        if (!formData.statusId) {
-          setstatusError('Status is required');
-        }
-        if (!formData.userName) {
-          setuserNameError('User Name is required');
-        }
-        return;
-      }
-
-        try {
-          // const userData = Object.fromEntries();
-           
-          dispatch(createuser(formData)).then((res) => {
-            res.payload.statusCode === 200 ? (
-              toast.success(res.payload.message),
-              props.setOpen(false),
-            router.push('/users')
-              ) : 
-              (
-                toast.error(res.payload.message)
-              )
-          })
-           
-         } catch (error) {
-           console.error('Failed to create user:', error);
-           // Handle error (e.g., display error message)
-         }
-    }
+      const handleSubmit = async (formData:any) => {
        
-    
+        if(row!=null) {
+          formData = {...formData, "phone": '', "address" : "", "id" : editformData.id};
+            try {
+              dispatch(edituser(formData)).then((res) => {
+                res.payload.statusCode === 200 ? (
+                  toast.success(res.payload.message),
+                  props.setOpen(false),
+                  methods.reset(),
+                  router.push('/users')
+                  ) : 
+                  (
+                    toast.error(res.payload.message)
+                  )
+              })
+              
+            } catch (error) {
+              console.error('Failed to create user:', error);
+            }
+        } else {
+
+          formData = {...formData, "phone": '', "address" : ""};
+
+            try {
+              dispatch(createuser(formData)).then((res) => {
+                res.payload.statusCode === 200 ? (
+                  toast.success(res.payload.message),
+                  props.setOpen(false),
+                  methods.reset(),
+                  router.push('/users')
+                  ) : 
+                  (
+                    toast.error(res.payload.message)
+                  )
+              })
+              
+            } catch (error) {
+              console.error('Failed to create user:', error);
+            }
+        }
+       
       }
 
     return (
@@ -272,7 +219,7 @@ const UserModalForm = (props:any) =>{
       aria-labelledby="modal-title"
       aria-describedby="modal-desc"
       open={props.open}
-      onClose={() => props.setOpen(false)}
+      onClose={() => {props.setOpen(false), methods.reset()}}
       sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: '9999' }}
     >  
       <Sheet
@@ -297,73 +244,72 @@ const UserModalForm = (props:any) =>{
           {props.label} User
         </Typography>
         <Stack className='p-8'>
-        <form style={{display:'flex' , flexDirection: 'column', gap: '8'}} onSubmit={handleSubmit}>
+        <FormProvider {...methods}>
+        <form style={{display:'flex' , flexDirection: 'column', gap: '8'}} onSubmit={methods.handleSubmit(handleSubmit )}>
         <Box component="div" display="flex" alignItems="center" flexDirection={{xs: 'column', sm: 'column', md: 'row'}} py={1} gap={2}>
             {row!=null &&
             
               <Box component="div" width={{xs: '100%', sm: '100%', md: '50%'}}>
                     <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>ID</Typography>
-                    <Input disabled name="id" value={editformData.id} style={{width:'100%'}}/>
+                    <Input disabled  style={{width:'100%'}} {...methods.register("id")} value={row!=null ? editformData.id: ''}/>
                 </Box>
             }
                 <Box component="div" width={{xs: '100%', sm: '100%', md: '50%'}}>
                   <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Role</Typography>
                     {
                     role && 
-                    <select multiple={false} name="rolesId" onChange={handleChange} style={{padding: '8px', borderRadius: '5px', borderColor: '#ccc', width: '100%'}}>
+                    <select multiple={false} {...methods.register("rolesId")} onChange={handleChange} style={{padding: '8px', borderRadius: '5px', borderColor: '#ccc', width: '100%'}}>
                         <option value={0}>Select</option>
                         {role.map((r:any, i) => {
-                            return <option key={i} value={r.id}>{r.roleName}</option>
+                            return <option key={i} value={r.id} selected={row!=null ? r.id === editformData?.rolesId : false}>{r.roleName}</option>
                         })                
                         }   
                     </select>
-                 }
+                    }
+                    {methods.formState.errors.rolesId?.message && <Typography fontSize="xs" color="danger">{`${methods.formState.errors.rolesId?.message}`}</Typography>}
                 </Box>
             </Box>
           
             <Box component="div" display="flex" alignItems="center" flexDirection={{xs: 'column', sm: 'column', md: 'row'}} py={1} gap={2}>
               <Box component="div" width={{xs: '100%', sm: '100%', md: '50%'}}>
                 <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Name</Typography>
-                  <Input size="sm" placeholder="name" name="name" value={row!=null ? editformData.name : formData.name} onChange={handleChange}/>
+                  <Input size="sm" placeholder="name" {...methods.register("name")} value={row!=null ? editformData.name: checkformData.name}  onChange={handleChange}/>
+                  {methods.formState.errors.name?.message && <Typography fontSize="xs" color="danger">{`${methods.formState.errors.name.message}`}</Typography>}
               </Box>
               <Box component="div" width={{xs: '100%', sm: '100%', md: '50%'}}>
               <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>User Name</Typography>
-                  <Input size="sm" placeholder="userName" name="userName" value={row!=null ? editformData.userName : formData.userName}
+                  <Input size="sm" placeholder="userName" {...methods.register("userName")} value={row!=null ? editformData.userName: checkformData.userName} 
                               onChange={handleChange}/>
+                              {methods.formState.errors.userName?.message && <Typography fontSize="xs" color="danger">{`${methods.formState.errors.userName.message}`}</Typography>}
               </Box>
             </Box>
             <Box component="div" display="flex" alignItems="center" flexDirection={{xs: 'column', sm: 'column', md: 'row'}} py={1} gap={2}>
               
             <Box component="div" width={{xs: '100%', sm: '100%', md: '50%'}}>
               <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Password</Typography>
-                  <Input size="sm" placeholder="password" name="password" value={row!=null ? editformData.password : formData.password}
-                              onChange={handleChange}/>
+                  <Input size="sm" placeholder="password" {...methods.register("password")} value={row!=null ? editformData.password: checkformData.password} onChange={handleChange}/>
+                  {methods.formState.errors.password?.message && <Typography fontSize="xs" color="danger">{`${methods.formState.errors.password.message}`}</Typography>}
               </Box>
               <Box component="div" width={{xs: '100%', sm: '100%', md: '50%'}}>
               <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Status</Typography>
-                    <select name="statusId" onChange={handleChange} style={{padding: '8px', borderRadius: '5px', borderColor: '#ccc', width: '100%'}}>
-                        <option value={0}>SELECT</option>
-                        <option value={1}>ACTIVE</option>
-                        <option value={2}>INACTIVE</option>
-                        <option value={3}>PENDING</option>
+                   
+              {
+                    status && 
+                    <select multiple={false} {...methods.register("statusId")} onChange={handleChange} style={{padding: '8px', borderRadius: '5px', borderColor: '#ccc', width: '100%'}}>
+                        <option value={0}>Select</option>
+                        {status.map((s:any, i) => {
+                            return <option key={i} value={s.id} selected={row!=null ? s.id === editformData?.statusId : false}>{s.statusName}</option>
+                        })                
+                        }   
                     </select>
+                    }
+                    {methods.formState.errors.statusId?.message && <Typography fontSize="xs" color="danger">{`${methods.formState.errors.statusId.message}`}</Typography>}
               </Box>
             </Box>
-            <Box component="div" display="flex" alignItems="center" flexDirection={'row'} py={1} gap={2}>
-              {/* <div className='space-y-[2px] w-full'>
-                  <h3 className='text-textdull text-xs mb-2'>Address</h3>
-                  <Input size="sm" placeholder="address" name="address" value={row!=null ? editformData.address : formData.address}
-                              onChange={handleChange}/>
-              </div> */}
-              {/* <div className='space-y-[2px] w-full'>
-                  <h3 className='text-textdull text-xs mb-2'>Phone</h3>
-                  <Input size="sm" placeholder="phonenumber" name="phone" value={row!=null ? editformData.phone : formData.phone}
-                              onChange={handleChange}/>
-              </div> */}
-            </Box>
-          
-          <Button type="submit"> {props.label} User</Button>
+                      
+            <Button type="submit"> {props.label} User</Button>
           </form>
+          </FormProvider>
         </Stack>
       </Sheet>
     </Modal>
