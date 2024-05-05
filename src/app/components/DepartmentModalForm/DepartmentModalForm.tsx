@@ -18,10 +18,22 @@ import Input from '@mui/joy/Input';
 import { useRouter } from 'next/navigation';
 import modalContext from "@/app/context/modalContext";
 import { Box, ModalDialog } from '@mui/joy';
+import { useForm, FormProvider, useFormContext } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
+const schema = z.object({
+  departmentName: z.string().min(1, {message: 'Please Enter the Department Name'}),
+  });
+
 const DepartmentModalForm = (props:any) =>{
+
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    reValidateMode: 'onChange',
+  });
 
     const dispatch = useDispatch<AppDispatch>();
     const router = useRouter();
@@ -37,7 +49,7 @@ const DepartmentModalForm = (props:any) =>{
     });
       
     
-      const [departmentError, setdepartmentError] = useState('');
+     // const [departmentError, setdepartmentError] = useState('');
       
       useEffect(() => {
         if(row!=null) {
@@ -46,9 +58,9 @@ const DepartmentModalForm = (props:any) =>{
                 departmentName: row?.departmentName
               });
         } else {
-            setFormData({
-                departmentName: ""
-            })
+          setFormData({
+            departmentName: ''
+          });
         }
       },[row])
       
@@ -62,43 +74,27 @@ const DepartmentModalForm = (props:any) =>{
             [name]: e.target.name === 'id'  ? parseInt(value) : value     
           }));
         } else {
-        setFormData(prevState => ({
-          ...prevState,
-          [name]: value     
-        }));
-      }
-        
-    
-        // Clear corresponding error message when input changes
-        switch (name) {
-          case 'departmentName':
-            setdepartmentError('');
-            break;
-          default:
-            break;
+          setFormData(prevState => ({
+            ...prevState,
+            [name]: value     
+          }));
         }
       };
     
       const handleSubmit = async (e:any) => {
-        e.preventDefault();
+        //e.preventDefault();
     
-       
+       e = {...e, "id" : editformData.id};
+
     if(row!=null) {
         try {
-          // Check if required fields are filled
-          if (!editformData.departmentName) {
-            // Display error message for missing fields
-            setdepartmentError('Department Name is required');
-            
-            return;
-          }
-        
+          
           dispatch(editdepartment(editformData)).then((res) => {
-            setdepartmentError('');
             res.payload.statusCode == 200 ? (
               toast.success(res.payload.message),
-            props.setOpen(false),
-            router.push('/departmentlist') 
+              props.setOpen(false),
+              methods.reset(),
+              router.push('/departmentlist') 
             ) : (
               toast.error(res.payload.message)
             )
@@ -109,20 +105,17 @@ const DepartmentModalForm = (props:any) =>{
            // Handle error (e.g., display error message)
          }
     } else {
+      e = {...e};
         try {
-          // const userData = Object.fromEntries();
-          if (!formData.departmentName) {
-            // Display error message for missing fields
-            setdepartmentError('Department Name is required');
-            
-            return;
-          }
-           
+          
           dispatch(createdepartment(formData)).then((res) => {
             res.payload.statusCode == 200 ? (
               toast.success(res.payload.message),
               props.setOpen(false),
-              setFormData({departmentName: ''}),
+              setFormData({
+                departmentName: ''
+              }),
+              methods.reset(),
               router.push('/departmentlist')
             ) : (
               toast.error(res.payload.message)
@@ -160,25 +153,27 @@ const DepartmentModalForm = (props:any) =>{
           {props.label} Department
         </Typography>
         <Stack>
-        <form style={{display:'flex' , flexDirection: 'column', gap: '8'}} onSubmit={handleSubmit}>
+        <FormProvider {...methods}>
+        <form style={{display:'flex' , flexDirection: 'column', gap: '8'}} onSubmit={methods.handleSubmit(handleSubmit )}>
             {row!=null &&
             <Box component="div" display="flex" alignItems="center" flexDirection={'row'} py={2}>
                 <Box component="div" sx={{width:'100%'}}>
                 <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>ID</Typography>
-                    <Input size="sm" disabled name="id" value={editformData.id} />
+                    <Input size="sm" disabled {...methods.register("id")} value={row!=null ? editformData.id: ''} />
                 </Box>
             </Box>
             }
             <Box component="div" display="flex" alignItems="center" flexDirection={'column'} py={2}>
               <Box component="div" sx={{width:'100%'}}>
                  <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Name</Typography>
-                  <Input size="sm" placeholder="Department Name" name="departmentName" value={row!= null?editformData.departmentName : formData.departmentName} onChange={handleChange}/>
-                  {departmentError && <Typography color='danger'>{departmentError}</Typography>}
+                  <Input size="sm" placeholder="Department Name" {...methods.register("departmentName")} value={row!= null?editformData.departmentName : formData.departmentName} onChangeCapture={handleChange}/>
+                  {methods.formState.errors.departmentName?.message && <Typography fontSize="xs" color="danger">{`${methods.formState.errors.departmentName?.message}`}</Typography>}
               </Box>
             </Box>
           
           <Button type="submit"> {props.label} Department</Button>
           </form>
+          </FormProvider>
         </Stack>
       </ModalDialog>
     </Modal>

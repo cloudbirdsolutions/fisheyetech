@@ -257,7 +257,7 @@ const UserModalForm = (props:any) =>{
                   <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Role</Typography>
                     {
                     role && 
-                    <select multiple={false} {...methods.register("rolesId")} onChange={handleChange} style={{padding: '8px', borderRadius: '5px', borderColor: '#ccc', width: '100%'}}>
+                    <select multiple={false} {...methods.register("rolesId")} onChangeCapture={handleChange} style={{padding: '8px', borderRadius: '5px', borderColor: '#ccc', width: '100%'}}>
                         <option value={0}>Select</option>
                         {role.map((r:any, i) => {
                             return <option key={i} value={r.id} selected={row!=null ? r.id === editformData?.rolesId : false}>{r.roleName}</option>
@@ -272,13 +272,13 @@ const UserModalForm = (props:any) =>{
             <Box component="div" display="flex" alignItems="center" flexDirection={{xs: 'column', sm: 'column', md: 'row'}} py={1} gap={2}>
               <Box component="div" width={{xs: '100%', sm: '100%', md: '50%'}}>
                 <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Name</Typography>
-                  <Input size="sm" placeholder="name" {...methods.register("name")} value={row!=null ? editformData.name: checkformData.name}  onChange={handleChange}/>
+                  <Input size="sm" placeholder="name" {...methods.register("name")} value={row!=null ? editformData.name: checkformData.name}  onChangeCapture={handleChange}/>
                   {methods.formState.errors.name?.message && <Typography fontSize="xs" color="danger">{`${methods.formState.errors.name.message}`}</Typography>}
               </Box>
               <Box component="div" width={{xs: '100%', sm: '100%', md: '50%'}}>
               <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>User Name</Typography>
                   <Input size="sm" placeholder="userName" {...methods.register("userName")} value={row!=null ? editformData.userName: checkformData.userName} 
-                              onChange={handleChange}/>
+                              onChangeCapture={handleChange}/>
                               {methods.formState.errors.userName?.message && <Typography fontSize="xs" color="danger">{`${methods.formState.errors.userName.message}`}</Typography>}
               </Box>
             </Box>
@@ -286,7 +286,7 @@ const UserModalForm = (props:any) =>{
               
             <Box component="div" width={{xs: '100%', sm: '100%', md: '50%'}}>
               <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Password</Typography>
-                  <Input size="sm" placeholder="password" {...methods.register("password")} value={row!=null ? editformData.password: checkformData.password} onChange={handleChange}/>
+                  <Input size="sm" placeholder="password" {...methods.register("password")} value={row!=null ? editformData.password: checkformData.password} onChangeCapture={handleChange}/>
                   {methods.formState.errors.password?.message && <Typography fontSize="xs" color="danger">{`${methods.formState.errors.password.message}`}</Typography>}
               </Box>
               <Box component="div" width={{xs: '100%', sm: '100%', md: '50%'}}>
@@ -294,7 +294,7 @@ const UserModalForm = (props:any) =>{
                    
               {
                     status && 
-                    <select multiple={false} {...methods.register("statusId")} onChange={handleChange} style={{padding: '8px', borderRadius: '5px', borderColor: '#ccc', width: '100%'}}>
+                    <select multiple={false} {...methods.register("statusId")} onChangeCapture={handleChange} style={{padding: '8px', borderRadius: '5px', borderColor: '#ccc', width: '100%'}}>
                         <option value={0}>Select</option>
                         {status.map((s:any, i) => {
                             return <option key={i} value={s.id} selected={row!=null ? s.id === editformData?.statusId : false}>{s.statusName}</option>
