@@ -17,13 +17,13 @@ import Sheet from '@mui/joy/Sheet';
 import Input from '@mui/joy/Input';
 import { useRouter } from 'next/navigation';
 import modalContext from "@/app/context/modalContext";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import Box from '@mui/joy/Box';
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import * as z from "zod";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const schema = z.object({
   rolesId: z.preprocess((a) => parseInt(z.string().parse(a)), z.number().min(1, { message: "Please Select the Roles" })),
   name: z.string().min(1, {message: 'Please Enter the Name'}),
@@ -231,7 +231,6 @@ const UserModalForm = (props:any) =>{
           boxShadow: 'lg',
         }}
       >
-        <ToastContainer/>
         <ModalClose variant="plain" sx={{ m: 1 }} />
         <Typography
           component="h2"
