@@ -31,49 +31,98 @@ export type ChatProps = {
 };
 
 
-export type Field = {
+export type ReadingMaster = {
   "id": number,
   "createdAt": string,
   "updatedAt": string,
-  "parameterId": number,
-  "fieldId": string,
-  "fieldName": string,
-  "fieldValue": string,
-  "filedValueType": string,
-  "readingMaster": Reading[]
+  "readingName": string
 }
 
-export type Reading = {
+
+export type FieldReading =   {
   "id": number,
   "createdAt": string,
   "updatedAt": string,
   "fieldId": number,
-  "readingName": string,
+  "readingId": number,
+  "readingMaster": ReadingMaster
 }
 
-export type Parameter = {
+export type FieldMaster = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "fieldId": string,
+  "fieldName": string,
+  "fieldValue": string,
+  "filedValueType": string,
+  "fieldReading": FieldReading[]
+}
+
+export type ParameterField = 
+  {
+    "id": number,
+    "createdAt": string,
+    "updatedAt": string,
+    "parameterId": number,
+    "fieldId": number,
+    "fieldMaster" : FieldMaster
+}
+
+
+export type ParameterMaster = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "parameterName": string,
+  "paramterFields" : ParameterField[]
+
+}
+
+export type GroupParameter = {
   "id": number,
   "createdAt": string,
   "updatedAt": string,
   "groupId": number,
-  "parameterName": string,
-  "fieldMaster": Field[]
+  "parameterId": number,
+  "parameterMaster": ParameterMaster
 }
 
-export type Group = {
+export type GroupMaster = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "groupName": string,
+  "groupParameters" : GroupParameter[]
+
+}
+
+export type FormData = {
+  
   "id": number,
   "createdAt": string,
   "updatedAt": string,
   "sheetId": number,
-  "groupName": string,
-  "parameterMaster": Parameter[]
+  "groupId": number,
+  "groupMaster": GroupMaster
 }
 
-export type FormData = {
-  "id": number,
-  "createdAt": string,
-  "updatedAt": string,
-  "sheetName": string,
-  "description": string,
-  "groupMaster": Group[]
+
+export type RecordReading = {"readingId":number,"fieldId":number,"parameterId":number,"groupId":number}
+
+
+export type  Reccod = {
+  id?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  createdBy: number;
+  updatedBy: number;
+  documentId: number;
+  groupId:number;
+  readingId:number;
+  shiftId: number;
+  fieldId: number;
+  fieldValue: string;
+  transitionId: number;
+  parameterId: number;
 }

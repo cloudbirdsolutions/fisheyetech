@@ -16,8 +16,10 @@ import { API_BASE_URL } from '@/app/config';
 import { ChatProps } from '@/app/types';
 
 import LogForm from '@/app/components/Forms/LogForm'
-import { FormData } from '@/app/types';
-import { formDataInitalState } from '@/app/InitialStates/formData';
+import { FormData, Reccod,RecordReading } from '@/app/types';
+import { formDataInitalState, recordMasterInitialState } from '@/app/InitialStates/initialState';
+
+var _array = require('lodash/array');
 
 var jmespath = require("jmespath");
 
@@ -25,19 +27,7 @@ interface LogProps {
   sheetid: string;
 }
 
-interface Reccod {
-  id?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  createdBy: number;
-  updatedBy: number;
-  documentId: number;
-  shiftId: number;
-  fieldId: number;
-  fieldValue: string;
-  transitionId: number;
-  parameterId: number;
-}
+
 
 async function getSheetFields(sheetid: string) {
   try {
@@ -48,7 +38,7 @@ async function getSheetFields(sheetid: string) {
         Accept: "application/json",
         'Content-Type': 'application/json',
       }
-  });
+    });
 
     if (!response.ok) {
       throw new Error("Failed to fetch user details: " + response.statusText);
@@ -163,6 +153,22 @@ async function getDocumentTransitionId(documentId: string) {
   }
 }
 
+const prepareFields = (formData: FormData[]):RecordReading[] => {
+  const arr:any = []
+  formData.forEach(gr => {
+    gr.groupMaster.groupParameters.forEach(gp => {
+      gp.parameterMaster.paramterFields.forEach(pf => {
+        pf.fieldMaster.fieldReading.forEach(read => {
+          arr.push({ readingId: read.readingId, fieldId: read.fieldId, parameterId: gp.parameterMaster.id, groupId: gr.id })
+        })
+      })
+    })
+  })
+
+  return arr.flat()
+
+}
+
 
 export default function Log() {
 
@@ -170,10 +176,12 @@ export default function Log() {
   const [expandIndex, setExpandIndex] = React.useState<number | null>(0);
   const [sheetPermissionId, setSheetPermissionId] = React.useState<number>(0);
 
-  const [formData, setFormData] = React.useState<FormData>(formDataInitalState);
+
+
+  const [formData, setFormData] = React.useState<FormData[]>(formDataInitalState);
 
   const params = useParams<{ id: string, document: string }>()
-  const [documentTransitionId,setDocumentTransistionId] = useState({
+  const [documentTransitionId, setDocumentTransistionId] = useState({
     "id": 0,
     "createdAt": "",
     "updatedAt": "",
@@ -181,16 +189,16 @@ export default function Log() {
     "userId": 0,
     "transitionId": 1,
     "transitionMaster": {
-        "transitionName": "Draft"
+      "transitionName": "Draft"
     }
-});
+  });
   const [parameters, setParameters] = useState({ id: "", sheetName: "", description: "", parameterMaster: [{ id: "", parameterName: "", fieldMaster: [{ id: "", fieldName: "", fieldId: "" }] }] });
 
   const logintype = useSelector((state: RootState) => state?.user.data);
 
   const [relaodData, setReloadData] = useState(Date.now());
 
-  const [showReview,setShowReview]= useState(false);
+  const [showReview, setShowReview] = useState(false);
 
 
   const [shiftDetails, setShiftDetails] = useState([{
@@ -207,65 +215,55 @@ export default function Log() {
   }])
 
   const [currentShift, setCurrentShift] = useState(shiftDetails[0].shiftId)
-  const [documentRecord, setDocumentRecord] = useState([{
-    "id": 5,
-    "createdBy": 2,
-    "updatedBy": 2,
-    "documentId": 1,
-    "shiftId": 1,
-    "fieldId": 287,
-    "fieldValue": "test value 287",
-    "transitionId": 1,
-    "parameterId": 24
-  }])
+  const [documentRecord, setDocumentRecord] = useState<Reccod[]>(recordMasterInitialState)
 
-  const [fieldRecord, setFieldRecord] = useState(jmespath.search(parameters, "parameterMaster[].fieldMaster[].{fieldId:id,parameterId:parameterId}"))
+  const [fieldRecord, setFieldRecord] = useState<RecordReading[]>(prepareFields(formData))
 
-  const [reviews,setReivews] = useState<ChatProps[]>([
+  const [reviews, setReivews] = useState<ChatProps[]>([
     {
-        "id": "1",
-        "createdAt": "2024-04-26T05:26:59.637Z",
-        "updatedAt": "2024-04-26T05:26:59.637Z",
-        "docId": 232,
-        "createdBy": 2,
-        "summary": "Pls check temperature limit",
-        "users": {
-            "userName": "Bharani1"
-        },
-        "comments": [
-            {
-                "id": 1,
-                "createdAt": "",
-                "updatedAt": "",
-                "reviewId": 1,
-                "comments": "",
-                "createdBy": 1,
-                "users": {
-                    "userName": ""
-                }
-            }
-        ]
+      "id": "1",
+      "createdAt": "2024-04-26T05:26:59.637Z",
+      "updatedAt": "2024-04-26T05:26:59.637Z",
+      "docId": 232,
+      "createdBy": 2,
+      "summary": "Pls check temperature limit",
+      "users": {
+        "userName": "Bharani1"
+      },
+      "comments": [
+        {
+          "id": 1,
+          "createdAt": "",
+          "updatedAt": "",
+          "reviewId": 1,
+          "comments": "",
+          "createdBy": 1,
+          "users": {
+            "userName": ""
+          }
+        }
+      ]
     }
-])
+  ])
 
-  const decideShowReview = ()=>{
+  const decideShowReview = () => {
 
     // Permission operator and review length < 1 don't show
     // operator 1, // shift 2 // sec 3
-      let show = false;
-      show = [2,3].includes(sheetPermissionId) ? true : [1].includes(sheetPermissionId) && reviews.length > 0 ? true : false
-      setShowReview(show)
+    let show = false;
+    show = [2, 3].includes(sheetPermissionId) ? true : [1].includes(sheetPermissionId) && reviews.length > 0 ? true : false
+    setShowReview(show)
 
   }
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     decideShowReview();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[sheetPermissionId])
+  }, [sheetPermissionId])
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
 
-    let fetchFromServer = async()=> {
+    let fetchFromServer = async () => {
       let reviewResp = await getDocumentReviews(params.document);
       // let permissionData = await getUserPermission(params.id, logintype.data.id)
 
@@ -277,15 +275,17 @@ export default function Log() {
 
       // setParameters(fieldResp.data)
       setFormData(fieldResp.data)
+      setFieldRecord(prepareFields(fieldResp.data))
       setShiftDetails(shiftResp.data)
       setSheetPermissionId(permissionData.data[0].permissionType.id)
 
       setReivews(reviewResp.data)
       setDocumentTransistionId(documentTransitioResp.data[0])
-    } 
+
+    }
     fetchFromServer()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[params])
+  }, [params])
 
 
   // React.useEffect(() => {
@@ -320,39 +320,23 @@ export default function Log() {
 
       let documentRecordResp = await getDocumentRecords(params.document, currentShift)
 
-      console.log(fieldRecord)
-
-      let mergedFiledDocumentRecord = fieldRecord.map((f: any) => {
-        let initialObject = { "createdBy": 2, "updatedBy": 2, "transitionId": 1, "fieldValue": "", "documentId": parseInt(params.document), "shiftId": currentShift }
+      let mergedFiledDocumentRecord = fieldRecord.map((f: RecordReading) => {
+        let initialObject = { "createdBy": logintype.data.id, "updatedBy": logintype.data.id, "transitionId": 1, "fieldValue": "", "documentId": parseInt(params.document), "shiftId": currentShift }
         let combinedInitialFiled = Object.assign(initialObject, f)
-        let matchedRecord = documentRecordResp.data.find((rec: Reccod) => rec.fieldId === parseInt(f.fieldId) && rec.parameterId === parseInt(f.parameterId))
+        let matchedRecord = documentRecordResp.data.find((rec: Reccod) => rec.readingId === f.readingId && rec.fieldId === f.fieldId && rec.groupId===f.groupId && rec.parameterId===f.parameterId)
         let finalFiledDocumentRecord = Object.assign(combinedInitialFiled, matchedRecord)
         return finalFiledDocumentRecord
       })
-
+      console.log(fieldRecord);
       setDocumentRecord(mergedFiledDocumentRecord)
-      console.log(mergedFiledDocumentRecord)
 
     }
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentShift, fieldRecord, relaodData])
 
-  const getFieldValue = (fieldId: string, parameterId: string) => {
-    const matchedRecord = documentRecord.find((rec) => rec.fieldId === parseInt(fieldId) && rec.parameterId === parseInt(parameterId))
-    return matchedRecord?.fieldValue
-  }
-  const getMatchedFieldRecord = (fieldId: string, parameterId: string) => {
-    const matchedRecord = documentRecord.find((rec) => rec.fieldId === parseInt(fieldId) && rec.parameterId === parseInt(parameterId))
-    return matchedRecord
-  }
 
-  const updateValue = (e: React.ChangeEvent<HTMLInputElement>, fieldId: string, paramerterId: string) => {
-    console.log("Value Updated")
-    let newDocumentRecord = documentRecord.map((rec) => (rec.fieldId === parseInt(fieldId) && rec.parameterId === parseInt(paramerterId) ? Object.assign({}, rec, { "fieldValue": e.target.value }) : rec))
-    setDocumentRecord(newDocumentRecord)
-    // console.log(e.target.value)
-  }
+
 
   const saveRecordChnages = async (transistionId: number) => {
     try {
@@ -386,9 +370,9 @@ export default function Log() {
         <ToastContainer />
         <Box>
           <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}>
-            <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{formData.sheetName}</Typography>
+            <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{formData[0].sheetId}</Typography>
             {/* <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{sheetPermissionId}</Typography> */}
-           
+
             <Link
               underline="hover"
               color="primary"
@@ -464,19 +448,19 @@ export default function Log() {
                   </AccordionGroup>
                   } */}
 
-                  <LogForm formData={formData}/>
+                  <LogForm formData={formData} recordMasterData={documentRecord} setDocumentRecord={setDocumentRecord} documentTransitionState={documentTransitionId.transitionId}/>
                 </TabPanel>
               </Tabs>
             </CardContent>
             <CardActions buttonFlex="0 1 220px">
-             
-             {[1].includes(documentTransitionId.transitionId) && <Button size='sm' variant='outlined' color='primary' onClick={() => { saveRecordChnages(1) }} sx={{ ml: 'auto' }}>
+
+              {[1].includes(documentTransitionId.transitionId) && <Button size='sm' variant='outlined' color='primary' onClick={() => { saveRecordChnages(1) }} sx={{ ml: 'auto' }}>
                 Save draft
               </Button>}
-              {sheetPermissionId == 1 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(2) }} disabled={documentTransitionId.transitionId!=1} sx={{ ml: 'auto' }}>
+              {sheetPermissionId == 1 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(2) }} disabled={documentTransitionId.transitionId != 1} sx={{ ml: 'auto' }}>
                 Send for Supervisor Approval
               </Button>}
-              {sheetPermissionId == 2 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(3) }} disabled={documentTransitionId.transitionId!=2} sx={{ ml: 'auto' }}>
+              {sheetPermissionId == 2 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(3) }} disabled={documentTransitionId.transitionId != 2} sx={{ ml: 'auto' }}>
                 Send for Engineer Approval
               </Button>}
               {sheetPermissionId == 3 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(4) }} sx={{ ml: 'auto' }}>
@@ -489,8 +473,8 @@ export default function Log() {
         </Box>
         {/* <Divider /> */}
         <Box marginTop={2}>
-          <Card  invertedColors size='sm' >
-          <Typography
+          <Card invertedColors size='sm' >
+            <Typography
               level="title-md"
               textColor="inherit"
               sx={{ textTransform: 'capitalize' }}
@@ -498,18 +482,18 @@ export default function Log() {
             <CardContent>
               <Tabs
                 aria-label="tabs"
-                // value={index}
-                // onChange={(event, newValue) => setIndex(newValue as number)}
+              // value={index}
+              // onChange={(event, newValue) => setIndex(newValue as number)}
               >
                 <TabList >
                   <Tab indicatorPlacement="top" variant='soft' color='neutral'>
-                  {/* <Badge badgeContent={reviews.length} variant='solid' color='danger'> */}
-                   <Typography> Reviews</Typography>
-                   {/* </Badge> */}
+                    {/* <Badge badgeContent={reviews.length} variant='solid' color='danger'> */}
+                    <Typography> Reviews</Typography>
+                    {/* </Badge> */}
                   </Tab>
                 </TabList>
                 <TabPanel>
-                 {showReview && <MyMessages chats={reviews} permissionId={sheetPermissionId} docId={parseInt(params.document)}/>}
+                  {showReview && <MyMessages chats={reviews} permissionId={sheetPermissionId} docId={parseInt(params.document)} />}
                 </TabPanel>
               </Tabs>
             </CardContent>
