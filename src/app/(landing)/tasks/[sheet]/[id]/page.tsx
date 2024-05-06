@@ -19,6 +19,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { API_BASE_URL } from '@/app/config'; 
 import {createdocument} from '@/app/Reducers/CreateDocumentSlice';
+import IconButton from '@mui/joy/IconButton';
+import DownloadIcon from '@mui/icons-material/Download';
+import EditIcon from '@mui/icons-material/Edit';
 
 interface LogProps {
   sheetid: string
@@ -140,14 +143,46 @@ export default function Log() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }
   
+  const downloadfn = async(sheetId:any, documentId:any) => {
 
+    try {
+      const response = await fetch(`${API_BASE_URL}/document/download`, {
+        method: 'POST',
+        headers: {
+          Accept: "application/json",
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"data": [{"sheetId": sheetId, "documentId": documentId}]})
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch user details: ' + response.statusText);
+      }
+
+      const data = await response.json();
+      return data
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    }
+  }
 
 
   const RowMenu = (props: any) => {
     return (
-      <Button color="primary" variant="outlined" size='sm' onClick={() => router.push(`/tasks/sheet/${props.sheetId}/${props.documentId}`)} >
-        Data Entry
-      </Button>
+    <>
+      <Button 
+      slots={{ root: IconButton }}
+      slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
+    >
+      <EditIcon onClick={() => router.push(`/tasks/sheet/${props.sheetId}/${props.documentId}`)}/>
+    </Button>
+    <Button 
+      slots={{ root: IconButton }}
+      slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
+    >
+      <DownloadIcon onClick={() => downloadfn(props.sheetId, props.documentId)}/>
+    </Button>
+    </>
     )
   }
 
