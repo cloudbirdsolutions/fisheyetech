@@ -274,3 +274,16 @@ export const allReadingInitialState = [
         "readingName": "Default"
     }
 ]
+
+export const fieldMappingInitialState = [
+    {
+        "id": 46,
+        "createdAt": "2024-05-06T12:15:30.844Z",
+        "updatedAt": "2024-05-06T12:15:30.844Z",
+        "sheetId": 2,
+        "groupId": 4,
+        "parameterId": 6,
+        "fieldId": 25,
+        "readingId": 8
+    },
+]

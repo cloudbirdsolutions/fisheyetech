@@ -111,67 +111,67 @@ const sidebarItems = [
     label: 'Home',
     navPath: '/home',
     icon: <HomeRoundedIcon />,
-    roles: ['admin', 'user']
+    roles: ['admin', 'user','superadmin']
   },
   {
     label: 'Dashboard',
     navPath: '/dashboard',
     icon: <DashboardRoundedIcon />,
-    roles: ['admin', 'user']
+    roles: ['admin', 'user','superadmin']
   },
   {
     label: 'Users',
     navPath: '/users',
     icon: <PeopleIcon />,
-    roles: ['admin']
+    roles: ['admin','superadmin']
   },
   {
     label: 'Department List',
     navPath: '/departmentlist',
     icon: <ApartmentIcon />,
-    roles: ['admin']
+    roles: ['admin','superadmin']
   },
   {
     label: 'Entities',
     navPath: '/entities',
     icon: <SupportRoundedIcon />,
-    roles: ['admin']
+    roles: ['admin','superadmin']
   },
   {
     label: 'Role List',
     navPath: '/rolelist',
     icon: <AdminPanelSettingsIcon />,
-    roles: ['admin']
+    roles: ['admin','superadmin']
   },
   {
     label: 'Job Allocation',
     navPath: '/joballocation',
     icon: <AssignmentRoundedIcon />,
-    roles: ['admin']
+    roles: ['admin','superadmin']
   },
   {
     label: 'Tasks',
     navPath: '/tasks',
     icon: <PendingActionsIcon />,
-    roles: ['admin', 'user']
+    roles: ['admin', 'user','superadmin']
   },
   {
     label:'Follow Ups',
     navPath: '/followups',
     icon: <PendingActionsIcon />,
-    roles: ['admin', 'user']
+    roles: ['admin', 'user','superadmin']
   },
   {
     label: 'Delete Document',
     navPath: '/deletedocument',
     icon: <DeleteOutlineRounded />,
-    roles: ['admin']
+    roles: ['superadmin']
   },
   {
     label: 'Sheet Field',
     navPath: '/sheetfield',
     icon: <DeleteOutlineRounded />,
-    roles: ['admin']
+    roles: ['superadmin']
   },
   // {
   //   label: 'Reviews',

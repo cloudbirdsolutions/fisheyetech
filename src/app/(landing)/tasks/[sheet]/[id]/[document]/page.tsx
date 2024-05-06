@@ -3,21 +3,17 @@ import * as React from 'react';
 import Box from '@mui/joy/Box';
 import { useState } from 'react';
 import { useParams } from 'next/navigation'
-import { AccordionGroup, FormControl, FormLabel, Tab, TabList, TabPanel, Tabs, Typography, Table, Sheet, Button, Stack, Link, Divider, Card, CardContent, CardActions, ListItemDecorator, Badge } from '@mui/joy';
-import { Accordion, AccordionDetails, AccordionSummary, Input } from '@mui/joy';
+import { Tab, TabList, TabPanel, Tabs, Typography,  Sheet, Button, Stack, Link, Card,  CardContent, CardActions } from '@mui/joy';
 import { useSelector } from 'react-redux';
-
 import { RootState } from "@/app/Store/store";
-
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MyMessages from '@/app/components/MyMessages';
 import { API_BASE_URL } from '@/app/config';
 import { ChatProps } from '@/app/types';
-
 import LogForm from '@/app/components/Forms/LogForm'
 import { FormData, Reccod,RecordReading } from '@/app/types';
-import { formDataInitalState, recordMasterInitialState } from '@/app/InitialStates/initialState';
+import { fieldMappingInitialState, formDataInitalState, recordMasterInitialState } from '@/app/InitialStates/initialState';
 
 var _array = require('lodash/array');
 
@@ -175,6 +171,26 @@ async function getDocumentTransitionId(documentId: string) {
     console.error('Error fetching user details:', error);
   }
 }
+async function getFieldMapping(sheetId: string) {
+  try {
+
+    const response = await fetch(`${API_BASE_URL}/sheetdependency/get?sheetId=${sheetId}`, {
+      method: 'GET',
+      headers: {
+        Accept: "application/json",
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch document Transition: ' + response.statusText);
+    }
+    const data = await response.json();
+    return data
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+  }
+}
 
 const prepareFields = (formData: FormData[]):RecordReading[] => {
   const arr:any = []
@@ -240,7 +256,7 @@ export default function Log() {
   const [currentShift, setCurrentShift] = useState(shiftDetails[0]?.shiftId)
   const [documentRecord, setDocumentRecord] = useState<Reccod[]>(recordMasterInitialState)
 
-  const [fieldRecord, setFieldRecord] = useState<RecordReading[]>(prepareFields(formData))
+  const [fieldRecord, setFieldRecord] = useState<RecordReading[]>(fieldMappingInitialState)
 
   const [sheetNames, setSheetName] = useState([
     {
@@ -314,12 +330,12 @@ export default function Log() {
       let shiftResp = await getDocumentShift(params.document)
       let permissionData = await getUserPermission(params.id, logintype.data.id)
       let sheetdet = await getsheetName(params.document)
-
+      let fieldMappingResp = await getFieldMapping(params.id)
       let documentTransitioResp = await getDocumentTransitionId(params.document)
 
       // setParameters(fieldResp.data)
       setFormData(fieldResp.data)
-      setFieldRecord(prepareFields(fieldResp.data))
+      setFieldRecord(fieldMappingResp.data)
       setShiftDetails(shiftResp.data)
       setSheetPermissionId(permissionData.id)
       setSheetName(sheetdet.data)
@@ -492,7 +508,7 @@ export default function Log() {
                   </AccordionGroup>
                   } */}
 
-                  <LogForm formData={formData} recordMasterData={documentRecord} setDocumentRecord={setDocumentRecord} documentTransitionState={documentTransitionId.transitionId}/>
+                  <LogForm formData={formData} recordMasterData={documentRecord} setDocumentRecord={setDocumentRecord} documentTransitionState={documentTransitionId.transitionId} fieldMapping={fieldRecord}/>
                 </TabPanel>
               </Tabs>
             </CardContent>

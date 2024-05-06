@@ -17,6 +17,7 @@ import ListItemDecorator from '@mui/joy/ListItemDecorator';
 import ListDivider from '@mui/joy/ListDivider';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import BlockIcon from '@mui/icons-material/Block';
@@ -135,7 +136,7 @@ export default function RoleLists(props:any) {
             <Chip
               variant="soft"
               size="sm"
-              startDecorator={listItem?.statusMaster?.statusName === 'ACTIVE' ? <CheckRoundedIcon /> : listItem?.statusMaster?.statusName === 'PENDING' ? <AutorenewRoundedIcon /> : <BlockIcon />}
+              startDecorator={listItem?.statusMaster?.statusName === 'ACTIVE' ? <CheckRoundedIcon /> : listItem?.statusMaster?.statusName === 'PENDING' ? <AutorenewIcon /> : <BlockIcon />}
               color={listItem?.statusMaster?.statusName === 'ACTIVE' ? 'success' : listItem?.statusMaster?.statusName === 'PENDING' ? 'neutral' : 'danger'}
             >
               {listItem?.statusMaster?.statusName}

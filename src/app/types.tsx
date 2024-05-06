@@ -108,7 +108,16 @@ export type FormData = {
 }
 
 
-export type RecordReading = {"readingId":number,"fieldId":number,"parameterId":number,"groupId":number}
+export type RecordReading = {
+        "readingId":number,
+        "fieldId":number,
+        "parameterId":number,
+        "groupId":number,
+        "id": number,
+        "createdAt": string,
+        "updatedAt": string,
+        "sheetId": number
+}
 
 
 export type  Reccod = {
