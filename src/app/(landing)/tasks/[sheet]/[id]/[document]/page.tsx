@@ -508,7 +508,7 @@ export default function Log() {
                   </AccordionGroup>
                   } */}
 
-                  <LogForm formData={formData} recordMasterData={documentRecord} setDocumentRecord={setDocumentRecord} documentTransitionState={documentTransitionId.transitionId} fieldMapping={fieldRecord}/>
+                  <LogForm formData={formData} recordMasterData={documentRecord} setDocumentRecord={setDocumentRecord} documentTransitionState={documentTransitionId.transitionId} fieldMapping={fieldRecord} sheetPermissionId={sheetPermissionId}/>
                 </TabPanel>
               </Tabs>
             </CardContent>
