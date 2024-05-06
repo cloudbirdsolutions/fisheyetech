@@ -126,3 +126,39 @@ export type  Reccod = {
   transitionId: number;
   parameterId: number;
 }
+
+export type SheetRaw = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "sheetName": string,
+  "description": string
+}
+
+export type GroupRaw =  {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "groupName": string
+}
+export type ReadingRaw =  {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "readingName": string
+}
+export type ParameterRaw =  {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "parameterName": string
+}
+export type FieldRaw =  {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "fieldId": string,
+  "fieldName": string,
+  "fieldValue": string,
+  "filedValueType": string
+}

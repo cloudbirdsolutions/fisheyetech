@@ -167,6 +167,12 @@ const sidebarItems = [
     icon: <DeleteOutlineRounded />,
     roles: ['admin']
   },
+  {
+    label: 'Sheet Field',
+    navPath: '/sheetfield',
+    icon: <DeleteOutlineRounded />,
+    roles: ['admin']
+  },
   // {
   //   label: 'Reviews',
   //   navPath: '/reviews',

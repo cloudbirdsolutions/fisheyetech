@@ -230,3 +230,47 @@ export const recordMasterInitialState = [{
     "transitionId": 1,
     "parameterId": 24
   }]
+
+export const allSheetsInitialState = [{
+    "id": 1,
+    "createdAt": "2024-04-20T08:04:49.113Z",
+    "updatedAt": "2024-04-20T08:04:49.113Z",
+    "sheetName": "AUTOMOBILE CHECKLIST & DAILY MAINTENANCE REPORT",
+    "description": ""
+}]
+
+export const allGroupsInitialState = [
+    {
+        "id": 1,
+        "createdAt": "2024-04-20T08:04:49.113Z",
+        "updatedAt": "2024-04-20T08:04:49.113Z",
+        "groupName": "Default"
+    }
+]
+export const allParamterInitialState = [
+    {
+        "id": 1,
+        "createdAt": "2024-04-20T08:04:49.113Z",
+        "updatedAt": "2024-04-20T08:04:49.113Z",
+        "parameterName": "Default"
+    }
+]
+export const allFieldInitialState = [
+    {
+        "id": 1,
+        "createdAt": "2024-04-20T08:13:33.872Z",
+        "updatedAt": "2024-04-20T08:13:33.872Z",
+        "fieldId": "sm1",
+        "fieldName": "Check the emergency push button",
+        "fieldValue": "reset",
+        "filedValueType": "string"
+    }
+]
+export const allReadingInitialState = [
+    {
+        "id": 1,
+        "createdAt": "2024-04-20T08:04:49.113Z",
+        "updatedAt": "2024-04-20T08:04:49.113Z",
+        "readingName": "Default"
+    }
+]
