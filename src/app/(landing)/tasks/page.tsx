@@ -6,8 +6,6 @@ import TasksTable from '@/app/components/Tasks/TasksTable';
 
 export default function Task() {
   return (
- <Box>
     <TasksTable/>
- </Box>
   );
 }

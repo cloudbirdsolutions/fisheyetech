@@ -162,7 +162,7 @@ return (
         </ModalDialog>
       </Modal>
     </Sheet>
-    <Sheet variant='outlined' sx={{borderRadius: 'sm',}}>
+    <Sheet variant='outlined' sx={{borderRadius: 'sm', width:'100%'}}>
     <Box
       className="SearchAndFilters-tabletUp"
       sx={{
@@ -271,11 +271,20 @@ return (
             </tr>
           ))} */}
           {
-            tableRows && tableRows.map((EachRowReactElement, i)=>(
-            <React.Fragment key={i}>
-            {EachRowReactElement}
-            </React.Fragment>
-          ))
+            tableRows && tableRows?.map((EachRowReactElement, i)=>(
+              <React.Fragment key={i}>
+              {EachRowReactElement}
+              </React.Fragment>
+            ))
+          }
+          {
+            tableRows.length === 0 ? (
+            <tr>
+              <td>
+                No data Found
+              </td>
+            </tr>
+            ) : ('')
           }
         </tbody>
       </Table>

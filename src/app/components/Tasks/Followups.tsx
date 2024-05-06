@@ -175,15 +175,15 @@ export default function Followups() {
 
     return (
         <React.Fragment>
-            <Sheet>
-                <Stack direction={'row'} marginBottom={1}>
+            <Stack direction={'row'} marginBottom={1}>
                     <Typography level="h2">Follow Ups</Typography>
 
                 </Stack>
+            <Box component={'div'} sx={{width:'100%'}}>
+                
 
-                <Box margin={2}>
                     {/* <Typography level="title-sm" >Add New Remarks</Typography> */}
-                    <Stack gap={2} >
+                    <Stack gap={2} flexDirection={'row'}>
                         <FormControl orientation="horizontal">
                             <FormLabel>Department</FormLabel>
                             <Select placeholder="Select a department" onChange={handleChange}>
@@ -199,10 +199,9 @@ export default function Followups() {
                         </FormControl>
 
                     </Stack>
-                </Box>
-
-                <TableSection tableHeaders={followUpHeader} tableRows={followUpRow} />
-            </Sheet>
+            </Box>
+            
+            <TableSection tableHeaders={followUpHeader} tableRows={followUpRow} />
         </React.Fragment>
 
 
