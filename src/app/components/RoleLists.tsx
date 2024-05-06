@@ -15,18 +15,11 @@ import ListItem from '@mui/joy/ListItem';
 import ListItemContent from '@mui/joy/ListItemContent';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
 import ListDivider from '@mui/joy/ListDivider';
-import Menu from '@mui/joy/Menu';
-import MenuButton from '@mui/joy/MenuButton';
-import MenuItem from '@mui/joy/MenuItem';
-import Dropdown from '@mui/joy/Dropdown';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
-import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import BlockIcon from '@mui/icons-material/Block';
-import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-
 import RowMenu from "./RowMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../Store/store";
@@ -34,10 +27,13 @@ import { useRouter } from "next/navigation";
 import { deleterole } from "../Reducers/DeleteRoleSlice";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {stableSort, getComparator} from '@/app/helper/sorting';
 
+type Order = "asc" | "desc";
 
 export default function RoleLists(props:any) {
   const [listItems, setlistItems] = React.useState([]);
+  const [order, setOrder] = React.useState<Order>("desc");
 
   const createrole = useSelector(
     (state: any) => state?.createroles?.data
@@ -99,7 +95,7 @@ export default function RoleLists(props:any) {
 
   return (
     <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
-      {listItems && listItems.map((listItem:any) => (
+      {listItems && stableSort(listItems, getComparator(order, "id")).map((listItem:any) => (
         <List
           key={listItem.id}
           size="sm"

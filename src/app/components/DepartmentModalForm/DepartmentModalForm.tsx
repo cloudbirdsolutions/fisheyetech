@@ -138,7 +138,7 @@ const DepartmentModalForm = (props:any) =>{
       aria-labelledby="modal-title"
       aria-describedby="modal-desc"
       open={props.open}
-      onClose={() => props.setOpen(false)}
+      onClose={() => {props.setOpen(false), methods.reset()}}
       sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
     >  
     <ModalDialog size='lg'>

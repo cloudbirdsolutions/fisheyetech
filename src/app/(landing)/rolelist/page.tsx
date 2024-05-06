@@ -2,12 +2,8 @@
 import * as React from 'react';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
-import Breadcrumbs from '@mui/joy/Breadcrumbs';
-import Link from '@mui/joy/Link';
 import Typography from '@mui/joy/Typography';
 
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 import RoleTable from '../../components/RoleTable';
@@ -16,19 +12,22 @@ import Stack from '@mui/joy/Stack';
 import modalContext from '@/app/context/modalContext';
 import RoleModalForm from '@/app/components/RoleListModalForm/RoleListModalForm';
 import { ToastContainer } from 'react-toastify';
+import Loader from '@/app/components/Loader/Loader';
 
 
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 export default function RoleList() {
   const [label, setLabel] = React.useState<string>('');
   const [open, setOpen] = React.useState<boolean>(false);
   const [row, setRow] = React.useState(null!);
   
+  const loadingState = useSelector((state:any) => state?.createroles?.status === 'loading' || state?.deleteroles?.status === 'loading' || state?.editroles?.status === 'loading' ? 'loading' : '');
   
   return (
     <>
-        
+        <Loader open={loadingState === 'loading'? true : false}/>
           <Box
             sx={{
               display: 'flex',

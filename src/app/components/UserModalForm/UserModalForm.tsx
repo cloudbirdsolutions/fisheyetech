@@ -105,7 +105,7 @@ const UserModalForm = (props:any) =>{
         } 
         const getrole = async () => {
           try {
-          const response = await fetch('http://51.79.147.139:3000/roles/get', {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/roles/get`, {
               method: 'GET',
               headers: {
                 Accept : "application/json",
