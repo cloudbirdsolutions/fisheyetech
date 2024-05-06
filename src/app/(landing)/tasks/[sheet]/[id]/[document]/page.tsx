@@ -67,6 +67,29 @@ async function getDocumentShift(documentId: string) {
     console.error('Error fetching user details:', error);
   }
 }
+
+async function getsheetName(documentId: string){
+  try {
+
+    const response = await fetch(`${API_BASE_URL}/sheetdocid/get-user-docs?id=${documentId}`, {
+      method: 'GET',
+      headers: {
+        Accept: "application/json",
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user details: ' + response.statusText);
+    }
+
+    const data = await response.json();
+    return data
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+  }
+}
+
 async function getDocumentRecords(documentId: string, shiftId: number) {
   try {
 
@@ -175,7 +198,7 @@ const prepareFields = (formData: FormData[]):RecordReading[] => {
     gr.groupMaster.groupParameters.forEach(gp => {
       gp.parameterMaster.paramterFields.forEach(pf => {
         pf.fieldMaster.fieldReading.forEach(read => {
-          arr.push({ readingId: read.readingId, fieldId: read.fieldId, parameterId: gp.parameterMaster.id, groupId: gr.id })
+          arr.push({ readingId: read.readingId, fieldId: read.fieldId, parameterId: gp.parameterMaster.id, groupId: gr.id})
         })
       })
     })
@@ -230,10 +253,30 @@ export default function Log() {
     }
   }])
 
-  const [currentShift, setCurrentShift] = useState(shiftDetails[0].shiftId)
+  const [currentShift, setCurrentShift] = useState(shiftDetails[0]?.shiftId)
   const [documentRecord, setDocumentRecord] = useState<Reccod[]>(recordMasterInitialState)
 
   const [fieldRecord, setFieldRecord] = useState<RecordReading[]>(fieldMappingInitialState)
+
+  const [sheetNames, setSheetName] = useState([
+    {
+      "id": 271,
+      "createdAt": "2024-05-04T07:39:05.206Z",
+      "updatedAt": "2024-05-06T12:52:16.238Z",
+      "sheetId": 1,
+      "userId": 25,
+      "transitionId": 1,
+      "users": {
+        "userName": "aravinth"
+      },
+      "transitionMaster": {
+        "transitionName": "Draft"
+      },
+      "sheetMaster": {
+        "sheetName": "AUTOMOBILE CHECKLIST & DAILY MAINTENANCE REPORT"
+      }
+    }
+  ]);
 
   const [reviews, setReivews] = useState<ChatProps[]>([
     {
@@ -286,6 +329,7 @@ export default function Log() {
       let fieldResp = await getSheetFields(params.id)
       let shiftResp = await getDocumentShift(params.document)
       let permissionData = await getUserPermission(params.id, logintype.data.id)
+      let sheetdet = await getsheetName(params.document)
       let fieldMappingResp = await getFieldMapping(params.id)
       let documentTransitioResp = await getDocumentTransitionId(params.document)
 
@@ -293,8 +337,8 @@ export default function Log() {
       setFormData(fieldResp.data)
       setFieldRecord(fieldMappingResp.data)
       setShiftDetails(shiftResp.data)
-      setSheetPermissionId(permissionData.data[0].permissionType.id)
-
+      setSheetPermissionId(permissionData.id)
+      setSheetName(sheetdet.data)
       setReivews(reviewResp.data)
       setDocumentTransistionId(documentTransitioResp.data[0])
 
@@ -386,7 +430,7 @@ export default function Log() {
         <ToastContainer />
         <Box>
           <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}>
-            <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{formData[0].sheetId}</Typography>
+            <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{sheetNames[0].sheetMaster.sheetName}</Typography>
             {/* <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{sheetPermissionId}</Typography> */}
 
             <Link
