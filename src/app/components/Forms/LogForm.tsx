@@ -29,7 +29,7 @@ import {
 } from '@mui/joy';
 
 
-import { FormData,Reccod } from '@/app/types';
+import { FormData,Reccod ,RecordReading} from '@/app/types';
 
 
 interface LogFormProps {
@@ -37,16 +37,12 @@ interface LogFormProps {
     formData: FormData[],
     recordMasterData : Reccod[],
     setDocumentRecord : React.Dispatch<React.SetStateAction<Reccod[]>>,
-    documentTransitionState : number
+    documentTransitionState : number,
+    fieldMapping : RecordReading[]
 
 }
 
 export default function LogForm(props: LogFormProps) {
-
-    const getFieldValue = (fieldId: string, readingId: string) => {
-        const matchedRecord = props.recordMasterData.find((rec:Reccod) => rec.fieldId === parseInt(fieldId) && rec.readingId === parseInt(readingId))
-        return matchedRecord?.fieldValue
-      }
 
     const getMatchedFieldRecord = (
         groupId: number, 

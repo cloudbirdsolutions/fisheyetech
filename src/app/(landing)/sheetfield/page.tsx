@@ -74,7 +74,7 @@ export default function SheetField() {
                         <Select defaultValue={allSheets[0].id} onChange={(e,val)=>(setSelectedSheet(val))}>
                             {
                                 allSheets.map(sheet => (
-                                    <Option value={sheet.id}>
+                                    <Option key={`sheet_option_${sheet.id}`} value={sheet.id}>
                                         {sheet.sheetName}
                                     </Option>))
                             }
@@ -91,7 +91,7 @@ export default function SheetField() {
                         <Select defaultValue={allGroups[0].id} onChange={(e,val)=>(setSelectedGroup(val))}>
                             {
                                 allGroups.map(group => (
-                                    <Option value={group.id}>
+                                    <Option key={`group_option_${group.id}`} value={group.id}>
                                         {group.groupName}
                                     </Option>))
                             }
@@ -108,7 +108,7 @@ export default function SheetField() {
                         <Select defaultValue={allParameters[0].id} onChange={(e,val)=>(setSelectedParamter(val))}>
                             {
                                 allParameters.map(o => (
-                                    <Option value={o.id}>
+                                    <Option key={`param_option_${o.id}`} value={o.id}>
                                         {o.parameterName}
                                     </Option>))
                             }
@@ -123,7 +123,7 @@ export default function SheetField() {
                         <Select defaultValue={allFields[0].id} onChange={(e,val)=>(setSelectedField(val))}>
                             {
                                 allFields.map(o => (
-                                    <Option value={o.id}>
+                                    <Option  key={`field_option_${o.id}`} value={o.id}>
                                         {o.fieldName}
                                     </Option>))
                             }
@@ -137,7 +137,7 @@ export default function SheetField() {
                         <Select defaultValue={allReadings[0].id} onChange={(e,val)=>(setSelectedReading(val))}>
                             {
                                 allReadings.map(o => (
-                                    <Option value={o.id}>
+                                    <Option key={`reading_option_${o.id}`} value={o.id}>
                                         {o.readingName}
                                     </Option>))
                             }
