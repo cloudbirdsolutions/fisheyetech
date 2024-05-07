@@ -113,7 +113,7 @@ export type RecordReading = {
         "fieldId":number,
         "parameterId":number,
         "groupId":number,
-        "id": number,
+        "id"?: number,
         "createdAt": string,
         "updatedAt": string,
         "sheetId": number

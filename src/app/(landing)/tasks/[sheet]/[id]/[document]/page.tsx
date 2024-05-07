@@ -381,6 +381,7 @@ export default function Log() {
       let documentRecordResp = await getDocumentRecords(params.document, currentShift)
 
       let mergedFiledDocumentRecord = fieldRecord.map((f: RecordReading) => {
+        delete f.id;
         let initialObject = { "createdBy": logintype.data.id, "updatedBy": logintype.data.id, "transitionId": 1, "fieldValue": "", "documentId": parseInt(params.document), "shiftId": currentShift }
         let combinedInitialFiled = Object.assign(initialObject, f)
         let matchedRecord = documentRecordResp.data.find((rec: Reccod) => rec.readingId === f.readingId && rec.fieldId === f.fieldId && rec.groupId===f.groupId && rec.parameterId===f.parameterId)
