@@ -25,7 +25,8 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
-    Input
+    Input,
+    Tooltip
 } from '@mui/joy';
 
 
@@ -126,10 +127,12 @@ export default function LogForm(props: LogFormProps) {
                                                                   return (<> { checkGroupParamFieldReadingExistence(group.groupId, groupParam.parameterId, paramField.fieldId,fieldReading.readingId) &&<td key={`td_id_${fieldReading.readingId}`}>
                                                                         <FormControl>
                                                                             {pfindex == 0 && <FormLabel>{fieldReading.readingMaster.readingName}</FormLabel>}
+                                                                            <Tooltip variant='soft' title={getMatchedFieldRecord(group.groupId, groupParam.parameterId, paramField.fieldId, fieldReading.readingId)?.fieldValue}>
                                                                             <Input
                                                                                 value={getMatchedFieldRecord(group.groupId, groupParam.parameterId, paramField.fieldId, fieldReading.readingId)?.fieldValue}
                                                                                 onChange={(e) => { updateValue(e, group.groupId, groupParam.parameterId, paramField.fieldId, fieldReading.readingId) }}
                                                                                 disabled={props.documentTransitionState != 1 || props.sheetPermissionId!=1} />
+                                                                                </Tooltip>
                                                                         </FormControl>
                                                                     </td>}</>)
                                                                  })}
