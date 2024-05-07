@@ -289,7 +289,7 @@ return (
         </tbody>
       </Table>
     </Sheet>
-    <Box
+    {/*<Box
       className="Pagination-laptopUp"
       sx={{
         pt: 2,
@@ -332,6 +332,7 @@ return (
         Next
       </Button>
     </Box>
+    */}   
   </React.Fragment>
 )
 }
