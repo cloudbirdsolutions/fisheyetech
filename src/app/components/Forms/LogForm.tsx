@@ -78,8 +78,8 @@ export default function LogForm(props: LogFormProps) {
 
     return (
         <Box>
-                {props.documentTransitionState}
-                {props.sheetPermissionId}
+                {/* {props.documentTransitionState}
+                {props.sheetPermissionId} */}
             <Tabs
                 aria-label="Vertical tabs"
                 orientation="vertical"

@@ -337,7 +337,7 @@ export default function Log() {
       setFormData(fieldResp.data)
       setFieldRecord(fieldMappingResp.data)
       setShiftDetails(shiftResp.data)
-      setSheetPermissionId(permissionData.id)
+      setSheetPermissionId(permissionData.data[0].permissionType.id)
       setSheetName(sheetdet.data)
       setReivews(reviewResp.data)
       setDocumentTransistionId(documentTransitioResp.data[0])
