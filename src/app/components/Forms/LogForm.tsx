@@ -68,6 +68,9 @@ export default function LogForm(props: LogFormProps) {
         console.log(newDocumentRecord)
     }
 
+    const checkGroupParamExistence = (groupId: number, parameterId: number) => {
+        return props.fieldMapping.find((m) => m.groupId === groupId && m.parameterId === parameterId)
+    }
     const checkGroupParamFieldExistence = (groupId: number, parameterId: number, fieldId: number) => {
         return props.fieldMapping.find((m) => m.groupId === groupId && m.fieldId === fieldId && m.parameterId === parameterId)
     }
@@ -95,8 +98,8 @@ export default function LogForm(props: LogFormProps) {
                 {props.formData.map((group, gindex) => (
                     <TabPanel key={`tabpanel_id_${group.groupId}`} value={gindex}>
                         <AccordionGroup>
-                            {group.groupMaster.groupParameters.map((groupParam, gpindex) => (
-                                <Accordion key={`accordion_id_${gpindex}`}
+                            {group.groupMaster.groupParameters.map((groupParam, gpindex) => {
+                            return    (<>{ checkGroupParamExistence(group.groupId,groupParam.parameterId) && <Accordion key={`accordion_id_${gpindex}`}
                                     expanded={gpindex === expandIndex}
                                     onChange={(event, expanded) => {
                                         setExpandIndex(expanded ? gpindex : null);
@@ -144,8 +147,8 @@ export default function LogForm(props: LogFormProps) {
                                             </Table>
                                         </Sheet>
                                     </AccordionDetails>
-                                </Accordion>
-                            ))}
+                                </Accordion> }</> )
+                                })}
                         </AccordionGroup>
                     </TabPanel>
                 ))}
