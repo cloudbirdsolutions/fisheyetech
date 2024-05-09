@@ -34,6 +34,7 @@ import Link from 'next/link';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import CloseIcon from '@mui/icons-material/Close';
 import BadgeIcon from '@mui/icons-material/Badge';
 
 import { CssVarsProvider, ListItemDecorator, extendTheme } from "@mui/joy";
@@ -170,8 +171,14 @@ const sidebarItems = [
   {
     label: 'Sheet Field',
     navPath: '/sheetfield',
-    icon: <DeleteOutlineRounded />,
+    icon: <AssignmentRoundedIcon />,
     roles: ['superadmin']
+  },
+  {
+    label: 'Force Close',
+    navPath: "/forceclose",
+    icon: <CloseIcon/>,
+    roles: ['admin','superadmin']
   },
   // {
   //   label: 'Reviews',

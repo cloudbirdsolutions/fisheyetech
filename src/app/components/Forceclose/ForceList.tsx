@@ -15,11 +15,11 @@ import ListDivider from "@mui/joy/ListDivider";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 
-import RowMenu from "./RowMenu";
+import RowMenu from "../RowMenu";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../Store/store";
+import { AppDispatch, RootState } from "../../Store/store";
 import { useRouter } from "next/navigation";
-import { deletedepartment } from "../Reducers/DeleteDepartmentSlice";
+import { deletedepartment } from "../../Reducers/DeleteDepartmentSlice";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {stableSort, getComparator} from '@/app/helper/sorting';
