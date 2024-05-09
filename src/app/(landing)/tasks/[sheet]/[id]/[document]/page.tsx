@@ -14,7 +14,7 @@ import { ChatProps } from '@/app/types';
 import LogForm from '@/app/components/Forms/LogForm'
 import { FormData, Reccod,RecordReading } from '@/app/types';
 import { fieldMappingInitialState, formDataInitalState, recordMasterInitialState } from '@/app/InitialStates/initialState';
-
+import { useRouter } from 'next/navigation';
 var _array = require('lodash/array');
 
 var jmespath = require("jmespath");
@@ -210,6 +210,8 @@ const prepareFields = (formData: FormData[]):RecordReading[] => {
 
 
 export default function Log() {
+
+  const router = useRouter();
 
   const [index, setIndex] = React.useState(0);
   const [expandIndex, setExpandIndex] = React.useState<number | null>(0);
@@ -417,6 +419,8 @@ export default function Log() {
       });
       setReloadData(Date.now());
       toast.success("Record Changes Saved Successfully");
+      router.push('/tasks', { scroll: false })
+
       if (!response.ok) {
         throw new Error(
           "Failed to save record changes: " + response.statusText
