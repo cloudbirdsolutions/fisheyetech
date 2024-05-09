@@ -218,6 +218,7 @@ export default function Log() {
 
 
   const [formData, setFormData] = React.useState<FormData[]>(formDataInitalState);
+  const [isUserInputDisabled, setIsUserInoutDisabled] = React.useState(false);
 
   const params = useParams<{ id: string, document: string }>()
   const [documentTransitionId, setDocumentTransistionId] = useState({
@@ -312,6 +313,10 @@ export default function Log() {
     let show = false;
     show = [2, 3].includes(sheetPermissionId) ? true : [1].includes(sheetPermissionId) && reviews.length > 0 ? true : false
     setShowReview(show)
+
+  }
+
+  const disableUserInput = ()=>{
 
   }
 
@@ -509,7 +514,7 @@ export default function Log() {
                   </AccordionGroup>
                   } */}
 
-                  <LogForm formData={formData} recordMasterData={documentRecord} setDocumentRecord={setDocumentRecord} documentTransitionState={documentTransitionId.transitionId} fieldMapping={fieldRecord} sheetPermissionId={sheetPermissionId}/>
+                  <LogForm formData={formData} recordMasterData={documentRecord} setDocumentRecord={setDocumentRecord} documentTransitionState={documentTransitionId.transitionId} fieldMapping={fieldRecord} sheetPermissionId={sheetPermissionId} />
                 </TabPanel>
               </Tabs>
             </CardContent>
@@ -521,10 +526,10 @@ export default function Log() {
               {sheetPermissionId == 1 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(2) }} disabled={documentTransitionId.transitionId != 1} sx={{ ml: 'auto' }}>
                 Send for Supervisor Approval
               </Button>}
-              {sheetPermissionId == 2 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(3) }} disabled={documentTransitionId.transitionId != 2} sx={{ ml: 'auto' }}>
+              {(sheetPermissionId == 2 ) && <Button size='sm' color='success' onClick={() => { saveRecordChnages(3) }} disabled={documentTransitionId.transitionId != 2} sx={{ ml: 'auto' }}>
                 Send for Engineer Approval
               </Button>}
-              {sheetPermissionId == 3 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(4) }} sx={{ ml: 'auto' }}>
+              {(sheetPermissionId == 3 ) && <Button size='sm' color='success' onClick={() => { saveRecordChnages(4) }} disabled={documentTransitionId.transitionId != 3} sx={{ ml: 'auto' }}>
                 Approve Document
               </Button>}
             </CardActions>

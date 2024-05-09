@@ -40,9 +40,8 @@ interface LogFormProps {
     setDocumentRecord: React.Dispatch<React.SetStateAction<Reccod[]>>,
     documentTransitionState: number,
     fieldMapping: RecordReading[],
-    sheetPermissionId:number
-
-}
+    sheetPermissionId:number,
+  }
 
 export default function LogForm(props: LogFormProps) {
 
@@ -79,6 +78,8 @@ export default function LogForm(props: LogFormProps) {
     }
 
     const [expandIndex, setExpandIndex] = React.useState<number | null>(0);
+
+    
 
     return (
         <Box>
