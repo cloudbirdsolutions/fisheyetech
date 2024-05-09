@@ -22,6 +22,7 @@ import {createdocument} from '@/app/Reducers/CreateDocumentSlice';
 import IconButton from '@mui/joy/IconButton';
 import DownloadIcon from '@mui/icons-material/Download';
 import EditIcon from '@mui/icons-material/Edit';
+import { saveAs } from 'file-saver';
 
 interface LogProps {
   sheetid: string
@@ -143,26 +144,28 @@ export default function Log() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }
   
-  const downloadfn = async(sheetId:any, documentId:any) => {
+  const downloadfn = async(documentId:any) => {
 
     try {
-      const response = await fetch(`${API_BASE_URL}/document/download`, {
-        method: 'POST',
-        headers: {
-          Accept: "application/json",
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({"data": [{"sheetId": sheetId, "documentId": documentId}]})
+      const response = await fetch(`${API_BASE_URL}/downloadexcel?documentId=${documentId}`, {
+        method: 'GET',
+        // headers: {
+        //   Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        //   'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        // },
+      
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch user details: ' + response.statusText);
+        throw new Error('Failed to download details: ' + response.statusText);
       }
 
-      const data = await response.json();
-      return data
+      const filename = 'file.xlsx';
+
+      const blob = await response.blob();
+      saveAs(blob, filename);
     } catch (error) {
-      console.error('Error fetching user details:', error);
+      console.error('Failed to download file:', error);
     }
   }
 
@@ -180,7 +183,7 @@ export default function Log() {
       slots={{ root: IconButton }}
       slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
     >
-      <DownloadIcon onClick={() => downloadfn(props.sheetId, props.documentId)}/>
+      <DownloadIcon onClick={() => downloadfn(props.documentId)}/>
     </Button>
     </>
     )
