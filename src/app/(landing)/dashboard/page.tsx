@@ -71,13 +71,13 @@ export default function Dashboard() {
       value: dashboardData.joballocation
     },
     {
-      title: 'Review',
+      title: 'Reviews',
       color: 'primary',
       icon: ReviewsIcon,
       value: dashboardData.review
     },
     {
-      title: 'Remarks',
+      title: 'Follow-Ups',
       color: 'warning',
       icon: ReportProblemIcon,
       value: dashboardData.remarks
