@@ -116,7 +116,9 @@ export type RecordReading = {
         "id"?: number,
         "createdAt": string,
         "updatedAt": string,
-        "sheetId": number
+        "sheetId": number,
+        worksheetId:number;
+        cellValue:string;
 }
 
 
@@ -134,6 +136,9 @@ export type  Reccod = {
   fieldValue: string;
   transitionId: number;
   parameterId: number;
+  worksheetId:number;
+  cellValue:string;
+
 }
 
 export type SheetRaw = {

@@ -388,7 +388,7 @@ export default function Log() {
         let finalFiledDocumentRecord = Object.assign(combinedInitialFiled, matchedRecord)
         return finalFiledDocumentRecord
       })
-      console.log(fieldRecord);
+      // console.log(fieldRecord);
       setDocumentRecord(mergedFiledDocumentRecord)
 
     }

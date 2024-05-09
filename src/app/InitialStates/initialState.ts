@@ -228,7 +228,9 @@ export const recordMasterInitialState = [{
     "readingId":2,
     "fieldValue": "test value 287",
     "transitionId": 1,
-    "parameterId": 24
+    "parameterId": 24,
+    worksheetId:1,
+    cellValue:'A:1'
   }]
 
 export const allSheetsInitialState = [{
@@ -284,6 +286,8 @@ export const fieldMappingInitialState = [
         "groupId": 4,
         "parameterId": 6,
         "fieldId": 25,
-        "readingId": 8
+        "readingId": 8,
+        worksheetId:1,
+        cellValue:'A:1'
     },
 ]
