@@ -20,7 +20,20 @@ type Order = "asc" | "desc";
 export default function DepartmentTable(props: any) {
   const [order, setOrder] = React.useState<Order>("desc");
   const [rows, setRows] = React.useState([
-    { id: "", createdAt: "", updatedAt: "", departmentName: "" },
+    {
+      "id": 0,
+      "createdAt": "",
+      "updatedAt": "",
+      "sheetId": 0,
+      "userId": 0,
+      "transitionId": 0,
+      "sheetMaster": {
+          "sheetName": ""
+      },
+      "users": {
+          "userName": ""
+      }
+  },
   ]);
 
   const createdepartment = useSelector(
@@ -37,21 +50,39 @@ export default function DepartmentTable(props: any) {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
-  function remarkfn(row: any): void {
-    props.setOpen(true);
-    props.setLabel('Edit');
-    props.setRow(row);
+  interface ActionProps {
+    docId:number
   }
 
-  const RowMenu = () => {
-    return <Button onClick={remarkfn}>Force Close</Button>
+  async function resolvefn(docId:number) {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_HOST}/sheetdocid/forcecomplete`,
+      {
+        // const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/departments/get`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body : JSON.stringify({docId})
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      toast.error(errorData.message)
+    }
+  }
+
+  const RowMenu = (props:ActionProps) => {
+    return <Button onClick={()=>{resolvefn(props.docId)}} color='success'>Resolve</Button>
   }
 
   // const data = await getData()
   React.useEffect(() => {
     const getData = async () => {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_HOST}/departments/get`,
+          `${process.env.NEXT_PUBLIC_API_HOST}/sheetdocid/forcecomplete`,
           {
             // const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/departments/get`, {
             method: "GET",
@@ -75,7 +106,7 @@ export default function DepartmentTable(props: any) {
     getData();
   }, [createdepartment, deletedepartments, editdepartment]);
 
-  const headers = ["Shift"];
+  const headers = ["Sheet Name", "Created By"];
 
   const tablerows = stableSort(rows, getComparator(order, "id")).map(
     (row: any) => (
@@ -84,12 +115,15 @@ export default function DepartmentTable(props: any) {
           <Typography level="body-xs">{row?.id}</Typography>
         </td>
         <td>
-          <Typography level="body-xs">{row?.departmentName}</Typography>
+          <Typography level="body-xs">{row?.sheetMaster.sheetName}</Typography>
+        </td>
+        <td>
+          <Typography level="body-xs">{row?.users.userName}</Typography>
         </td>
 
         <td>
           <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-            <RowMenu />
+            <RowMenu docId={row?.id}/>
           </Box>
         </td>
       </tr>
