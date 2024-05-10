@@ -38,10 +38,10 @@ interface LineChartsParams {
 
 export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState({
-    "joballocation": 27,
+    "joballocation": 0,
     "review": 0,
-    "remarks": 3,
-    "sheetDocumentId": 10
+    "remarks": 0,
+    "sheetDocumentId": 0
   });
   const [loading, setLoading] = useState(true)
 

@@ -353,7 +353,7 @@ export default function Log() {
 
 
   const decideDisable = () =>{
-    return documentTransitionId.transitionId !=1 && shiftDetails[index].shiftStatus != 'Active' && sheetPermissionId !=1
+    return documentTransitionId.transitionId !=1 || shiftDetails[index].shiftStatus != 'Active' || sheetPermissionId !=1
   }
 
   React.useEffect(() => {
