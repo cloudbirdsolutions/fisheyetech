@@ -23,7 +23,7 @@ import { RootState } from '@/app/Store/store';
 import { useSelector } from 'react-redux';
 
 const schema = z.object({
-    remarks:z.string().min(1, {message: 'Please Enter the Sheet Name'}),
+    remarks:z.string().min(1, {message: 'Please Enter the Remarks'}),
     });
 const Remarks = (props:any) =>{
 
