@@ -216,7 +216,7 @@ export default function Log() {
   const [index, setIndex] = React.useState(0);
   const [expandIndex, setExpandIndex] = React.useState<number | null>(0);
   const [sheetPermissionId, setSheetPermissionId] = React.useState<number>(0);
-
+  const [isInputDisabled, setIsInputDisabled] = React.useState(false);
 
 
   const [formData, setFormData] = React.useState<FormData[]>(formDataInitalState);
@@ -318,9 +318,6 @@ export default function Log() {
 
   }
 
-  const disableUserInput = ()=>{
-
-  }
 
   React.useEffect(() => {
     decideShowReview();
@@ -355,31 +352,21 @@ export default function Log() {
   }, [params])
 
 
-  // React.useEffect(() => {
-
-  //   const fetchData = async () => {
-  //     let fieldResp = await getSheetFields(params.id)
-  //     let shiftResp = await getDocumentShift(params.document)
-  //     let permissionData = await getUserPermission(params.id, logintype.data.id)
-
-  //     setParameters(fieldResp.data)
-  //     setShiftDetails(shiftResp.data)
-  //     setSheetPermissionId(permissionData.data[0].permissionType.id)
-  //   }
-  //   fetchData();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [params])
+  const decideDisable = () =>{
+    return documentTransitionId.transitionId !=1 && shiftDetails[index].shiftStatus != 'Active' && sheetPermissionId !=1
+  }
 
   React.useEffect(() => {
     setCurrentShift(shiftDetails[index].shiftId)
+    setIsInputDisabled(decideDisable())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index])
 
-  React.useEffect(() => {
-    let records = jmespath.search(parameters, "parameterMaster[].fieldMaster[].{fieldId:id,parameterId:parameterId}")
-    setFieldRecord(records)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [parameters])
+  // React.useEffect(() => {
+  //   let records = jmespath.search(parameters, "parameterMaster[].fieldMaster[].{fieldId:id,parameterId:parameterId}")
+  //   setFieldRecord(records)
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [parameters])
 
   React.useEffect(() => {
 
@@ -433,11 +420,39 @@ export default function Log() {
       console.error("Error fetching user details:", error);
     }
   };
+  const sendForApproval = async (docId: number, shiftId:number,transitionId:number) => {
+    try {
+      
+      const response = await fetch(`${API_BASE_URL}/sheetdocid/send-approval`, {
+        method: 'POST',
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      body : JSON.stringify({docId,shiftId,transitionId})
+      });
+      setReloadData(Date.now());
+      toast.success("Record Changes Saved Successfully");
+      router.push('/tasks', { scroll: false })
+
+      if (!response.ok) {
+        throw new Error(
+          "Failed to save record changes: " + response.statusText
+        );
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+  };
 
   return (
     <Sheet variant='outlined' sx={{ px: 2, py: 2, borderRadius: 'sm' }}>
       <Box marginTop={2}>
         <ToastContainer />
+        
         <Box>
           <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}>
             <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{sheetNames[0].sheetMaster.sheetName}</Typography>
@@ -517,8 +532,8 @@ export default function Log() {
 
                   </AccordionGroup>
                   } */}
-
-                  <LogForm formData={formData} recordMasterData={documentRecord} setDocumentRecord={setDocumentRecord} documentTransitionState={documentTransitionId.transitionId} fieldMapping={fieldRecord} sheetPermissionId={sheetPermissionId} />
+                    {JSON.stringify(shiftDetails[index].shiftStatus != 'Active')}
+                  <LogForm formData={formData} recordMasterData={documentRecord} setDocumentRecord={setDocumentRecord} documentTransitionState={documentTransitionId.transitionId} fieldMapping={fieldRecord} sheetPermissionId={sheetPermissionId} isInputDisabled={isInputDisabled} />
                 </TabPanel>
               </Tabs>
             </CardContent>
@@ -533,7 +548,7 @@ export default function Log() {
               {(sheetPermissionId == 2 ) && <Button size='sm' color='success' onClick={() => { saveRecordChnages(3) }} disabled={documentTransitionId.transitionId != 2} sx={{ ml: 'auto' }}>
                 Send for Engineer Approval
               </Button>}
-              {(sheetPermissionId == 3 ) && <Button size='sm' color='success' onClick={() => { saveRecordChnages(4) }} disabled={documentTransitionId.transitionId != 3} sx={{ ml: 'auto' }}>
+              {(sheetPermissionId == 3 ) && <Button size='sm' color='success' onClick={() => { sendForApproval(parseInt(params.document),currentShift,4) }} disabled={documentTransitionId.transitionId != 3} sx={{ ml: 'auto' }}>
                 Approve Document
               </Button>}
             </CardActions>

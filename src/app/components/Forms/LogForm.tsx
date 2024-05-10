@@ -41,6 +41,7 @@ interface LogFormProps {
     documentTransitionState: number,
     fieldMapping: RecordReading[],
     sheetPermissionId:number,
+    isInputDisabled : boolean
   }
 
 export default function LogForm(props: LogFormProps) {
@@ -79,12 +80,12 @@ export default function LogForm(props: LogFormProps) {
 
     const [expandIndex, setExpandIndex] = React.useState<number | null>(0);
 
-    
+        
 
     return (
         <Box>
-                {/* {props.documentTransitionState}
-                {props.sheetPermissionId} */}
+               {JSON.stringify(props.isInputDisabled)}                           
+                
             <Tabs
                 aria-label="Vertical tabs"
                 orientation="vertical"
@@ -135,7 +136,10 @@ export default function LogForm(props: LogFormProps) {
                                                                             <Input
                                                                                 value={getMatchedFieldRecord(group.groupId, groupParam.parameterId, paramField.fieldId, fieldReading.readingId)?.fieldValue}
                                                                                 onChange={(e) => { updateValue(e, group.groupId, groupParam.parameterId, paramField.fieldId, fieldReading.readingId) }}
-                                                                                disabled={props.documentTransitionState != 1 || props.sheetPermissionId!=1} />
+                                                                                // disabled={props.documentTransitionState != 1 || props.sheetPermissionId!=1} 
+                                                                                disabled={props.isInputDisabled} 
+                                                                                
+                                                                                />
                                                                                 </Tooltip>
                                                                         </FormControl>
                                                                     </td>}</>)
