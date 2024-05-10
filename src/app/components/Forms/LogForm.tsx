@@ -84,7 +84,7 @@ export default function LogForm(props: LogFormProps) {
 
     return (
         <Box>
-               {JSON.stringify(props.isInputDisabled)}                           
+                                    
                 
             <Tabs
                 aria-label="Vertical tabs"
