@@ -353,7 +353,7 @@ export default function Log() {
 
 
   const decideDisable = () =>{
-    return documentTransitionId.transitionId !=1 || sheetPermissionId !=1
+    return documentTransitionId.transitionId !=1 || sheetPermissionId !=1 || shiftDetails[index].shiftStatus !='Active'
   }
 
   React.useEffect(() => {
@@ -533,7 +533,7 @@ export default function Log() {
                   </AccordionGroup>
                   } */}
                    
-                  <LogForm formData={formData} recordMasterData={documentRecord} setDocumentRecord={setDocumentRecord} documentTransitionState={documentTransitionId.transitionId} fieldMapping={fieldRecord} sheetPermissionId={sheetPermissionId} isInputDisabled={isInputDisabled} />
+                  <LogForm formData={formData} recordMasterData={documentRecord} setDocumentRecord={setDocumentRecord} documentTransitionState={documentTransitionId.transitionId} fieldMapping={fieldRecord} sheetPermissionId={sheetPermissionId} isInputDisabled={isUserInputDisabled} />
                 </TabPanel>
               </Tabs>
             </CardContent>
