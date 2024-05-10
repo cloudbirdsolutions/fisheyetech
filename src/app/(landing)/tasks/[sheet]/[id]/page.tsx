@@ -122,7 +122,8 @@ export default function Log() {
   const getDocumentList = async(sheetid: string) => {
     try {
 
-      const url = [2, 3].includes(permision.permissionType.id) ? `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}` : `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}&userId=${logintype.data.id}`
+      // const url = [2, 3].includes(permision.permissionType.id) ? `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}` : `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}&userId=${logintype.data.id}`
+      const url = `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}`
 
       const response = await fetch(url, {
         method: 'GET',
