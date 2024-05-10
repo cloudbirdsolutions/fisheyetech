@@ -4,13 +4,14 @@ import Sheet from '@mui/joy/Sheet';
 
 import MessagesPane from './MessagesPane';
 import ChatsPane from './ChatsPane';
-import { ChatProps } from '../types';
+import { ChatProps, ShiftDetails } from '../types';
 import { chats } from '../data';
 
 interface MyMessagesProps {
   chats : ChatProps[],
   permissionId : number,
-  docId:number
+  docId:number;
+  selectedShift:ShiftDetails
 }
 
 export default function MyMessages(props:MyMessagesProps) {
@@ -52,6 +53,7 @@ export default function MyMessages(props:MyMessagesProps) {
           setSelectedChat={setSelectedChat}
           permissionId={permissionId}
           docId={docId}
+          selectedShift = {props.selectedShift}
         />
       </Sheet>
      {props.chats.length > 0 && <MessagesPane chat={selectedChat} />}

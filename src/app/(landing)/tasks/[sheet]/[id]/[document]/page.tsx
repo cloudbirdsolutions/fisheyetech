@@ -111,10 +111,10 @@ async function getDocumentRecords(documentId: string, shiftId: number) {
     console.error('Error fetching user details:', error);
   }
 }
-async function getDocumentReviews(documentId: string) {
+async function getDocumentReviews(documentId: string, shiftId:number) {
   try {
 
-    const response = await fetch(`${API_BASE_URL}/review/get?id=${documentId}`, {
+    const response = await fetch(`${API_BASE_URL}/review/get?id=${documentId}&shiftId=${shiftId}`, {
       method: 'GET',
       headers: {
         Accept: "application/json",
@@ -256,6 +256,8 @@ export default function Log() {
     }
   }])
 
+  const [selectedShift, setSelectedShift] = useState(shiftDetails[0])
+
   const [currentShift, setCurrentShift] = useState(shiftDetails[0]?.shiftId)
   const [documentRecord, setDocumentRecord] = useState<Reccod[]>(recordMasterInitialState)
 
@@ -327,7 +329,7 @@ export default function Log() {
   React.useEffect(() => {
 
     let fetchFromServer = async () => {
-      let reviewResp = await getDocumentReviews(params.document);
+      let reviewResp = await getDocumentReviews(params.document, currentShift);
       // let permissionData = await getUserPermission(params.id, logintype.data.id)
 
       let fieldResp = await getSheetFields(params.id)
@@ -341,6 +343,8 @@ export default function Log() {
       setFormData(fieldResp.data)
       setFieldRecord(fieldMappingResp.data)
       setShiftDetails(shiftResp.data)
+      setSelectedShift(shiftResp.data[0])
+      setCurrentShift((shiftResp.data[0].shiftId))
       setSheetPermissionId(permissionData.data[0].permissionType.id)
       setSheetName(sheetdet.data)
       setReivews(reviewResp.data)
@@ -353,12 +357,13 @@ export default function Log() {
 
 
   const decideDisable = () =>{
-    return documentTransitionId.transitionId !=1 || sheetPermissionId !=1 || shiftDetails[index].shiftStatus !='Active'
+    return (documentTransitionId.transitionId !=1 || sheetPermissionId !=1 || shiftDetails[index].shiftStatus !='Active')
   }
 
   React.useEffect(() => {
     setCurrentShift(shiftDetails[index].shiftId)
     setIsInputDisabled(decideDisable())
+    setSelectedShift(shiftDetails[index])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index])
 
@@ -373,6 +378,7 @@ export default function Log() {
     const fetchData = async () => {
 
       let documentRecordResp = await getDocumentRecords(params.document, currentShift)
+      let reviewResp = await getDocumentReviews(params.document, currentShift);
 
       let mergedFiledDocumentRecord = fieldRecord.map((f: RecordReading) => {
         delete f.id;
@@ -383,10 +389,12 @@ export default function Log() {
         return finalFiledDocumentRecord
       })
       // console.log(fieldRecord);
-      setDocumentRecord(mergedFiledDocumentRecord)
+      setDocumentRecord(mergedFiledDocumentRecord);
+      setReivews(reviewResp.data)
 
     }
     fetchData();
+    setIsInputDisabled(decideDisable())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentShift, fieldRecord, relaodData])
 
@@ -482,7 +490,7 @@ export default function Log() {
                 <TabList>
                   {
                     shiftDetails && shiftDetails.map((s) => (
-                      <Tab key={`tab_shift_${s.shiftId}`} disabled={s.shiftStatus != 'Active'} variant='solid' color='primary' indicatorInset>{s.shiftMaster.shiftType}</Tab>
+                      <Tab key={`tab_shift_${s.shiftId}`} disabled={s.shiftStatus.toLowerCase() === 'inactive'} variant='solid' color='primary' indicatorInset>{s.shiftMaster.shiftType}</Tab>
                     ))
                   }
                 </TabList>
@@ -539,16 +547,16 @@ export default function Log() {
             </CardContent>
             <CardActions buttonFlex="0 1 220px">
 
-              {[1].includes(documentTransitionId.transitionId) && <Button size='sm' variant='outlined' color='primary' onClick={() => { saveRecordChnages(1) }} sx={{ ml: 'auto' }}>
+              {([1].includes(documentTransitionId.transitionId) && sheetPermissionId == 1) && <Button size='sm' variant='outlined' color='primary' onClick={() => { saveRecordChnages(1) }} sx={{ ml: 'auto' }} disabled={!(shiftDetails[index].shiftStatus.toLowerCase() === 'active')}>
                 Save draft
               </Button>}
-              {sheetPermissionId == 1 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(2) }} disabled={documentTransitionId.transitionId != 1} sx={{ ml: 'auto' }}>
+              {sheetPermissionId == 1 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(2) }} disabled={documentTransitionId.transitionId != 1 || !(shiftDetails[index].shiftStatus.toLowerCase() === 'active')} sx={{ ml: 'auto' }}>
                 Send for Supervisor Approval
               </Button>}
-              {(sheetPermissionId == 2 ) && <Button size='sm' color='success' onClick={() => { saveRecordChnages(3) }} disabled={documentTransitionId.transitionId != 2} sx={{ ml: 'auto' }}>
+              {(sheetPermissionId == 2 ) && <Button size='sm' color='success' onClick={() => { saveRecordChnages(3) }} disabled={documentTransitionId.transitionId != 2 || !(shiftDetails[index].shiftStatus.toLowerCase() === 'active')} sx={{ ml: 'auto' }}>
                 Send for Engineer Approval
               </Button>}
-              {(sheetPermissionId == 3 ) && <Button size='sm' color='success' onClick={() => { sendForApproval(parseInt(params.document),currentShift,4) }} disabled={documentTransitionId.transitionId != 3} sx={{ ml: 'auto' }}>
+              {(sheetPermissionId == 3 ) && <Button size='sm' color='success' onClick={() => { sendForApproval(parseInt(params.document),currentShift,4) }} disabled={documentTransitionId.transitionId != 3 || !(shiftDetails[index].shiftStatus.toLowerCase() === 'active')} sx={{ ml: 'auto' }}>
                 Approve Document
               </Button>}
             </CardActions>
@@ -578,7 +586,7 @@ export default function Log() {
                   </Tab>
                 </TabList>
                 <TabPanel>
-                  {showReview && <MyMessages chats={reviews} permissionId={sheetPermissionId} docId={parseInt(params.document)} />}
+                  {showReview && <MyMessages chats={reviews} permissionId={sheetPermissionId} docId={parseInt(params.document)} selectedShift={selectedShift}/>}
                 </TabPanel>
               </Tabs>
             </CardContent>

@@ -8,7 +8,7 @@ import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ChatListItem from './ChatListItem';
-import { ChatProps } from '../types';
+import { ChatProps, ShiftDetails } from '../types';
 import { toggleMessagesPane } from '../utils';
 import { useSelector } from 'react-redux';
 import { RootState } from '../Store/store';
@@ -21,7 +21,8 @@ type ChatsPaneProps = {
   setSelectedChat: (chat: ChatProps) => void;
   selectedChatId: string;
   permissionId: number;
-  docId: number
+  docId: number;
+  selectedShift:ShiftDetails
 };
 
 export default function ChatsPane(props: ChatsPaneProps) {
@@ -42,10 +43,13 @@ export default function ChatsPane(props: ChatsPaneProps) {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({docId,createdBy:logintype.data.id,summary:newReviewSummary})
+        body: JSON.stringify({docId,createdBy:logintype.data.id,summary:newReviewSummary,shiftId:props.selectedShift.shiftId})
       });
       
       toast.success("Review Created successfully please add comments");
+      if(response.ok){
+        window.location.reload();
+      }
       if (!response.ok) {
         throw new Error(
           "Failed to save record changes: " + response.statusText
@@ -134,7 +138,7 @@ export default function ChatsPane(props: ChatsPaneProps) {
       >
         {/* {permissionId} */}
         {
-          [2, 3].includes(permissionId) && <Box sx={{ px: 2, pb: 1.5 }}> <Button size="sm" onClick={() => { setShowNewReviewForm(true) }}>Add New Review</Button></Box>
+          [2, 3].includes(permissionId) && <Box sx={{ px: 2, pb: 1.5 }}> <Button size="sm" onClick={() => { setShowNewReviewForm(true) }} disabled={props.selectedShift.shiftStatus.toLowerCase() === 'closed'}>Add New Review</Button></Box>
         }
         {showNewReviewForm && <>
           <FormControl>

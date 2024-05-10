@@ -176,3 +176,16 @@ export type FieldRaw =  {
   "fieldValue": string,
   "filedValueType": string
 }
+
+export type ShiftDetails = {
+
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "docId": number,
+  "shiftId": number,
+  "shiftStatus": string,
+  "shiftMaster": {
+    "shiftType": string
+  }
+}

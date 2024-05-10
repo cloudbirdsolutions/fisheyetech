@@ -92,7 +92,7 @@ export default function LogForm(props: LogFormProps) {
             >
                 <TabList>
                     {props.formData.map((group, gindex) => (
-                        <Tab key={`tabp_id_${group.groupId}`}>{group.groupMaster.groupName}</Tab>
+                        <Tab key={`tabp_id_${group.groupId}`} variant='solid' color={'primary'}>{group.groupMaster.groupName}</Tab>
 
                     ))}
                 </TabList>
@@ -108,9 +108,11 @@ export default function LogForm(props: LogFormProps) {
                                     }}
                                     variant='soft'
                                     sx={{ borderRadius: 'md' }}
+                                    
+                                    
 
                                 >
-                                    <AccordionSummary>
+                                    <AccordionSummary variant='solid' sx={{ borderRadius:'md'}} color='primary'>
                                         {groupParam.parameterMaster.parameterName}
                                     </AccordionSummary>
                                     <AccordionDetails>
@@ -136,8 +138,8 @@ export default function LogForm(props: LogFormProps) {
                                                                             <Input
                                                                                 value={getMatchedFieldRecord(group.groupId, groupParam.parameterId, paramField.fieldId, fieldReading.readingId)?.fieldValue}
                                                                                 onChange={(e) => { updateValue(e, group.groupId, groupParam.parameterId, paramField.fieldId, fieldReading.readingId) }}
-                                                                                // disabled={props.documentTransitionState != 1 || props.sheetPermissionId!=1} 
-                                                                                disabled={props.isInputDisabled} 
+                                                                                disabled={getMatchedFieldRecord(group.groupId, groupParam.parameterId, paramField.fieldId, fieldReading.readingId)?.transitionId != 1 || props.sheetPermissionId!=1} 
+                                                                                // disabled={props.isInputDisabled} 
                                                                                 
                                                                                 />
                                                                                 </Tooltip>
