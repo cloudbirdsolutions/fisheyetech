@@ -8,11 +8,10 @@ import TableSection from "../Common/TableSection";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../Store/store";
 import { useRouter } from "next/navigation";
-import { deletedepartment } from "@/app/Reducers/DeleteDepartmentSlice";
-import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {stableSort, getComparator} from '@/app/helper/sorting';
 import Button from "@mui/joy/Button/Button";
+import { toast } from "react-toastify";
 
 
 type Order = "asc" | "desc";
@@ -36,46 +35,15 @@ export default function DepartmentTable(props: any) {
   },
   ]);
 
-  const createdepartment = useSelector(
-    (state: any) => state?.createdepartments?.data
-  );
-  const deletedepartments = useSelector(
-    (state: any) => state?.deletedepartments?.data
-  );
-  const editdepartment = useSelector(
-    (state: any) => state?.editdepartments?.data
-  );
 
-  const childRef = React.useRef(null);
-  const dispatch = useDispatch<AppDispatch>();
-  const router = useRouter();
-
-  interface ActionProps {
-    docId:number
+  function remarksfn(row: any): void {
+    props.setOpen(true);
+    props.setLabel('Edit');
+    props.setRow(row);
   }
 
-  async function resolvefn(docId:number) {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_HOST}/sheetdocid/forcecomplete`,
-      {
-        // const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/departments/get`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body : JSON.stringify({docId})
-      }
-    );
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      toast.error(errorData.message)
-    }
-  }
-
-  const RowMenu = (props:ActionProps) => {
-    return <Button onClick={()=>{resolvefn(props.docId)}} color='success'>Resolve</Button>
+   const RowMenu = (props:any) => {
+    return <Button onClick={()=>{remarksfn(props.row)}} color='success'>Resolve</Button>
   }
 
   // const data = await getData()
@@ -104,7 +72,7 @@ export default function DepartmentTable(props: any) {
     }
 
     getData();
-  }, [createdepartment, deletedepartments, editdepartment]);
+  }, []);
 
   const headers = ["Sheet Name", "Created By"];
 
@@ -123,7 +91,7 @@ export default function DepartmentTable(props: any) {
 
         <td>
           <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-            <RowMenu docId={row?.id}/>
+            <RowMenu row={row}/>
           </Box>
         </td>
       </tr>

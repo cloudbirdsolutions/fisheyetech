@@ -44,7 +44,7 @@ export default function ForceClose() {
     
 
           <modalContext.Provider value={row}>
-            <Remarks open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
+            <Remarks open={open} setOpen={setOpen} label={label} setLabel={setLabel}/>
           </modalContext.Provider>
       <ToastContainer/>
       </>
