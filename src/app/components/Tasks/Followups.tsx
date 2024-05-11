@@ -53,8 +53,17 @@ export default function Followups() {
 
     const [departmentList, setDepartmentList] = React.useState([
         {
-          "id": 1,
-          "departmentName": "CHP"
+        
+            "id": 1,
+            "departmentName": "CHP"
+        }
+      ])
+      const [department, setDepartment] = React.useState([
+        {
+            "id": 1,
+            "createdAt": "2024-04-20T08:20:59.096Z",
+            "updatedAt": "2024-04-20T08:20:59.096Z",
+            "departmentName": "CHP"
         }
       ])
     const handleChange = (
@@ -133,6 +142,27 @@ export default function Followups() {
         }
     }
 
+    const getDepartment = async () => {
+        try {
+          const response = await fetch(`${API_BASE_URL}/departments/get`, {
+            method: 'GET',
+            headers: {
+              Accept: "application/json",
+              'Content-Type': 'application/json',
+            }
+          });
+    
+          if (!response.ok) {
+            throw new Error('Failed to fetch user details: ' + response.statusText);
+          }
+    
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.error('Error fetching user details:', error);
+        }
+      }
+
     const followUpHeader = ["Department", "CreatedAt", "UpdatedAt", "CreatedBy","UpdatedBy","Remarks", "Status"]
 
     const followUpRow = departmentRemarks.map(dep => (
@@ -153,9 +183,11 @@ export default function Followups() {
     React.useEffect(() => {
         const fetchRemarks = async () => {
             // let depRem = await getRemarksByUser()
-            let departments = await getDepartmentsByUser()
+            let department = await getDepartment();
+            let departments = await getDepartmentsByUser();
 
             setDepartmentList(jmespath.search(departments.data,'[].departments.{id:id,departmentName:departmentName}'))
+            setDepartment(department.data);
             setDepartmentRemark(departments.data)
         }
 
@@ -179,8 +211,8 @@ export default function Followups() {
                     <FormControl orientation="horizontal">
                         <FormLabel>Department</FormLabel>
                         <Select placeholder="Select a department" onChange={handleChange}>
-                            {departmentList.map(dep => (<Option key={dep.id} value={dep.id}>
-                                {dep.departmentName}
+                            {department.map(dep => (<Option key={dep?.id} value={dep?.id}>
+                                {dep?.departmentName}
                             </Option>))}
                         </Select>
                     </FormControl>
