@@ -19,13 +19,13 @@ type MessagesPaneProps = {
 
 export default function MessagesPane(props: MessagesPaneProps) {
   const { chat } = props;
-  const [chatMessages, setChatMessages] = React.useState(chat.comments);
+  const [chatMessages, setChatMessages] = React.useState(chat?.comments);
   const [textAreaValue, setTextAreaValue] = React.useState('');
   const logintype = useSelector((state: RootState) => state?.user.data);
 
   React.useEffect(() => {
-    setChatMessages(chat.comments);
-  }, [chat.comments]);
+    setChatMessages(chat?.comments);
+  }, [chat?.comments]);
 
   const saveComment = async ()=>{
     try {
@@ -75,7 +75,7 @@ export default function MessagesPane(props: MessagesPaneProps) {
       >
         <Stack spacing={2} justifyContent="flex-end">
           
-          {chatMessages.map((message: MessageProps, index: number) => {
+          {chatMessages?.map((message: MessageProps, index: number) => {
             const isYou = message.users === 'You';
             return (
               <Stack

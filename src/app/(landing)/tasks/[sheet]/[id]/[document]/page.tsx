@@ -361,9 +361,16 @@ export default function Log() {
   }
 
   React.useEffect(() => {
+    decideShowReview();
     setCurrentShift(shiftDetails[index].shiftId)
     setIsInputDisabled(decideDisable())
     setSelectedShift(shiftDetails[index])
+    const fetchReview = async () => {
+      let reviewResp = await getDocumentReviews(params.document, shiftDetails[index].shiftId);
+      setReivews(reviewResp.data)
+    }
+    fetchReview();
+    decideShowReview();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index])
 
