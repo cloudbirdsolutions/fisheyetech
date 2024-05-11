@@ -239,7 +239,7 @@ export default function Log() {
         <Stack direction={'row'}  justifyContent="space-between"  spacing={3} marginBottom={2} marginTop={2}>
         <Stack>
           <Typography level='title-sm' component="h1">{sheetName}</Typography>
-          <Chip variant='soft' color="primary">{permision.permissionType.permissionType}</Chip>
+          <Chip variant='soft' color="primary">{permision?.permissionType.permissionType}</Chip>
           {/* <Typography level='title-sm' component="h1" sx={{ marginBottom: "12px" }}>{permision.permissionType.id}</Typography> */}
         </Stack>
         <Stack direction={'row'} spacing={2} justifyContent={'flex-end'} alignItems={'flex-end'}>
@@ -253,7 +253,7 @@ export default function Log() {
           >
             Go Back to Task List
           </Link>
-         { [1].includes(permision.permissionType.id) && <Button size='sm' color='primary' startDecorator={<Add />} onClick={() => createDocument(params.id, logintype.data.id, 1)}>
+         { [1].includes(permision?.permissionType.id) && <Button size='sm' color='primary' startDecorator={<Add />} onClick={() => createDocument(params.id, logintype.data.id, 1)}>
             Create New Document
           </Button>}
         </Stack>
