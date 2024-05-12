@@ -30,7 +30,7 @@ export default function SubLayout({ children }: Readonly<{
             <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
               <Header />
               <Sidebar />
-              <Box sx={{ display: 'flex', minHeight: '100dvh'}} width={{xs: '100%', sm: '100%', md: '82%' }} marginLeft={{xs:'0', sm:'0', md:'240px'}}>
+              <Box sx={{ display: 'flex', minHeight: '100dvh'}} width={{xs: '100%', sm: '100%', md: '100%' }} marginLeft={{xs:'0', sm:'0', md:'0'}}>
                 <Box
                   component="main"
                   className="MainContent"

@@ -38,7 +38,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import BadgeIcon from '@mui/icons-material/Badge';
 
 import { CssVarsProvider, ListItemDecorator, extendTheme } from "@mui/joy";
-
+import Menu from '@mui/icons-material/Menu';
 
 const baseTheme = extendTheme();
 
@@ -74,38 +74,6 @@ const darkOnlyTheme = extendTheme({
     }
   },
 });
-
-function Toggler({
-  defaultExpanded = false,
-  renderToggle,
-  children,
-}: {
-  defaultExpanded?: boolean;
-  children: React.ReactNode;
-  renderToggle: (params: {
-    open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  }) => React.ReactNode;
-}) {
-  const [open, setOpen] = React.useState(defaultExpanded);
-  return (
-    <React.Fragment>
-      {renderToggle({ open, setOpen })}
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateRows: open ? '1fr' : '0fr',
-          transition: '0.2s ease',
-          '& > *': {
-            overflow: 'hidden',
-          },
-        }}
-      >
-        {children}
-      </Box>
-    </React.Fragment>
-  );
-}
 
 const sidebarItems = [
   {
@@ -219,8 +187,7 @@ export default function Sidebar() {
         sx={{
           position: { xs: 'fixed', md: 'fixed' },
           transform: {
-            xs: 'translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))',
-            md: 'none',
+            xs: 'translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))'
           },
           transition: 'transform 0.4s, width 0.4s',
           zIndex: 10000,
@@ -262,7 +229,6 @@ export default function Sidebar() {
             transition: 'opacity 0.4s',
             transform: {
               xs: 'translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1) + var(--SideNavigation-slideIn, 0) * var(--Sidebar-width, 0px)))',
-              lg: 'translateX(-100%)',
             },
           }}
           onClick={() => closeSidebar()}
@@ -273,6 +239,7 @@ export default function Sidebar() {
           </IconButton>
           <Typography level="title-lg" sx={{ color: 'var(--joy-palette-common-white)' }}>Fisheyetech.</Typography>
           {/* <ColorSchemeToggle sx={{ ml: 'auto' }} /> */}
+          
         </Box>
         <Divider/>
         {/* <Input size="sm" startDecorator={<SearchRoundedIcon />} placeholder="Search" /> */}
@@ -315,24 +282,6 @@ export default function Sidebar() {
 
             </List>
           
-
-          {/* <List
-            size="sm"
-            sx={{
-              mt: 'auto',
-              flexGrow: 0,
-              '--ListItem-radius': (theme) => theme.vars.radius.sm,
-              '--List-gap': '8px',
-              mb: 2,
-            }}
-          >
-            <ListItem>
-              <ListItemButton>
-                <SettingsRoundedIcon />
-                Settings
-              </ListItemButton>
-            </ListItem>
-          </List> */}
 
         </Box>
         <Divider />

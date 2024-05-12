@@ -12,7 +12,7 @@ export default function Header() {
   return (
     <Sheet
       sx={{
-        display: { xs: 'flex', md: 'none' },
+        display: { xs: 'flex'},
         alignItems: 'center',
         justifyContent: 'space-between',
         position: 'fixed',
@@ -32,7 +32,7 @@ export default function Header() {
           ':root': {
             '--Header-height': '52px',
             [theme.breakpoints.up('md')]: {
-              '--Header-height': '0px',
+              '--Header-height': '52px',
             },
           },
         })}
