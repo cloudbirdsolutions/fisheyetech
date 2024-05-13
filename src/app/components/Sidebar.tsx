@@ -37,7 +37,7 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import CloseIcon from '@mui/icons-material/Close';
 import BadgeIcon from '@mui/icons-material/Badge';
 
-import { CssVarsProvider, ListItemDecorator, extendTheme } from "@mui/joy";
+import { CssVarsProvider, ListItemDecorator, ModalClose, extendTheme } from "@mui/joy";
 import Menu from '@mui/icons-material/Menu';
 
 const baseTheme = extendTheme();
@@ -180,14 +180,16 @@ export default function Sidebar() {
     //setuser('')
     router.push("/", { scroll: false });
   };
+
   return (
     <CssVarsProvider theme={darkOnlyTheme}>
       <Sheet
         className="Sidebar"
         sx={{
-          position: { xs: 'fixed', md: 'fixed' },
+          position: { xs: 'fixed', md: 'initial' },
           transform: {
-            xs: 'translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))'
+            xs: 'translateX(var(--translateX))',
+            md: 'translateX(var(--translateX) - 58)',
           },
           transition: 'transform 0.4s, width 0.4s',
           zIndex: 10000,
@@ -195,43 +197,26 @@ export default function Sidebar() {
           width: 'var(--Sidebar-width)',
           top: 0,
           p: 2,
-          flexShrink: 0,
-          display: 'flex',
-          flexDirection: 'column',
           gap: 2,
+          flexShrink: 0,
+          whiteSpace: 'nowrap',
+          boxSizing: 'border-box',
           borderRight: '1px solid',
           borderColor: 'divider',
           background:'var(--joy-palette-primary-900)',
           // color:'var(--joy-palette-common-white)'
+          overflowX: 'hidden'
+
         }}
       >
         <GlobalStyles
           styles={(theme) => ({
-            ':root': {
-              '--Sidebar-width': '220px',
-              [theme.breakpoints.up('lg')]: {
-                '--Sidebar-width': '240px',
+            '--Sidebar-width': '240px',
+            '--SideNavigation-slideIn': '0',
+              [theme.breakpoints.up('md')]: {
+                '--Sidebar-width': '58px',
               },
-            },
           })}
-        />
-        <Box
-          className="Sidebar-overlay"
-          sx={{
-            position: 'fixed',
-            zIndex: 9998,
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            opacity: 'var(--SideNavigation-slideIn)',
-            backgroundColor: 'var(--joy-palette-background-backdrop)',
-            transition: 'opacity 0.4s',
-            transform: {
-              xs: 'translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1) + var(--SideNavigation-slideIn, 0) * var(--Sidebar-width, 0px)))',
-            },
-          }}
-          onClick={() => closeSidebar()}
         />
         <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
           <IconButton variant="soft" color="primary" size="sm">
@@ -239,7 +224,7 @@ export default function Sidebar() {
           </IconButton>
           <Typography level="title-lg" sx={{ color: 'var(--joy-palette-common-white)' }}>Fisheyetech.</Typography>
           {/* <ColorSchemeToggle sx={{ ml: 'auto' }} /> */}
-          
+          <ModalClose id="close-icon" sx={{ position: 'initial', marginLeft: 'auto' }} onClick={() => closeSidebar()} />
         </Box>
         <Divider/>
         {/* <Input size="sm" startDecorator={<SearchRoundedIcon />} placeholder="Search" /> */}

@@ -27,12 +27,12 @@ export default function SubLayout({ children }: Readonly<{
     <Providers>
     <CssVarsProvider disableTransitionOnChange>
       <CssBaseline />
-            <Box sx={{ display: 'flex', minHeight: '100dvh' }}>
-              <Header />
+            <Box sx={{ display: 'flex', minHeight: '100dvh' }}>              
               <Sidebar />
-              <Box sx={{ display: 'flex', minHeight: '100dvh'}} width={{xs: '100%', sm: '100%', md: '100%' }} marginLeft={{xs:'0', sm:'0', md:'0'}}>
+              <Box component="main" sx={{  minHeight: '100dvh', flexGrow: 1, width: '100%'}}>
+                <Header />
                 <Box
-                  component="main"
+                  
                   className="MainContent"
                   sx={{
                     px: { xs: 2, md: 6 },
@@ -53,7 +53,7 @@ export default function SubLayout({ children }: Readonly<{
                  
                       {children}
                   </Box>
-                </Box>
+              </Box>
             </Box>
           </CssVarsProvider>
         </Providers>

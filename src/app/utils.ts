@@ -1,14 +1,30 @@
 export function openSidebar() {
   if (typeof window !== 'undefined') {
-    document.body.style.overflow = 'hidden';
     document.documentElement.style.setProperty('--SideNavigation-slideIn', '1');
+    window.innerWidth < 767 ? (
+    document.documentElement.style.setProperty('--Sidebar-width', '240px'),
+    document.documentElement.style.setProperty('--translateX', '0px')
+    ) : ( 
+    document.documentElement.style.setProperty('--Sidebar-width', '240px'),
+    document.documentElement.style.setProperty('--translateX', '240px')
+    )
   }
 }
 
 export function closeSidebar() {
   if (typeof window !== 'undefined') {
     document.documentElement.style.removeProperty('--SideNavigation-slideIn');
-    document.body.style.removeProperty('overflow');
+    window.innerWidth < 767 ? (
+    document.documentElement.style.setProperty('--Sidebar-width', '240px'),
+    document.documentElement.style.setProperty('--translateX', '-240px')
+    )
+    : 
+    (
+    document.documentElement.style.setProperty('--Sidebar-width', '58px'),
+    document.documentElement.style.setProperty('--translateX', '58px')
+    )
+
+
   }
 }
 
