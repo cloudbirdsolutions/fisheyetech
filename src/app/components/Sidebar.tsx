@@ -186,14 +186,14 @@ export default function Sidebar() {
       <Sheet
         className="Sidebar"
         sx={{
-          position: { xs: 'fixed', md: 'initial' },
+          position: { xs: 'fixed', md: 'sticky' },
           transform: {
             xs: 'translateX(var(--translateX))',
             md: 'translateX(var(--translateX) - 58)',
           },
           transition: 'transform 0.4s, width 0.4s',
           zIndex: 10000,
-          height: '100dvh',
+          height: '100vh',
           width: 'var(--Sidebar-width)',
           top: 0,
           p: 2,
@@ -205,7 +205,9 @@ export default function Sidebar() {
           borderColor: 'divider',
           background:'var(--joy-palette-primary-900)',
           // color:'var(--joy-palette-common-white)'
-          overflowX: 'hidden'
+          overflowX: 'hidden',
+         display : 'flex',
+         flexDirection:'column'
 
         }}
       >
@@ -269,8 +271,8 @@ export default function Sidebar() {
           
 
         </Box>
-        <Divider />
-        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+        <Divider sx={{flexGrow:1 }} />
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', }}>
           <Avatar
             variant="outlined"
             size="sm"
