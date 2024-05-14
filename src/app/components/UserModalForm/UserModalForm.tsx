@@ -260,7 +260,7 @@ const UserModalForm = (props:any) =>{
                     <select multiple={false} {...methods.register("rolesId")} onChangeCapture={handleChange} style={{padding: '8px', borderRadius: '5px', borderColor: '#ccc', width: '100%'}}>
                         <option value={0}>Select</option>
                         {role.map((r:any, i) => {
-                            return <option key={i} value={r.id} selected={row!=null ? r.id === editformData?.rolesId : false}>{r.roleName}</option>
+                            return <>{ r.roleName != 'superadmin'&& <option key={i} value={r.id} selected={row!=null ? r.id === editformData?.rolesId : false}>{r.roleName}</option>}</>
                         })                
                         }   
                     </select>
