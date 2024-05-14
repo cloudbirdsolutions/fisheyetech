@@ -271,7 +271,7 @@ export default function Sidebar() {
           
 
         </Box>
-        <Divider sx={{flexGrow:1 }} />
+        <Divider sx={{marginTop:'auto' }} />
         <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', }}>
           <Avatar
             variant="outlined"
