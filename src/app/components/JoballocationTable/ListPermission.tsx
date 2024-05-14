@@ -44,7 +44,7 @@ export default function ListPermission(props: any) {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
-  const headers = ["Name", "Department", "Permission", "Sheets"];
+  const headers = ["Name", "Department", "Permission", "Sheets", "Shift"];
 
 
 
@@ -64,6 +64,9 @@ export default function ListPermission(props: any) {
       </td>
       <td>
         {j?.sheetMaster?.sheetName}
+      </td>
+      <td>
+        {j?.shiftMaster?.shiftType}
       </td>
 
       <td>
