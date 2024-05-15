@@ -324,7 +324,7 @@ export default function Log() {
   React.useEffect(() => {
     decideShowReview();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sheetPermissionId])
+  }, [sheetPermissionId, currentShift,reviews])
 
   React.useEffect(() => {
 
@@ -400,6 +400,7 @@ export default function Log() {
       // console.log(fieldRecord);
       setDocumentRecord(mergedFiledDocumentRecord);
       setReivews(reviewResp.data)
+      decideShowReview()
 
     }
     fetchData();
