@@ -150,10 +150,10 @@ export default function Log() {
     try {
       const response = await fetch(`${API_BASE_URL}/downloadexcel?documentId=${documentId}`, {
         method: 'GET',
-        // headers: {
-        //   Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        //   'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        // },
+        headers: {
+          // Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          'Content-Type': 'application/octet-stream',
+        },
       
       });
 
@@ -161,9 +161,11 @@ export default function Log() {
         throw new Error('Failed to download details: ' + response.statusText);
       }
 
-      const filename = 'file.xlsx';
+      const filename = response.headers.get("Content-Disposition")?.split('=')[1];
 
       const blob = await response.blob();
+
+      // console.log(response.headers.get("Content-Disposition"))
       saveAs(blob, filename);
     } catch (error) {
       console.error('Failed to download file:', error);
