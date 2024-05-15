@@ -349,6 +349,7 @@ export default function Log() {
       setSheetName(sheetdet.data)
       setReivews(reviewResp.data)
       setDocumentTransistionId(documentTransitioResp.data[0])
+      decideShowReview();
 
     }
     fetchFromServer()
@@ -361,16 +362,17 @@ export default function Log() {
   }
 
   React.useEffect(() => {
-    decideShowReview();
+    // decideShowReview();
     setCurrentShift(shiftDetails[index].shiftId)
     setIsInputDisabled(decideDisable())
     setSelectedShift(shiftDetails[index])
     const fetchReview = async () => {
       let reviewResp = await getDocumentReviews(params.document, shiftDetails[index].shiftId);
       setReivews(reviewResp.data)
+      decideShowReview();
     }
     fetchReview();
-    decideShowReview();
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index])
 
@@ -579,6 +581,21 @@ export default function Log() {
               textColor="inherit"
               sx={{ textTransform: 'capitalize' }}
             >Audit Info</Typography>
+            {/* <Typography
+              level="title-md"
+              textColor="inherit"
+              sx={{ textTransform: 'capitalize' }}
+            >{JSON.stringify(showReview)}</Typography>
+            <Typography
+              level="title-md"
+              textColor="inherit"
+              sx={{ textTransform: 'capitalize' }}
+            >{JSON.stringify(reviews.length)}</Typography>
+            <Typography
+              level="title-md"
+              textColor="inherit"
+              sx={{ textTransform: 'capitalize' }}
+            >{JSON.stringify(sheetPermissionId)}</Typography> */}
             <CardContent>
               <Tabs
                 aria-label="tabs"
