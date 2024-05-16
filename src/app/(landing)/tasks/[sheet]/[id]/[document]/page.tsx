@@ -447,7 +447,7 @@ export default function Log() {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-      body : JSON.stringify({docId,shiftId,transitionId})
+      body : JSON.stringify({docId,shiftId,transitionId,userId:logintype.data.id})
       });
       setReloadData(Date.now());
       toast.success("Record Changes Saved Successfully");
