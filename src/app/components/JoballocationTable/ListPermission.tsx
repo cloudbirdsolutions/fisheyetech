@@ -46,6 +46,7 @@ export default function ListPermission(props: any) {
 
   const headers = ["Name", "Department", "Permission", "Sheets", "Shift"];
 
+  const [selectedShiftId,setSelectedShiftd] = useState(1);
 
 
   const jobstablerows = alljobs?.map((j: any) => (
@@ -149,9 +150,15 @@ export default function ListPermission(props: any) {
     }
     getPermission();
 
+
+// eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [creatjob])
+
+  useEffect(()=>{
+
     const getshift = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetshiftmaster/get-shift?id=${props?.selectedrows?.id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetshiftmaster/get-shift?id=${selectedShiftId}`, {
           method: 'GET',
           headers: {
             Accept: "application/json",
@@ -172,8 +179,8 @@ export default function ListPermission(props: any) {
 
     }
     getshift();
-// eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [creatjob])
+
+  },[selectedShiftId])
 
   const handleChange = async (e: any) => {
     const { name, value, type, checked } = e.target;
@@ -209,31 +216,32 @@ export default function ListPermission(props: any) {
       }
     }
     if (e.target.name === 'sheetId') {
-      try {
+      setSelectedShiftd(parseInt(value))
+      // try {
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetshiftmaster/get-shift?id=${parseInt(value)}`, {
-          method: 'GET',
-          headers: {
-            Accept: "application/json",
-            'Content-Type': 'application/json',
-          }
-        });
+      //   const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetshiftmaster/get-shift?id=${parseInt(value)}`, {
+      //     method: 'GET',
+      //     headers: {
+      //       Accept: "application/json",
+      //       'Content-Type': 'application/json',
+      //     }
+      //   });
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch user details: ' + response.statusText);
-        }
+      //   if (!response.ok) {
+      //     throw new Error('Failed to fetch user details: ' + response.statusText);
+      //   }
 
-        const data = await response.json();
+      //   const data = await response.json();
 
-        // setSheets(data.data);
-        setShift(data.data)
+      //   // setSheets(data.data);
+      //   setShift(data.data)
 
-      }
+      // }
 
 
-      catch {
+      // catch {
 
-      }
+      // }
     }
 
   }
@@ -245,8 +253,8 @@ export default function ListPermission(props: any) {
       dispatch(createjob(formData)).then((res) => {
         
         res.payload.statusCode === 200 ? (
-          toast.success(res.payload.message),
-          router.push('/joballocation')
+          toast.success(res.payload.message)
+          // router.push('/joballocation')
           ) : 
           (
             toast.error(res.payload.message)
