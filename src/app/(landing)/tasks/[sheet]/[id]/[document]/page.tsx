@@ -252,7 +252,7 @@ export default function Log() {
     "shiftId": 1,
     "shiftStatus": "Active",
     "shiftMaster": {
-      "shiftType": "Shift A"
+      "shiftType": "Loading..."
     }
   }])
 
@@ -272,13 +272,13 @@ export default function Log() {
       "userId": 25,
       "transitionId": 1,
       "users": {
-        "userName": "aravinth"
+        "userName": "no user"
       },
       "transitionMaster": {
         "transitionName": "Draft"
       },
       "sheetMaster": {
-        "sheetName": "AUTOMOBILE CHECKLIST & DAILY MAINTENANCE REPORT"
+        "sheetName": "Loading..."
       }
     }
   ]);

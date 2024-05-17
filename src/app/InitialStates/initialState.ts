@@ -218,75 +218,75 @@ export const formDataInitalState = [
 ]
 
 export const recordMasterInitialState = [{
-    "id": 5,
-    "createdBy": 2,
-    "updatedBy": 2,
-    "documentId": 1,
-    "shiftId": 1,
-    "fieldId": 287,
-    "groupId":1,
-    "readingId":2,
-    "fieldValue": "test value 287",
-    "transitionId": 1,
-    "parameterId": 24,
-    worksheetId:1,
+    "id": 0,
+    "createdBy": 0,
+    "updatedBy": 0,
+    "documentId": 0,
+    "shiftId": 0,
+    "fieldId": 0,
+    "groupId":0,
+    "readingId":0,
+    "fieldValue": "sample value",
+    "transitionId": 0,
+    "parameterId": 0,
+    worksheetId:0,
     cellValue:'A:1'
   }]
 
 export const allSheetsInitialState = [{
     "id": 1,
-    "createdAt": "2024-04-20T08:04:49.113Z",
-    "updatedAt": "2024-04-20T08:04:49.113Z",
-    "sheetName": "AUTOMOBILE CHECKLIST & DAILY MAINTENANCE REPORT",
+    "createdAt": "",
+    "updatedAt": "",
+    "sheetName": "",
     "description": ""
 }]
 
 export const allGroupsInitialState = [
     {
         "id": 1,
-        "createdAt": "2024-04-20T08:04:49.113Z",
-        "updatedAt": "2024-04-20T08:04:49.113Z",
-        "groupName": "Default"
+        "createdAt": "",
+        "updatedAt": "",
+        "groupName": ""
     }
 ]
 export const allParamterInitialState = [
     {
         "id": 1,
-        "createdAt": "2024-04-20T08:04:49.113Z",
-        "updatedAt": "2024-04-20T08:04:49.113Z",
-        "parameterName": "Default"
+        "createdAt": "",
+        "updatedAt": "",
+        "parameterName": ""
     }
 ]
 export const allFieldInitialState = [
     {
         "id": 1,
-        "createdAt": "2024-04-20T08:13:33.872Z",
-        "updatedAt": "2024-04-20T08:13:33.872Z",
-        "fieldId": "sm1",
-        "fieldName": "Check the emergency push button",
-        "fieldValue": "reset",
+        "createdAt": "",
+        "updatedAt": "",
+        "fieldId": "sm",
+        "fieldName": "",
+        "fieldValue": "",
         "filedValueType": "string"
     }
 ]
 export const allReadingInitialState = [
     {
         "id": 1,
-        "createdAt": "2024-04-20T08:04:49.113Z",
-        "updatedAt": "2024-04-20T08:04:49.113Z",
+        "createdAt": "",
+        "updatedAt": "",
         "readingName": "Default"
     }
 ]
 
 export const fieldMappingInitialState = [
     {
-        "id": 46,
-        "createdAt": "2024-05-06T12:15:30.844Z",
-        "updatedAt": "2024-05-06T12:15:30.844Z",
-        "sheetId": 2,
-        "groupId": 4,
-        "parameterId": 6,
-        "fieldId": 25,
-        "readingId": 8,
+        "id": 1,
+        "createdAt": "",
+        "updatedAt": "",
+        "sheetId": 0,
+        "groupId": 0,
+        "parameterId": 0,
+        "fieldId": 0,
+        "readingId": 0,
         worksheetId:1,
         cellValue:'A:1'
     },
