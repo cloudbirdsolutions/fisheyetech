@@ -1,7 +1,7 @@
 export function openSidebar() {
   if (typeof window !== 'undefined') {
     document.documentElement.style.setProperty('--SideNavigation-slideIn', '1');
-    window.innerWidth < 767 ? (
+    window.innerWidth < 900 ? (
     document.documentElement.style.setProperty('--Sidebar-width', '240px'),
     document.documentElement.style.setProperty('--translateX', '0px')
     ) : ( 
@@ -14,7 +14,7 @@ export function openSidebar() {
 export function closeSidebar() {
   if (typeof window !== 'undefined') {
     document.documentElement.style.removeProperty('--SideNavigation-slideIn');
-    window.innerWidth < 767 ? (
+    window.innerWidth < 900 ? (
     document.documentElement.style.setProperty('--Sidebar-width', '240px'),
     document.documentElement.style.setProperty('--translateX', '-240px')
     )
