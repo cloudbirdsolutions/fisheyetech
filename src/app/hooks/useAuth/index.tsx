@@ -10,7 +10,7 @@ export function useAuth() {
    // const cookies = new Cookies();
    const token = localStorage.getItem("accessToken") ?? null;
     const verifiedToken = await verifyJwtToken(token);
-    !verifiedToken ?
+    verifiedToken ?
       setAuth(token) 
       : 
       setAuth(null)
