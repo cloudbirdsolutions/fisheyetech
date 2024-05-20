@@ -76,12 +76,12 @@ const darkOnlyTheme = extendTheme({
 });
 
 const sidebarItems = [
-  {
-    label: 'Home',
-    navPath: '/home',
-    icon: <HomeRoundedIcon />,
-    roles: ['admin', 'user','superadmin']
-  },
+  // {
+  //   label: 'Home',
+  //   navPath: '/home',
+  //   icon: <HomeRoundedIcon />,
+  //   roles: ['admin', 'user','superadmin']
+  // },
   {
     label: 'Dashboard',
     navPath: '/dashboard',

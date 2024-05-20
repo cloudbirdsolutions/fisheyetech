@@ -270,7 +270,7 @@ export default function Log() {
     "shiftId": 1,
     "shiftStatus": "Active",
     "shiftMaster": {
-      "shiftType": "Shift A"
+      "shiftType": "Loading..."
     }
   }])
 
@@ -290,13 +290,13 @@ export default function Log() {
       "userId": 25,
       "transitionId": 1,
       "users": {
-        "userName": "aravinth"
+        "userName": "no user"
       },
       "transitionMaster": {
         "transitionName": "Draft"
       },
       "sheetMaster": {
-        "sheetName": "AUTOMOBILE CHECKLIST & DAILY MAINTENANCE REPORT"
+        "sheetName": "Loading..."
       }
     }
   ]);
@@ -354,7 +354,7 @@ export default function Log() {
   React.useEffect(() => {
     decideShowReview();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sheetPermissionId])
+  }, [sheetPermissionId, currentShift,reviews])
 
   React.useEffect(() => {
 
@@ -379,6 +379,7 @@ export default function Log() {
       setSheetName(sheetdet.data)
       setReivews(reviewResp.data)
       setDocumentTransistionId(documentTransitioResp.data[0])
+      decideShowReview();
 
     }
     fetchFromServer()
@@ -391,16 +392,17 @@ export default function Log() {
   }
 
   React.useEffect(() => {
-    decideShowReview();
+    // decideShowReview();
     setCurrentShift(shiftDetails[index].shiftId)
     setIsInputDisabled(decideDisable())
     setSelectedShift(shiftDetails[index])
     const fetchReview = async () => {
       let reviewResp = await getDocumentReviews(params.document, shiftDetails[index].shiftId);
       setReivews(reviewResp.data)
+      decideShowReview();
     }
     fetchReview();
-    decideShowReview();
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index])
 
@@ -428,6 +430,7 @@ export default function Log() {
       // console.log(fieldRecord);
       setDocumentRecord(mergedFiledDocumentRecord);
       setReivews(reviewResp.data)
+      decideShowReview()
 
     }
     fetchData();
@@ -476,7 +479,7 @@ export default function Log() {
           "Content-Type": "application/json",
           Authorization: "Bearer "  + accessToken,
         },
-      body : JSON.stringify({docId,shiftId,transitionId})
+      body : JSON.stringify({docId,shiftId,transitionId,userId:logintype.data.id})
       });
       setReloadData(Date.now());
       toast.success("Record Changes Saved Successfully");
@@ -613,6 +616,21 @@ export default function Log() {
               textColor="inherit"
               sx={{ textTransform: 'capitalize' }}
             >Audit Info</Typography>
+            {/* <Typography
+              level="title-md"
+              textColor="inherit"
+              sx={{ textTransform: 'capitalize' }}
+            >{JSON.stringify(showReview)}</Typography>
+            <Typography
+              level="title-md"
+              textColor="inherit"
+              sx={{ textTransform: 'capitalize' }}
+            >{JSON.stringify(reviews.length)}</Typography>
+            <Typography
+              level="title-md"
+              textColor="inherit"
+              sx={{ textTransform: 'capitalize' }}
+            >{JSON.stringify(sheetPermissionId)}</Typography> */}
             <CardContent>
               <Tabs
                 aria-label="tabs"

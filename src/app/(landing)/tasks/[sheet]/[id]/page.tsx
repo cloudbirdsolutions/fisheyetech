@@ -178,9 +178,11 @@ export default function Log() {
         throw new Error('Failed to download details: ' + response.statusText);
       }
 
-      const filename = 'file.xlsx';
+      const filename = response.headers.get("Content-Disposition")?.split('=')[1];
 
       const blob = await response.blob();
+
+      // console.log(response.headers.get("Content-Disposition"))
       saveAs(blob, filename);
     } catch (error) {
       console.error('Failed to download file:', error);
@@ -262,6 +264,9 @@ export default function Log() {
           {/* <Typography level='title-sm' component="h1" sx={{ marginBottom: "12px" }}>{permision.permissionType.id}</Typography> */}
         </Stack>
         <Stack direction={'row'} spacing={2} justifyContent={'flex-end'} alignItems={'flex-end'}>
+        { [1].includes(permision?.permissionType.id) && <Button size='sm' color='primary' startDecorator={<Add />} onClick={() => createDocument(params.id, logintype.data.id, 1)}>
+            Create New Document
+          </Button>}
           <Link
             underline="hover"
             color="primary"
@@ -272,9 +277,7 @@ export default function Log() {
           >
             Go Back to Task List
           </Link>
-         { [1].includes(permision?.permissionType.id) && <Button size='sm' color='primary' startDecorator={<Add />} onClick={() => createDocument(params.id, logintype.data.id, 1)}>
-            Create New Document
-          </Button>}
+         
         </Stack>
         </Stack>
         <Divider/>

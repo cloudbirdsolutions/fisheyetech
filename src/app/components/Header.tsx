@@ -6,9 +6,14 @@ import Sheet from '@mui/joy/Sheet';
 import IconButton from '@mui/joy/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 
-import { toggleSidebar } from '../utils';
+import { toggleSidebar,openSidebar } from '../utils';
 
 export default function Header() {
+
+  React.useEffect(()=>{
+    openSidebar()
+  },[])
+
   return (
     <Sheet
       sx={{

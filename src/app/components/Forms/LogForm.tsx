@@ -116,7 +116,7 @@ export default function LogForm(props: LogFormProps) {
                                         {groupParam.parameterMaster.parameterName}
                                     </AccordionSummary>
                                     <AccordionDetails>
-                                        <Sheet variant='outlined'>
+                                        <Sheet variant='outlined' sx={{overflow:'auto'}}>
                                             <Table variant='soft' color='primary' size='sm' hoverRow>
                                                 {/* <thead>
                                                 <tr>
@@ -128,17 +128,17 @@ export default function LogForm(props: LogFormProps) {
                                                     {groupParam.parameterMaster.paramterFields.map((paramField, pfindex) => {
                                                         return (
                                                             <> {checkGroupParamFieldExistence(group.groupId, groupParam.parameterId, paramField.fieldId) && <tr key={`trow_id_${pfindex}`}>
-                                                                <td>{paramField.fieldMaster.fieldName}</td>
-                                                                <td>{paramField.fieldMaster.fieldValue}</td>
+                                                                <td style={{ width: 200 }}>{paramField.fieldMaster.fieldName}</td>
+                                                                <td style={{ width: 200 }}>{paramField.fieldMaster.fieldValue}</td>
                                                                 {paramField.fieldMaster.fieldReading.map((fieldReading) => {
-                                                                  return (<> { checkGroupParamFieldReadingExistence(group.groupId, groupParam.parameterId, paramField.fieldId,fieldReading.readingId) &&<td key={`td_id_${fieldReading.readingId}`}>
+                                                                  return (<> { checkGroupParamFieldReadingExistence(group.groupId, groupParam.parameterId, paramField.fieldId,fieldReading.readingId) &&<td key={`td_id_${fieldReading.readingId}`}  style={{ width: 200 }}>
                                                                         <FormControl>
                                                                             {pfindex == 0 && <FormLabel>{fieldReading.readingMaster.readingName}</FormLabel>}
                                                                             <Tooltip variant='soft' title={getMatchedFieldRecord(group.groupId, groupParam.parameterId, paramField.fieldId, fieldReading.readingId)?.fieldValue}>
                                                                             <Input
                                                                                 value={getMatchedFieldRecord(group.groupId, groupParam.parameterId, paramField.fieldId, fieldReading.readingId)?.fieldValue}
                                                                                 onChange={(e) => { updateValue(e, group.groupId, groupParam.parameterId, paramField.fieldId, fieldReading.readingId) }}
-                                                                                disabled={getMatchedFieldRecord(group.groupId, groupParam.parameterId, paramField.fieldId, fieldReading.readingId)?.transitionId != 1 || props.sheetPermissionId!=1} 
+                                                                                disabled={getMatchedFieldRecord(group.groupId, groupParam.parameterId, paramField.fieldId, fieldReading.readingId)?.transitionId != 1 || props.sheetPermissionId!=1 || props.documentTransitionState !=1} 
                                                                                 // disabled={props.isInputDisabled} 
                                                                                 
                                                                                 />
