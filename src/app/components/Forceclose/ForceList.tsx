@@ -23,6 +23,7 @@ import { deletedepartment } from "../../Reducers/DeleteDepartmentSlice";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {stableSort, getComparator} from '@/app/helper/sorting';
+import { useAuth } from "@/app/hooks/useAuth";
 
 
 type Order = "asc" | "desc";
@@ -51,7 +52,7 @@ export default function DepartmentLists(props: any) {
         )
       });
   };
-
+const auth = useAuth();
   React.useEffect(() => {
     const getData = async () => {
         const response = await fetch(
@@ -62,6 +63,7 @@ export default function DepartmentLists(props: any) {
             headers: {
               Accept: "application/json",
               "Content-Type": "application/json",
+              Authorization: "Bearer "  + auth,
             },
           }
         );

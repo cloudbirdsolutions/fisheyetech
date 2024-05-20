@@ -14,18 +14,33 @@ import DepartmentModalForm from '@/app/components/DepartmentModalForm/Department
 import { ToastContainer } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import Loader from '@/app/components/Loader/Loader';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/hooks/useAuth';
+import { AppDispatch } from '@/app/Store/store';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 export default function DepartmentList() {
   const [label, setLabel] = React.useState<string>('');
   const [open, setOpen] = React.useState<boolean>(false);
   const [row, setRow] = React.useState(null!);
   const loadingState = useSelector((state:any) => state?.createdepartments?.status === 'loading' || state?.deletedepartments?.status === 'loading' || state?.editdepartments?.status === 'loading' ? 'loading' : '');
-
+  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+const auth =  useAuth();
+useEffect(() => {
+  !auth ? (
+  localStorage.removeItem('accessToken'),
+  dispatch({ type: "USER_LOGOUT" }),
+  //setuser('')
+  router.push("/", { scroll: false }) ): ( '' )
+}, [])
 
    return (
     <>
     <Loader open={loadingState === 'loading'? true : false}/>
-
+    {auth ? (
+            <>
           <Box
             sx={{
               display: 'flex',
@@ -59,6 +74,9 @@ export default function DepartmentList() {
           <DepartmentModalForm open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
           </modalContext.Provider>
       <ToastContainer/>
+      </>
+    ) : ('Session Timed Out')
+  }
       </>
   );
 }

@@ -15,8 +15,11 @@ import { ToastContainer } from 'react-toastify';
 import Loader from '@/app/components/Loader/Loader';
 
 
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/hooks/useAuth';
+import { AppDispatch } from '@/app/Store/store';
 
 export default function RoleList() {
   const [label, setLabel] = React.useState<string>('');
@@ -24,10 +27,21 @@ export default function RoleList() {
   const [row, setRow] = React.useState(null!);
   
   const loadingState = useSelector((state:any) => state?.createroles?.status === 'loading' || state?.deleteroles?.status === 'loading' || state?.editroles?.status === 'loading' ? 'loading' : '');
-  
+  const router = useRouter();
+    const dispatch = useDispatch<AppDispatch>();
+const auth =  useAuth();
+  useEffect(() => {
+    !auth ? (
+    localStorage.removeItem('accessToken'),
+    dispatch({ type: "USER_LOGOUT" }),
+    //setuser('')
+    router.push("/", { scroll: false }) ): ( '' )
+  }, [])
   return (
     <>
         <Loader open={loadingState === 'loading'? true : false}/>
+        {auth ? (
+          <>
           <Box
             sx={{
               display: 'flex',
@@ -60,6 +74,9 @@ export default function RoleList() {
           <modalContext.Provider value={row}>
           <RoleModalForm open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
           </modalContext.Provider>
+          </>
+        ) :  ('Session Timed Out')
+      }
           <ToastContainer/>
       </>
   );

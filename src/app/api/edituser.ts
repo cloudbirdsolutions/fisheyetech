@@ -3,11 +3,13 @@ import { API_BASE_URL } from "../config";
 const loginEndpoint = process.env.NEXT_PUBLIC_API_HOST+'/users/update';
 
 export async function edituserapi(userData:any) {
+  const accessToken = localStorage.getItem('accessToken');
   try {
     const response = await fetch(loginEndpoint, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: "Bearer "  + accessToken,
       },
       body: JSON.stringify(userData),
     });

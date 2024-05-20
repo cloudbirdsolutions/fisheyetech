@@ -14,7 +14,11 @@ import modalContext from '@/app/context/modalContext';
 import { ToastContainer } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import Loader from '@/app/components/Loader/Loader';
-
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/hooks/useAuth';
+import { AppDispatch } from '@/app/Store/store';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 
 export default function Entity() {  
@@ -24,10 +28,21 @@ export default function Entity() {
   const [row, setRow] = React.useState(null!);
 
   const loadingState = useSelector((state:any) => state?.createentity?.status === 'loading' || state?.deleteentity?.status === 'loading' || state?.editentity?.status === 'loading' ? 'loading' : '');
-
+  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+const auth =  useAuth();
+useEffect(() => {
+  !auth ? (
+  localStorage.removeItem('accessToken'),
+  dispatch({ type: "USER_LOGOUT" }),
+  //setuser('')
+  router.push("/", { scroll: false }) ): ( '' )
+}, [])
   return (
     <>
       <Loader open={loadingState === 'loading'? true : false}/>
+      {auth ? (
+            <>
           <Box
             sx={{
               display: 'flex',
@@ -60,6 +75,9 @@ export default function Entity() {
           <EntityModalForm open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
           </modalContext.Provider>
           <ToastContainer/>
+          </>
+    ) : ('Session Timed Out')
+  }
           </>
   );
 }

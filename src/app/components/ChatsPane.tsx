@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../Store/store';
 import { API_BASE_URL } from '../config';
 import { ToastContainer, toast } from 'react-toastify';
+import { useAuth } from '../hooks/useAuth';
 
 
 type ChatsPaneProps = {
@@ -34,14 +35,15 @@ export default function ChatsPane(props: ChatsPaneProps) {
   const updateSummary = (e: any) => {
     setNewReviewSummary(e.target.value)
   }
-
+  const auth = useAuth();
   const saveReview = async ()=>{
     try {
-      const response = await fetch(`${API_BASE_URL}/review/create`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/review/create`, {
         method: 'POST',
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
+          Authorization: "Bearer "  + auth,
         },
         body: JSON.stringify({docId,createdBy:logintype.data.id,summary:newReviewSummary,shiftId:props.selectedShift.shiftId})
       });

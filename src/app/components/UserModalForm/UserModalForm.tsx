@@ -23,6 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from '@/app/hooks/useAuth';
 
 const schema = z.object({
   rolesId: z.preprocess((a) => parseInt(z.string().parse(a)), z.number().min(1, { message: "Please Select the Roles" })),
@@ -44,6 +45,7 @@ const UserModalForm = (props:any) =>{
     const router = useRouter();
 
     const row:any = useContext(modalContext);
+    const auth = useAuth();
 
     const [editformData, seteditFormData] = useState({
       id:0,
@@ -110,6 +112,7 @@ const UserModalForm = (props:any) =>{
               headers: {
                 Accept : "application/json",
                 'Content-Type': 'application/json',
+                Authorization: "Bearer "  + auth,
               }
             });
       
@@ -134,6 +137,7 @@ const UserModalForm = (props:any) =>{
             headers: {
               Accept : "application/json",
               'Content-Type': 'application/json',
+              Authorization: "Bearer "  + auth,
             }
           });
     
@@ -260,7 +264,7 @@ const UserModalForm = (props:any) =>{
                     <select multiple={false} {...methods.register("rolesId")} onChangeCapture={handleChange} style={{padding: '8px', borderRadius: '5px', borderColor: '#ccc', width: '100%'}}>
                         <option value={0}>Select</option>
                         {role.map((r:any, i) => {
-                            return <>{ r.roleName != 'superadmin'&& <option key={i} value={r.id} selected={row!=null ? r.id === editformData?.rolesId : false}>{r.roleName}</option>}</>
+                            return r.roleName != 'superadmin' && <option key={i} value={r.id} selected={row!=null ? r.id === editformData?.rolesId : false}>{r.roleName}</option>
                         })                
                         }   
                     </select>

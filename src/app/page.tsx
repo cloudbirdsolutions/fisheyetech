@@ -72,15 +72,15 @@ export default function Home() {
   const loadingState = useSelector((state:any) => state?.user?.status);
   const router = useRouter();
   
-  useEffect(() => {
-    if(data?.status === "200") {
+  /*useEffect(() => {
+    if(data?.statusCode === "200") {
         data?.data?.roles?.roleName === 'admin' ?        
           router.push('/users', { scroll: false })
           :
           router.push('/tasks', { scroll: false })
     } 
     // eslint-disable-next-line
-  }, [data]);
+  }, [data]);*/
 
   const handleSubmit = (formData:any) => {
         //e.preventDefault();
@@ -89,8 +89,17 @@ export default function Home() {
         //console.log('form values', userData)
         dispatch(fetchUserData(formData)).then((res) => {
           methods.reset();
-          res.payload.statusCode === 404 ? 
-            toast.error(res.payload.message) : ''
+          
+
+          res.payload?.statusCode === 200 ? (
+            res.payload.data?.roles?.roleName === 'admin' ? (    
+              router.push('/users', { scroll: false })
+            ) : 
+            (
+            router.push('/tasks', { scroll: false })
+            )
+          ) : res.payload?.statusCode === 404 ? 
+                toast.error(res.payload.message) : ''
         });
   }
     

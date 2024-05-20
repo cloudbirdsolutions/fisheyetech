@@ -15,6 +15,7 @@ import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
 import Link from "@mui/joy/Link";
 import { API_BASE_URL } from "@/app/config";
 import ListPermission from "./ListPermission";
+import { useAuth } from "@/app/hooks/useAuth";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -65,6 +66,7 @@ export default function JoballocationTable(props:any) {
   
 
   // const data = await getData()
+  const auth = useAuth();
   React.useEffect(() => {
     const getData = async () => {
       try {
@@ -76,6 +78,7 @@ export default function JoballocationTable(props:any) {
             headers: {
               Accept: "application/json",
               "Content-Type": "application/json",
+              Authorization: "Bearer "  + auth,
             },
           }
         );

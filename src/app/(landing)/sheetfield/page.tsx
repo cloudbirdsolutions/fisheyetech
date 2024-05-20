@@ -2,13 +2,17 @@
 import * as React from 'react';
 import Box from '@mui/joy/Box';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Select, Table, Typography, Option, FormLabel } from '@mui/joy';
 import { SheetRaw, GroupRaw, ParameterRaw, FieldRaw, ReadingRaw } from '@/app/types';
 import { allFieldInitialState, allGroupsInitialState, allParamterInitialState, allReadingInitialState, allSheetsInitialState } from '@/app/InitialStates/initialState';
 import { getAllGroups, getAllSheets, getAllFields, getAllParameters, getAllReadings,saveMapping } from '@/app/api/FieldMapping/mapping_api';
 import { FormControl } from '@mui/joy';
 import { group } from 'console';
+import { useAuth } from "@/app/hooks/useAuth";
+import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/app/Store/store';
 
 interface FormCtrl {
     state: any,
@@ -61,8 +65,21 @@ export default function SheetField() {
 
         saveMapping(data)
     }
+    const router = useRouter();
+    const dispatch = useDispatch<AppDispatch>();
+const auth =  useAuth();
+  useEffect(() => {
+    !auth ? (
+    localStorage.removeItem('accessToken'),
+    dispatch({ type: "USER_LOGOUT" }),
+    //setuser('')
+    router.push("/", { scroll: false }) ): ( '' )
+  }, [])
 
-    return (<Box width={'100%'} display={'flex'} flexDirection={'column'} alignItems={'center'} gap={4}>
+    return (
+    <>
+    {auth ? (
+    <Box width={'100%'} display={'flex'} flexDirection={'column'} alignItems={'center'} gap={4}>
        <Table>
             <tbody>
                 <tr>
@@ -156,4 +173,9 @@ export default function SheetField() {
         <Button color='success' onClick={handleSave}>Save</Button>
 
     </Box>)
+    : 
+    ('Session Timed Out')
+    }
+    </>
+    )
 }

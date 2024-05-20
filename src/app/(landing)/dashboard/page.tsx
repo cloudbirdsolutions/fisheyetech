@@ -14,6 +14,10 @@ import ReviewsIcon from '@mui/icons-material/Reviews';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import DashboardChart from '@/app/components/dashboard/dashboardchart';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/hooks/useAuth';
+import { AppDispatch } from '@/app/Store/store';
+import { useDispatch } from 'react-redux';
 
 
 interface ChartType {
@@ -46,9 +50,23 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
 
   const logintype = useSelector((state: RootState) => state?.user.data);
-
-  useEffect(() => {
-    fetch(`http://51.79.147.139:3001/dashboard/count?userId=${logintype.data.id}`)
+  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+const auth =  useAuth();
+useEffect(() => {
+  !auth ? (
+  localStorage.removeItem('accessToken'),
+  dispatch({ type: "USER_LOGOUT" }),
+  //setuser('')
+  router.push("/", { scroll: false }) ): ( '' )
+ 
+    fetch(`${process.env.NEXT_PUBLIC_API_HOST}/dashboard/count?userId=${logintype.data.id}`, {
+      headers: {
+      Accept : "application/json",
+      'Content-Type': 'application/json',
+      Authorization: "Bearer "  + auth,
+    }
+    })
       .then(response => response.json())
       .then(data => {
         if (data.status === 200) {
@@ -92,6 +110,8 @@ export default function Dashboard() {
 
   return (
     <>
+     {auth ? (
+            <>
       <Box
         sx={{
           // display: 'flex',
@@ -123,7 +143,9 @@ export default function Dashboard() {
         }
       </Grid>
       <DashboardChart />
-      
+      </>
+    ) : ('Session Timed Out')
+  }
     </>
 
   )

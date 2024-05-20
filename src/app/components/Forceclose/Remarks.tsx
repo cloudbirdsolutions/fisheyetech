@@ -21,6 +21,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { RootState } from '@/app/Store/store';
 import { useSelector } from 'react-redux';
+import { useAuth } from '@/app/hooks/useAuth';
 
 const schema = z.object({
     remarks:z.string().min(1, {message: 'Please Enter the Remarks'}),
@@ -35,7 +36,7 @@ const Remarks = (props:any) =>{
         resolver: zodResolver(schema),
         reValidateMode: 'onChange',
       });
-
+const auth = useAuth();
     const resolvefn = async (e:any) => {
         e = {...e, "docId": row.id, "createdBy": logintype?.data?.id}
         const response = await fetch(
@@ -46,6 +47,7 @@ const Remarks = (props:any) =>{
             headers: {
               Accept: "application/json",
               "Content-Type": "application/json",
+              Authorization: "Bearer "  + auth,
             },
             body : JSON.stringify(e)
           }

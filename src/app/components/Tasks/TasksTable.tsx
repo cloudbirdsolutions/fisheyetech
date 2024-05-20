@@ -18,6 +18,7 @@ import { RootState } from "@/app/Store/store";
 import { Stack, Tooltip } from "@mui/joy";
 import TableSection from "../Common/TableSection";
 import {stableSort, getComparator} from '@/app/helper/sorting';
+import { useAuth } from "@/app/hooks/useAuth";
 type Order = "asc" | "desc";
 
 export default function TasksTable() {
@@ -85,11 +86,12 @@ export default function TasksTable() {
 
   const getRemarksByUser = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/remarks/get-user-remarks?userId=${logintype.data.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/remarks/get-user-remarks?userId=${logintype.data.id}`, {
         method: 'GET',
         headers: {
           Accept: "application/json",
           'Content-Type': 'application/json',
+          Authorization: "Bearer "  + auth,
         }
       });
 
@@ -105,11 +107,12 @@ export default function TasksTable() {
   }
   const getDepartmentsByUser = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/joballocation/get-user-departments?userId=${logintype.data.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/joballocation/get-user-departments?userId=${logintype.data.id}`, {
         method: 'GET',
         headers: {
           Accept: "application/json",
           'Content-Type': 'application/json',
+          Authorization: "Bearer "  + auth,
         }
       });
 
@@ -140,19 +143,20 @@ export default function TasksTable() {
   };
 
   const router = useRouter();
-
+const auth = useAuth();
   // const data = await getData()
   React.useEffect(() => {
     const getData = async () => {
       try {
 
-        const url = [2,3].includes(logintype.data.rolesId) ? `${API_BASE_URL}/joballocation/get-all-jobs` : `${API_BASE_URL}/joballocation/get-user-jobs?id=${logintype.data.id}`
+        const url = [2,3].includes(logintype.data.rolesId) ? `${process.env.NEXT_PUBLIC_API_HOST}/joballocation/get-all-jobs` : `${process.env.NEXT_PUBLIC_API_HOST}/joballocation/get-user-jobs?id=${logintype.data.id}`
         // const url = `http://51.79.147.139:3000/joballocation/get-user-jobs?id=${logintype.data.id}`
         const response = await fetch(url, {
           method: "GET",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+            Authorization: "Bearer "  + auth,
           },
         });
 
@@ -175,8 +179,8 @@ export default function TasksTable() {
     const fetchRemarks = async () => {
       let depRem = await getRemarksByUser()
       let departments = await getDepartmentsByUser()
-      setDepartmentRemark(depRem.data)
-      setDepartmentList(departments.data)
+      setDepartmentRemark(depRem?.data)
+      setDepartmentList(departments?.data) 
     }
 
     fetchRemarks();

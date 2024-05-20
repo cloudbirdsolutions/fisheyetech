@@ -1,12 +1,15 @@
 import { API_BASE_URL } from '@/app/config';
 
 export const getAllSheets = async ()=>{
+  const accessToken = localStorage.getItem('accessToken');
+
     try {
-        const response = await fetch(`${API_BASE_URL}/sheetmaster/get`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetmaster/get`, {
         method: 'GET',
         headers: {
           Accept: "application/json",
           'Content-Type': 'application/json',
+          Authorization: "Bearer "  + accessToken,
         }
       });
   

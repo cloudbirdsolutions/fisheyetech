@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import Box from '@mui/joy/Box';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation'
 import { Tab, TabList, TabPanel, Tabs, Typography,  Sheet, Button, Stack, Link, Card,  CardContent, CardActions } from '@mui/joy';
-import { useSelector } from 'react-redux';
-import { RootState } from "@/app/Store/store";
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from "@/app/Store/store";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MyMessages from '@/app/components/MyMessages';
@@ -15,7 +15,9 @@ import LogForm from '@/app/components/Forms/LogForm'
 import { FormData, Reccod,RecordReading } from '@/app/types';
 import { fieldMappingInitialState, formDataInitalState, recordMasterInitialState } from '@/app/InitialStates/initialState';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/hooks/useAuth';
 var _array = require('lodash/array');
+
 
 var jmespath = require("jmespath");
 
@@ -23,16 +25,20 @@ interface LogProps {
   sheetid: string;
 }
 
+const accessToken = localStorage.getItem('accessToken');
+
 
 
 async function getSheetFields(sheetid: string) {
+  
   try {
 
-    const response = await fetch(`${API_BASE_URL}/forms/get?id=${sheetid}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/forms/get?id=${sheetid}`, {
       method: 'GET',
       headers: {
         Accept: "application/json",
         'Content-Type': 'application/json',
+        Authorization: "Bearer "  + accessToken,
       }
     });
 
@@ -47,13 +53,15 @@ async function getSheetFields(sheetid: string) {
   }
 }
 async function getDocumentShift(documentId: string) {
+  
   try {
 
-    const response = await fetch(`${API_BASE_URL}/docshiftstate/get?id=${documentId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/docshiftstate/get?id=${documentId}`, {
       method: 'GET',
       headers: {
         Accept: "application/json",
         'Content-Type': 'application/json',
+        Authorization: "Bearer "  + accessToken,
       }
     });
 
@@ -69,13 +77,15 @@ async function getDocumentShift(documentId: string) {
 }
 
 async function getsheetName(documentId: string){
+  
   try {
 
-    const response = await fetch(`${API_BASE_URL}/sheetdocid/get-user-docs?id=${documentId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetdocid/get-user-docs?id=${documentId}`, {
       method: 'GET',
       headers: {
         Accept: "application/json",
         'Content-Type': 'application/json',
+        Authorization: "Bearer "  + accessToken,
       }
     });
 
@@ -91,13 +101,15 @@ async function getsheetName(documentId: string){
 }
 
 async function getDocumentRecords(documentId: string, shiftId: number) {
+  
   try {
 
-    const response = await fetch(`${API_BASE_URL}/recordmaster/get-records?docId=${documentId}&shiftId=${shiftId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/recordmaster/get-records?docId=${documentId}&shiftId=${shiftId}`, {
       method: 'GET',
       headers: {
         Accept: "application/json",
         'Content-Type': 'application/json',
+        Authorization: "Bearer "  + accessToken,
       }
     });
 
@@ -112,13 +124,15 @@ async function getDocumentRecords(documentId: string, shiftId: number) {
   }
 }
 async function getDocumentReviews(documentId: string, shiftId:number) {
+  
   try {
 
-    const response = await fetch(`${API_BASE_URL}/review/get?id=${documentId}&shiftId=${shiftId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/review/get?id=${documentId}&shiftId=${shiftId}`, {
       method: 'GET',
       headers: {
         Accept: "application/json",
         'Content-Type': 'application/json',
+        Authorization: "Bearer "  + accessToken,
       }
     });
 
@@ -134,11 +148,12 @@ async function getDocumentReviews(documentId: string, shiftId:number) {
 async function getUserPermission(sheetId: string, userId: number) {
   try {
 
-    const response = await fetch(`${API_BASE_URL}/joballocation/get-permissions?userId=${userId}&sheetId=${sheetId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/joballocation/get-permissions?userId=${userId}&sheetId=${sheetId}`, {
       method: 'GET',
       headers: {
         Accept: "application/json",
         'Content-Type': 'application/json',
+        Authorization: "Bearer "  + accessToken,
       }
     });
 
@@ -152,13 +167,15 @@ async function getUserPermission(sheetId: string, userId: number) {
   }
 }
 async function getDocumentTransitionId(documentId: string) {
+  
   try {
 
-    const response = await fetch(`${API_BASE_URL}/sheetdocid/get-transition?docId=${documentId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetdocid/get-transition?docId=${documentId}`, {
       method: 'GET',
       headers: {
         Accept: "application/json",
         'Content-Type': 'application/json',
+        Authorization: "Bearer "  + accessToken,
       }
     });
 
@@ -172,13 +189,15 @@ async function getDocumentTransitionId(documentId: string) {
   }
 }
 async function getFieldMapping(sheetId: string) {
+  
   try {
 
-    const response = await fetch(`${API_BASE_URL}/sheetdependency/get?sheetId=${sheetId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetdependency/get?sheetId=${sheetId}`, {
       method: 'GET',
       headers: {
         Accept: "application/json",
         'Content-Type': 'application/json',
+        Authorization: "Bearer "  + accessToken,
       }
     });
 
@@ -212,7 +231,6 @@ const prepareFields = (formData: FormData[]):RecordReading[] => {
 export default function Log() {
 
   const router = useRouter();
-
   const [index, setIndex] = React.useState(0);
   const [expandIndex, setExpandIndex] = React.useState<number | null>(0);
   const [sheetPermissionId, setSheetPermissionId] = React.useState<number>(0);
@@ -310,6 +328,18 @@ export default function Log() {
     }
   ])
 
+  const dispatch = useDispatch<AppDispatch>();
+  
+  const auth =  useAuth();
+
+  useEffect(() => {
+    !auth ? (
+    localStorage.removeItem('accessToken'),
+    dispatch({ type: "USER_LOGOUT" }),
+    //setuser('')
+    router.push("/", { scroll: false }) ): ( '' )
+  }, [])
+
   const decideShowReview = () => {
 
     // Permission operator and review length < 1 don't show
@@ -344,8 +374,8 @@ export default function Log() {
       setFieldRecord(fieldMappingResp.data)
       setShiftDetails(shiftResp.data)
       setSelectedShift(shiftResp.data[0])
-      setCurrentShift((shiftResp.data[0].shiftId))
-      setSheetPermissionId(permissionData.data[0].permissionType.id)
+      setCurrentShift((shiftResp.data[0]?.shiftId))
+      setSheetPermissionId(permissionData.data[0]?.permissionType.id)
       setSheetName(sheetdet.data)
       setReivews(reviewResp.data)
       setDocumentTransistionId(documentTransitioResp.data[0])
@@ -411,11 +441,12 @@ export default function Log() {
   const saveRecordChnages = async (transistionId: number) => {
     try {
       let setDocumentRecordTransitionState = documentRecord.map((rec) => (Object.assign({}, rec, { "transitionId": transistionId, "updatedBy": logintype.data.id })))
-      const response = await fetch(`${API_BASE_URL}/forms/save`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/forms/save`, {
         method: 'POST',
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
+          Authorization: "Bearer "  + accessToken,
         },
         body: JSON.stringify({ "data": setDocumentRecordTransitionState })
       });
@@ -438,11 +469,12 @@ export default function Log() {
   const sendForApproval = async (docId: number, shiftId:number,transitionId:number) => {
     try {
       
-      const response = await fetch(`${API_BASE_URL}/sheetdocid/send-approval`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetdocid/send-approval`, {
         method: 'POST',
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
+          Authorization: "Bearer "  + accessToken,
         },
       body : JSON.stringify({docId,shiftId,transitionId})
       });
@@ -464,6 +496,8 @@ export default function Log() {
   };
 
   return (
+    <>
+    {auth ? (
     <Sheet variant='outlined' sx={{ px: 2, py: 2, borderRadius: 'sm' }}>
       <Box marginTop={2}>
         <ToastContainer />
@@ -601,5 +635,10 @@ export default function Log() {
         </Box>
       </Box>
     </Sheet>
+    )
+    : 
+    ('Session Timed Out')
+    }
+    </>
   );
 }

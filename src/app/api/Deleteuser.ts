@@ -3,11 +3,14 @@
 const loginEndpoint = process.env.NEXT_PUBLIC_API_HOST+'/users/delete';
 
 export async function deleteuserapi(id:any) {
+  const accessToken = localStorage.getItem('accessToken');
+
   try {
     const response = await fetch(loginEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: "Bearer "  + accessToken,
       },
       body: JSON.stringify({"data": [id]}),
     });

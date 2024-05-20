@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ListPermissionSecLists from "./ListPermissionSecLists";
+import { useAuth } from "@/app/hooks/useAuth";
 
 export default function ListPermission(props: any) {
 
@@ -74,7 +75,7 @@ export default function ListPermission(props: any) {
       </td>
     </tr>
   ))
-
+const auth = useAuth();
   useEffect(() => {
     const getalljobs = async () => {
       try {
@@ -83,6 +84,7 @@ export default function ListPermission(props: any) {
           headers: {
             Accept: "application/json",
             'Content-Type': 'application/json',
+            Authorization: "Bearer "  + auth,
           }
         });
 
@@ -107,6 +109,7 @@ export default function ListPermission(props: any) {
           headers: {
             Accept: "application/json",
             'Content-Type': 'application/json',
+            Authorization: "Bearer "  + auth,
           }
         });
 
@@ -132,6 +135,7 @@ export default function ListPermission(props: any) {
           headers: {
             Accept: "application/json",
             'Content-Type': 'application/json',
+            Authorization: "Bearer "  + auth,
           }
         });
 
@@ -156,6 +160,7 @@ export default function ListPermission(props: any) {
           headers: {
             Accept: "application/json",
             'Content-Type': 'application/json',
+            Authorization: "Bearer "  + auth,
           }
         });
 
@@ -190,6 +195,7 @@ export default function ListPermission(props: any) {
           headers: {
             Accept: "application/json",
             'Content-Type': 'application/json',
+            Authorization: "Bearer "  + auth,
           }
         });
 
@@ -216,6 +222,7 @@ export default function ListPermission(props: any) {
           headers: {
             Accept: "application/json",
             'Content-Type': 'application/json',
+            Authorization: "Bearer "  + auth,
           }
         });
 
