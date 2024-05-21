@@ -20,6 +20,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TableSection from './Common/TableSection';
 import {stableSort, getComparator} from '@/app/helper/sorting';
+import { useAuth } from '../hooks/useAuth';
 
 type Order = "asc" | "desc";
 
@@ -56,6 +57,7 @@ export default function OrderTable(props:any) {
      }
   }
 
+  const auth = useAuth();
 
   React.useEffect(() => {
     const getData = async () => {
@@ -66,6 +68,7 @@ export default function OrderTable(props:any) {
           headers: {
             Accept: "application/json",
             'Content-Type': 'application/json',
+            Authorization: "Bearer "  + auth,
           }
         });
 

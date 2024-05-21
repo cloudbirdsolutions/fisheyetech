@@ -16,6 +16,7 @@ import { Stack} from "@mui/joy";
 import TableSection from "../Common/TableSection";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/Store/store";
+import { useAuth } from "@/app/hooks/useAuth";
 
 export default function Followups() {
 const [userRemarks, setUserRemarks] = React.useState('');
@@ -55,14 +56,16 @@ const handleChange = (
   };
 
   const logintype = useSelector((state: RootState) => state?.user.data);
+  const auth = useAuth();
 
   const getRemarksByUser = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/remarks/get-user-remarks?userId=${logintype.data.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/remarks/get-user-remarks?userId=${logintype.data.id}`, {
         method: 'GET',
         headers: {
           Accept: "application/json",
           'Content-Type': 'application/json',
+          Authorization: "Bearer "  + auth,
         }
       });
 
@@ -78,11 +81,12 @@ const handleChange = (
   }
   const getDepartmentsByUser = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/joballocation/get-user-departments?userId=${logintype.data.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/joballocation/get-user-departments?userId=${logintype.data.id}`, {
         method: 'GET',
         headers: {
           Accept: "application/json",
           'Content-Type': 'application/json',
+          Authorization: "Bearer "  + auth,
         }
       });
 
@@ -98,11 +102,12 @@ const handleChange = (
   }
   const savedepartmentRemarks = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/remarks/create`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/remarks/create`, {
         method: 'POST',
         headers: {
           Accept: "application/json",
           'Content-Type': 'application/json',
+          Authorization: "Bearer "  + auth,
         },
         body : JSON.stringify({departmentId:remarksDepartment,remarks:userRemarks,createdBy:logintype.data.id})
       });

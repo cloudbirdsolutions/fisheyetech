@@ -26,6 +26,7 @@ import { Chip } from "@mui/joy";
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import BlockIcon from "@mui/icons-material/Block";
 import AutorenewRoundedIcon from "@mui/icons-material/AutorenewRounded";
+import { useAuth } from "@/app/hooks/useAuth";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -75,6 +76,7 @@ export default function JoballocationLists(props:any) {
 
   
   // const data = await getData()
+  const auth = useAuth();
   React.useEffect(() => {
     const getData = async () => {
       try {
@@ -86,6 +88,7 @@ export default function JoballocationLists(props:any) {
             headers: {
               Accept: "application/json",
               "Content-Type": "application/json",
+              Authorization: "Bearer "  + auth,
             },
           }
         );

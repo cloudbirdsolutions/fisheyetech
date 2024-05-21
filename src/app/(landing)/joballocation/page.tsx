@@ -6,13 +6,31 @@ import Typography from '@mui/joy/Typography';
 import JoballocationTable from '@/app/components/JoballocationTable/JoballocationTable';
 import Link from 'next/link';
 import JoballocationLists from '@/app/components/JoballocationTable/JoballocationLists';
+import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/app/Store/store';
+import { useAuth } from '@/app/hooks/useAuth';
+import { useEffect } from 'react';
 
 export default function Joballocation() {
   const [listsec, setListsec] = React.useState(false);
   const [selectedrow, setSelectedRow] = React.useState();
 
+  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+const auth =  useAuth();
+useEffect(() => {
+  !auth ? (
+  localStorage.removeItem('accessToken'),
+  dispatch({ type: "USER_LOGOUT" }),
+  //setuser('')
+  router.push("/", { scroll: false }) ): ( '' )
+}, [])
+
    return (
     <>
+    {auth ? (
+      <>
           <Box
             sx={{
               display: 'flex',
@@ -36,5 +54,8 @@ export default function Joballocation() {
           <JoballocationLists listsec={listsec} setListsec={setListsec} setSelectedRow={setSelectedRow} selectedrow={selectedrow}></JoballocationLists>
           <JoballocationTable listsec={listsec} setListsec={setListsec} setSelectedRow={setSelectedRow} selectedrow={selectedrow}/>
          </>
+      ): ('Session Timed Out')
+    }
+    </>
   );
 }

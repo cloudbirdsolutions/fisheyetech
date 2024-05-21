@@ -16,6 +16,7 @@ import {stableSort, getComparator} from '@/app/helper/sorting';
 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from '../hooks/useAuth';
 
 type Order = "asc" | "desc";
 
@@ -52,6 +53,7 @@ export default function EntityTable(props:any) {
      }
   }
   // const data = await getData()
+  const auth = useAuth();
   React.useEffect(() => {
     const getData = async () => {
       try {
@@ -61,6 +63,7 @@ export default function EntityTable(props:any) {
           headers: {
             Accept : "application/json",
             'Content-Type': 'application/json',
+            Authorization: "Bearer "  + auth,
           }
         });
   

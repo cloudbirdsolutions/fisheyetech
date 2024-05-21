@@ -3,11 +3,13 @@
 const loginEndpoint = process.env.NEXT_PUBLIC_API_HOST+'/roles/update';
 
 export async function editroleapi(roleData:any) {
+  const accessToken = localStorage.getItem('accessToken');
   try {
     const response = await fetch(loginEndpoint, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: "Bearer "  + accessToken,
       },
       body: JSON.stringify(roleData),
     });

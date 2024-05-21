@@ -17,44 +17,23 @@ import { AppDispatch, RootState } from '@/app/Store/store';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { API_BASE_URL } from '@/app/config'; 
 import {createdocument} from '@/app/Reducers/CreateDocumentSlice';
 import IconButton from '@mui/joy/IconButton';
 import DownloadIcon from '@mui/icons-material/Download';
 import EditIcon from '@mui/icons-material/Edit';
 import { saveAs } from 'file-saver';
+import {useAuth} from '@/app/hooks/useAuth';
+import { useEffect } from 'react';
 
 interface LogProps {
   sheetid: string
 }
-
-
-async function getSheetDetails(sheetid: string) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/sheetmaster/get-sheets?id=${sheetid}`, {
-      method: 'GET',
-      headers: {
-        Accept: "application/json",
-        'Content-Type': 'application/json',
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch user details: ' + response.statusText);
-    }
-
-    const data = await response.json();
-    return data
-  } catch (error) {
-    console.error('Error fetching user details:', error);
-  }
-}
-
-
-
+const accessToken = localStorage.getItem('accessToken');
 
 
 export default function Log() {
+  const auth =  useAuth();
+
   const createdocuments = useSelector((state:any) => state?.createdocuments?.data);
 
   const dispatch:any = useDispatch<AppDispatch>();
@@ -78,14 +57,47 @@ export default function Log() {
   const logintype = useSelector((state: RootState) => state?.user.data);
   const [refreshListIndicator, setRefreshListIndicator] = useState(Date.now())
 
-  async function getUserPermission() {
+  useEffect(() => {
+    !auth ? (
+    localStorage.removeItem('accessToken'),
+    dispatch({ type: "USER_LOGOUT" }),
+    //setuser('')
+    router.push("/", { scroll: false }) ): ( '' )
+  }, [])
+
+  async function getSheetDetails(sheetid: string) {
+
+
     try {
-  
-      const response = await fetch(`${API_BASE_URL}/joballocation/get-permissions?sheetId=${parseInt(params.id)}&userId=${logintype.data.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetmaster/get-sheets?id=${sheetid}`, {
         method: 'GET',
         headers: {
           Accept: "application/json",
           'Content-Type': 'application/json',
+          Authorization: "Bearer "  + auth,
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to fetch user details: ' + response.statusText);
+      }
+  
+      const data = await response.json();
+      return data
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    }
+  }
+
+  async function getUserPermission() {
+    try {
+  
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/joballocation/get-permissions?sheetId=${parseInt(params.id)}&userId=${logintype.data.id}`, {
+        method: 'GET',
+        headers: {
+          Accept: "application/json",
+          'Content-Type': 'application/json',
+          Authorization: "Bearer "  + auth,
         }
       });
   
@@ -122,14 +134,15 @@ export default function Log() {
   const getDocumentList = async(sheetid: string) => {
     try {
 
-      // const url = [2, 3].includes(permision.permissionType.id) ? `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}` : `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}&userId=${logintype.data.id}`
-      const url = `${API_BASE_URL}/sheetdocid/get-user-docs?sheetId=${sheetid}`
+      // const url = [2, 3].includes(permision.permissionType.id) ? `${process.env.NEXT_PUBLIC_API_HOST}/sheetdocid/get-user-docs?sheetId=${sheetid}` : `${process.env.NEXT_PUBLIC_API_HOST}/sheetdocid/get-user-docs?sheetId=${sheetid}&userId=${logintype.data.id}`
+      const url = `${process.env.NEXT_PUBLIC_API_HOST}/sheetdocid/get-user-docs?sheetId=${sheetid}`
 
       const response = await fetch(url, {
         method: 'GET',
         headers: {
           Accept: "application/json",
           'Content-Type': 'application/json',
+          Authorization: "Bearer "  + auth,
         }
       });
 
@@ -148,12 +161,16 @@ export default function Log() {
   const downloadfn = async(documentId:any) => {
 
     try {
-      const response = await fetch(`${API_BASE_URL}/downloadexcel?documentId=${documentId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/downloadexcel?documentId=${documentId}`, {
         method: 'GET',
+        // headers: {
+        //   Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        //   'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        // },
         headers: {
-          // Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          'Content-Type': 'application/octet-stream',
-        },
+          
+          Authorization: "Bearer "  + auth,
+        }
       
       });
 
@@ -234,6 +251,8 @@ export default function Log() {
 
   return (
     <>
+    {auth ? (
+      <>
       <Box marginTop={2}>
         <ToastContainer />
         <Typography level='title-lg' color='warning'>Document List</Typography>
@@ -264,6 +283,12 @@ export default function Log() {
         <Divider/>
       </Box>
       <TableSection tableHeaders={headers} tableRows={rows} />
+      </>
+    )
+    : 
+    ('Session Timed Out')
+    }
     </>
+    
   );
 }

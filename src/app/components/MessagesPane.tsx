@@ -12,6 +12,7 @@ import { API_BASE_URL } from '../config';
 import { useSelector } from 'react-redux';
 import { RootState } from '../Store/store';
 import { toast } from 'react-toastify';
+import { useAuth } from '../hooks/useAuth';
 
 type MessagesPaneProps = {
   chat: ChatProps;
@@ -27,13 +28,16 @@ export default function MessagesPane(props: MessagesPaneProps) {
     setChatMessages(chat?.comments);
   }, [chat?.comments]);
 
+  const auth = useAuth();
+
   const saveComment = async ()=>{
     try {
-      const response = await fetch(`${API_BASE_URL}/comments/create`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/comments/create`, {
         method: 'POST',
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
+          Authorization: "Bearer "  + auth,
         },
         body: JSON.stringify({ reviewId: parseInt(chat.id), createdBy: logintype.data.id ,comments:textAreaValue})
       });

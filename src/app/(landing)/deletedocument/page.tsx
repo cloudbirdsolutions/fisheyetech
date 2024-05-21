@@ -1,6 +1,7 @@
 'use client';
 import { deletedocument } from "@/app/Reducers/DeleteDocumetSlice";
 import { AppDispatch } from "@/app/Store/store";
+import { useAuth } from "@/app/hooks/useAuth";
 import { Box, Button, Input, Typography } from "@mui/joy";
 import Sheet from "@mui/joy/Sheet";
 import {useRouter} from "next/navigation";
@@ -64,10 +65,20 @@ export default function RoleList() {
              
     }
 
+    const auth =  useAuth();
+useEffect(() => {
+  !auth ? (
+  localStorage.removeItem('accessToken'),
+  dispatch({ type: "USER_LOGOUT" }),
+  //setuser('')
+  router.push("/", { scroll: false }) ): ( '' )
+}, [])
           
 
     return (
         <>
+         {auth ? (
+            <>
         <Sheet variant='outlined' sx={{ px: 2, py: 2, borderRadius: 'sm' }}>
             <Box>
                 <ToastContainer />
@@ -82,6 +93,9 @@ export default function RoleList() {
                 </form>
                 </Box>
         </Sheet>
+        </>
+    ) : ('Session Timed Out')
+  }
         </>
     )
 }

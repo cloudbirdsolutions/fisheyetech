@@ -30,6 +30,7 @@ import List from '@mui/joy/List';
 
 import {stableSort, getComparator} from '@/app/helper/sorting';
 import Typography from '@mui/joy/Typography';
+import { useAuth } from '../hooks/useAuth';
 
 type Order = "asc" | "desc";
 
@@ -65,7 +66,7 @@ export default function OrderList(props:any) {
        // Handle error (e.g., display error message)
      }
   }
-
+  const auth = useAuth();
   React.useEffect(() => {
     const getData = async () => {
       try {
@@ -75,6 +76,7 @@ export default function OrderList(props:any) {
           headers: {
             Accept: "application/json",
             'Content-Type': 'application/json',
+            Authorization: "Bearer "  + auth,
           }
         });
 

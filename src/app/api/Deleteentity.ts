@@ -3,11 +3,14 @@
 const loginEndpoint = process.env.NEXT_PUBLIC_API_HOST+'/sheetMaster/delete';
 
 export async function deleteentityapi(id:any) {
+  const accessToken = localStorage.getItem('accessToken');
+
   try {
     const response = await fetch(loginEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: "Bearer "  + accessToken,
       },
       body: JSON.stringify({"data": [id]}),
     });
