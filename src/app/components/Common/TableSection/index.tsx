@@ -65,7 +65,8 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 
 interface TableSectionProops{
     tableHeaders : String[],
-    tableRows: React.ReactNode[]
+    tableRows: React.ReactNode[],
+    action : Boolean
 
 }
 
@@ -236,7 +237,7 @@ return (
                 <th key={i} style={{ padding: '12px 6px' }} >{head}</th>
             ))}
       
-            <th style={{padding: '12px 6px' }}>Action</th>
+            {props.action && <th style={{padding: '12px 6px' }}>Action</th>}
           </tr>
         </thead>
         <tbody>

@@ -244,6 +244,6 @@ const auth = useAuth();
   ))
 
   return (
-    <TableSection tableHeaders={headers} tableRows={tablerows} />
+    <TableSection tableHeaders={headers} tableRows={tablerows} action={true}/>
   );
 }

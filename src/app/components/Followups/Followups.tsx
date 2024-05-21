@@ -164,7 +164,7 @@ return(
   </Stack>
 </Box>
 
-<TableSection tableHeaders={followUpHeader} tableRows={followUpRow} />
+<TableSection tableHeaders={followUpHeader} tableRows={followUpRow} action={true}/>
 </Sheet>
 </React.Fragment>
 

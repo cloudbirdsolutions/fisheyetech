@@ -344,7 +344,7 @@ const auth = useAuth();
 
         <Button type="submit"> Add Job</Button>
       </form>
-      <TableSection tableHeaders={headers} tableRows={jobstablerows} />
+      <TableSection tableHeaders={headers} tableRows={jobstablerows} action={true}/>
       <ListPermissionSecLists alljobs={alljobs}/>
     </>
   )

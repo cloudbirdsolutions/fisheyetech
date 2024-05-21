@@ -225,7 +225,7 @@ export default function Followups() {
                 </Stack>
             </Box>
 
-            <TableSection tableHeaders={followUpHeader} tableRows={followUpRow} />
+            <TableSection tableHeaders={followUpHeader} tableRows={followUpRow} action={true}/>
         </React.Fragment>
 
 

@@ -105,7 +105,7 @@ export default function EntityTable(props:any) {
  
   return (
       <>
-        <TableSection tableHeaders={headers} tableRows={tablerows}/>
+        <TableSection tableHeaders={headers} tableRows={tablerows} action={true}/>
         <EntityListSection listItems={rows} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} setLabel={props.setLabel} parentFunction={HandleDeleteFunction}/>
         </>
   );
