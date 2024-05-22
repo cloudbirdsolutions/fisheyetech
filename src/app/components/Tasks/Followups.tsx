@@ -18,36 +18,18 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/Store/store";
 import { ToastContainer,toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from "@/app/hooks/useAuth";
+
 const jmespath = require('jmespath');
 
 export default function Followups() {
+    const auth = useAuth();
+
     const [userRemarks, setUserRemarks] = React.useState('');
     // const [rows, setRows] = React.useState();
     const [departmentRemarks, setDepartmentRemark] = React.useState([
         {
-            "departments": {
-                "id": 1,
-                "createdAt": "2024-04-20T08:20:59.096Z",
-                "updatedAt": "2024-04-20T08:20:59.096Z",
-                "departmentName": "CHP",
-                "remarks": [
-                    {
-                        "id": 1,
-                        "createdAt": "2024-04-29T10:43:38.583Z",
-                        "updatedAt": "2024-04-29T10:43:38.583Z",
-                        "createdBy": 1,
-                        "departmentId": 1,
-                        "remarks": "Power shutdown",
-                        "status": "Active",
-                        "updatedBy": 2,
-                        "createdUser": {
-                            "userName": "Moses"
-                        },
-                        "updatedUser": {
-                            "userName": "Bharani1"
-                        }
-                    }]
-            }
+            
         }])
     const [remarksDepartment, setRemarksDepartment] = React.useState(0);
 
@@ -55,15 +37,15 @@ export default function Followups() {
         {
         
             "id": 1,
-            "departmentName": "CHP"
+            "departmentName": ""
         }
       ])
       const [department, setDepartment] = React.useState([
         {
             "id": 1,
-            "createdAt": "2024-04-20T08:20:59.096Z",
-            "updatedAt": "2024-04-20T08:20:59.096Z",
-            "departmentName": "CHP"
+            "createdAt": "",
+            "updatedAt": "",
+            "departmentName": ""
         }
       ])
     const handleChange = (
@@ -83,6 +65,7 @@ export default function Followups() {
                     headers: {
                         Accept: "application/json",
                         'Content-Type': 'application/json',
+                        Authorization: "Bearer "  + auth,
                     }
                 });
 
@@ -103,6 +86,7 @@ export default function Followups() {
                 headers: {
                     Accept: "application/json",
                     'Content-Type': 'application/json',
+                    Authorization: "Bearer "  + auth,
                 }
             });
 
@@ -123,6 +107,7 @@ export default function Followups() {
                 headers: {
                     Accept: "application/json",
                     'Content-Type': 'application/json',
+                    Authorization: "Bearer "  + auth,
                 },
                 body: JSON.stringify({ departmentId: remarksDepartment, remarks: userRemarks, createdBy: logintype.data.id, status:'new',updatedBy: logintype.data.id })
             });
@@ -149,6 +134,7 @@ export default function Followups() {
             headers: {
               Accept: "application/json",
               'Content-Type': 'application/json',
+              Authorization: "Bearer "  + auth,
             }
           });
     
@@ -165,11 +151,11 @@ export default function Followups() {
 
     const followUpHeader = ["Department", "CreatedAt", "UpdatedAt", "CreatedBy","UpdatedBy","Remarks", "Status"]
 
-    const followUpRow = departmentRemarks.map(dep => (
-        dep.departments.remarks.map(rem => (
-            <tr key={`document_id_${rem.id}`}>
+    const followUpRow = departmentRemarks?.map(dep => (
+        dep?.departments?.remarks.map(rem => (
+            <tr key={`document_id_${rem?.id}`}>
                 <td><Typography level="body-xs">{rem?.id}</Typography></td>
-                <td><Typography level="body-xs">{dep?.departments.departmentName}</Typography></td>
+                <td><Typography level="body-xs">{dep?.departments?.departmentName}</Typography></td>
                 <td><Typography level="body-xs">{rem?.createdAt}</Typography></td>
                 <td><Typography level="body-xs">{rem?.updatedAt}</Typography></td>
                 <td><Typography level="body-xs">{rem?.createdUser.userName}</Typography></td>
