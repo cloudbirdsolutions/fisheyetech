@@ -55,20 +55,14 @@ export default function Followups() {
     const [remarksDepartment, setRemarksDepartment] = React.useState(0);
 
     const [departmentList, setDepartmentList] = React.useState([
-        {
-        
-            "id": 1,
-            "departmentName": ""
-        }
-      ])
-      const [department, setDepartment] = React.useState([
-        {
-            "id": 1,
-            "createdAt": "",
-            "updatedAt": "",
-            "departmentName": ""
-        }
-      ])
+        {id:'1',departmentName:'CHP'},
+        {id:'2',departmentName:'EMD'},
+        {id:'3',departmentName:'IMD'},
+        {id:'4',departmentName:'MAIN_PLANT'},
+        {id:'5',departmentName:'WTP'},
+    ])
+
+    const [department, setDepartment] = React.useState([])
     const handleChange = (
         event: React.SyntheticEvent | null,
         newValue: string | null,
@@ -78,28 +72,6 @@ export default function Followups() {
 
     const logintype = useSelector((state: RootState) => state?.user.data);
 
-    const getRemarksByUser = async () => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/remarks/get-user-remarks?userId=${logintype.data.rolesId}`,
-                {
-                    method: 'GET',
-                    headers: {
-                        Accept: "application/json",
-                        'Content-Type': 'application/json',
-                        Authorization: "Bearer "  + auth,
-                    }
-                });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch user details: ' + response.statusText);
-            }
-
-            const data = await response.json();
-            return data
-        } catch (error) {
-            console.error('Error fetching user details:', error);
-        }
-    }
     const getDepartmentsByUser = async () => {
         try {
             const response = await fetch(`${API_BASE_URL}/joballocation/get-user-departments?userId=${logintype.data.id}`, {
@@ -193,7 +165,7 @@ export default function Followups() {
             let department = await getDepartment();
             let departments = await getDepartmentsByUser();
 
-            setDepartmentList(jmespath.search(departments.data,'[].departments.{id:id,departmentName:departmentName}'))
+            // setDepartmentList(jmespath.search(departments.data,'[].departments.{id:id,departmentName:departmentName}'))
             setDepartment(department.data);
             setDepartmentRemark(departments.data)
         }
@@ -218,7 +190,7 @@ export default function Followups() {
                     <FormControl orientation="horizontal">
                         <FormLabel>Department</FormLabel>
                         <Select placeholder="Select a department" onChange={handleChange}>
-                            {department.map(dep => (<Option key={dep?.id} value={dep?.id}>
+                            {departmentList.map(dep => (<Option key={dep?.id} value={dep?.id}>
                                 {dep?.departmentName}
                             </Option>))}
                         </Select>
