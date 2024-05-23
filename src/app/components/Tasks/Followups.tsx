@@ -27,30 +27,31 @@ export default function Followups() {
 
     const [userRemarks, setUserRemarks] = React.useState('');
     // const [rows, setRows] = React.useState();
-    const [departmentRemarks, setDepartmentRemark] = React.useState([
-        {
-            "departments": {
-                "id": 1,
-                "createdAt": "2024-04-20T08:20:59.096Z",
-                "updatedAt": "2024-04-20T08:20:59.096Z",
-                "departmentName": "CHP",
-                "remarks": [
-                    {
-                        "id": 1,
-                        "createdAt": "2024-04-29T10:43:38.583Z",
-                        "updatedAt": "2024-04-29T10:43:38.583Z",
-                        "createdBy": 1,
-                        "departmentId": 1,
-                        "remarks": "Power shutdown",
-                        "status": "Active",
-                        "updatedBy": 1,
-                        "createdUser": {
-                            "userName": "Moses"
-                        },
-                        "updatedUser": {
-                            "userName": "Moses"
-                        }
-                    }]}}])
+    const [departmentRemarks, setDepartmentRemark] = React.useState([{
+        "departments": {
+        "id": null,
+        "createdAt": "",
+        "updatedAt": "",
+        "departmentName": "",
+        "remarks": [
+            {
+                "id": null,
+                "createdAt": "",
+                "updatedAt": "",
+                "createdBy": null,
+                "departmentId": null,
+                "remarks": "",
+                "status": "",
+                "updatedBy": null,
+                "createdUser": {
+                    "userName": ""
+                },
+                "updatedUser": {
+                    "userName": ""
+                }
+            }]
+    }
+}])
     const [remarksDepartment, setRemarksDepartment] = React.useState(0);
 
     const [departmentList, setDepartmentList] = React.useState([
