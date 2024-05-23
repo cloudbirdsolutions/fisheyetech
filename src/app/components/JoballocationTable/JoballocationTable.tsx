@@ -152,7 +152,7 @@ export default function JoballocationTable(props:any) {
   return (
     <>
       {props.listsec === false && (
-        <TableSection tableHeaders={headers} tableRows={tablerows} />
+        <TableSection tableHeaders={headers} tableRows={tablerows} action={true}/>
       )}
       {props.listsec === true && <ListPermission selectedrows={props.selectedrow} />}
     </>
