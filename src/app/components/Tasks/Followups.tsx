@@ -27,10 +27,31 @@ export default function Followups() {
 
     const [userRemarks, setUserRemarks] = React.useState('');
     // const [rows, setRows] = React.useState();
-    const [departmentRemarks, setDepartmentRemark] = React.useState([
-        {
-            
-        }])
+    const [departmentRemarks, setDepartmentRemark] = React.useState([{
+        "departments": {
+        "id": null,
+        "createdAt": "",
+        "updatedAt": "",
+        "departmentName": "",
+        "remarks": [
+            {
+                "id": null,
+                "createdAt": "",
+                "updatedAt": "",
+                "createdBy": null,
+                "departmentId": null,
+                "remarks": "",
+                "status": "",
+                "updatedBy": null,
+                "createdUser": {
+                    "userName": ""
+                },
+                "updatedUser": {
+                    "userName": ""
+                }
+            }]
+    }
+}])
     const [remarksDepartment, setRemarksDepartment] = React.useState(0);
 
     const [departmentList, setDepartmentList] = React.useState([
