@@ -53,7 +53,13 @@ export default function Followups() {
                     }]}}])
     const [remarksDepartment, setRemarksDepartment] = React.useState(0);
 
-    const [departmentList, setDepartmentList] = React.useState([{id:'',departmentName:''}])
+    const [departmentList, setDepartmentList] = React.useState([
+        {id:'1',departmentName:'CHP'},
+        {id:'2',departmentName:'EMD'},
+        {id:'3',departmentName:'IMD'},
+        {id:'4',departmentName:'MAIN_PLANT'},
+        {id:'5',departmentName:'WTP'},
+    ])
 
     const [department, setDepartment] = React.useState([])
     const handleChange = (
@@ -158,7 +164,7 @@ export default function Followups() {
             let department = await getDepartment();
             let departments = await getDepartmentsByUser();
 
-            setDepartmentList(jmespath.search(departments.data,'[].departments.{id:id,departmentName:departmentName}'))
+            // setDepartmentList(jmespath.search(departments.data,'[].departments.{id:id,departmentName:departmentName}'))
             setDepartment(department.data);
             setDepartmentRemark(departments.data)
         }
