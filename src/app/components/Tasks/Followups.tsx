@@ -29,25 +29,33 @@ export default function Followups() {
     // const [rows, setRows] = React.useState();
     const [departmentRemarks, setDepartmentRemark] = React.useState([
         {
-            
-        }])
+            "departments": {
+                "id": 1,
+                "createdAt": "2024-04-20T08:20:59.096Z",
+                "updatedAt": "2024-04-20T08:20:59.096Z",
+                "departmentName": "CHP",
+                "remarks": [
+                    {
+                        "id": 1,
+                        "createdAt": "2024-04-29T10:43:38.583Z",
+                        "updatedAt": "2024-04-29T10:43:38.583Z",
+                        "createdBy": 1,
+                        "departmentId": 1,
+                        "remarks": "Power shutdown",
+                        "status": "Active",
+                        "updatedBy": 1,
+                        "createdUser": {
+                            "userName": "Moses"
+                        },
+                        "updatedUser": {
+                            "userName": "Moses"
+                        }
+                    }]}}])
     const [remarksDepartment, setRemarksDepartment] = React.useState(0);
 
-    const [departmentList, setDepartmentList] = React.useState([
-        {
-        
-            "id": 1,
-            "departmentName": ""
-        }
-      ])
-      const [department, setDepartment] = React.useState([
-        {
-            "id": 1,
-            "createdAt": "",
-            "updatedAt": "",
-            "departmentName": ""
-        }
-      ])
+    const [departmentList, setDepartmentList] = React.useState([{id:'',departmentName:''}])
+
+    const [department, setDepartment] = React.useState([])
     const handleChange = (
         event: React.SyntheticEvent | null,
         newValue: string | null,
@@ -57,28 +65,6 @@ export default function Followups() {
 
     const logintype = useSelector((state: RootState) => state?.user.data);
 
-    const getRemarksByUser = async () => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/remarks/get-user-remarks?userId=${logintype.data.rolesId}`,
-                {
-                    method: 'GET',
-                    headers: {
-                        Accept: "application/json",
-                        'Content-Type': 'application/json',
-                        Authorization: "Bearer "  + auth,
-                    }
-                });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch user details: ' + response.statusText);
-            }
-
-            const data = await response.json();
-            return data
-        } catch (error) {
-            console.error('Error fetching user details:', error);
-        }
-    }
     const getDepartmentsByUser = async () => {
         try {
             const response = await fetch(`${API_BASE_URL}/joballocation/get-user-departments?userId=${logintype.data.id}`, {
@@ -197,7 +183,7 @@ export default function Followups() {
                     <FormControl orientation="horizontal">
                         <FormLabel>Department</FormLabel>
                         <Select placeholder="Select a department" onChange={handleChange}>
-                            {department.map(dep => (<Option key={dep?.id} value={dep?.id}>
+                            {departmentList.map(dep => (<Option key={dep?.id} value={dep?.id}>
                                 {dep?.departmentName}
                             </Option>))}
                         </Select>
