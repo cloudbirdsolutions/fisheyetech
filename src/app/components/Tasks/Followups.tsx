@@ -1,15 +1,16 @@
 "use client";
 
 import * as React from "react";
-import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
-import Table from "@mui/joy/Table";
-import Sheet from "@mui/joy/Sheet";
+
+import IconButton from '@mui/joy/IconButton';
+import { Box, Button } from '@mui/joy';
+import EditIcon from '@mui/icons-material/Edit';
+
 import Typography from "@mui/joy/Typography";
 import { API_BASE_URL } from '@/app/config';
 import { Stack } from "@mui/joy";
@@ -19,11 +20,14 @@ import { RootState } from "@/app/Store/store";
 import { ToastContainer,toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from "@/app/hooks/useAuth";
+import FollowupsModalForm from "../followupsmodalform/FollowupsModalForm";
 
 const jmespath = require('jmespath');
 
 export default function Followups() {
     const auth = useAuth();
+
+    const editfollowupstatus = useSelector((state: RootState) => state?.editfollowupstatus.data);
 
     const [userRemarks, setUserRemarks] = React.useState('');
     // const [rows, setRows] = React.useState();
@@ -62,7 +66,16 @@ export default function Followups() {
         {id:'5',departmentName:'WTP'},
     ])
 
-    const [department, setDepartment] = React.useState([])
+    const [department, setDepartment] = React.useState([]);
+
+    const [open, setOpen] = React.useState<boolean>(false);
+    const [row, setRow] = React.useState(null!);
+
+    const editfn = (row: any) => {
+      setOpen(true);
+      setRow(row);
+    }
+
     const handleChange = (
         event: React.SyntheticEvent | null,
         newValue: string | null,
@@ -142,8 +155,10 @@ export default function Followups() {
         }
       }
 
-    const followUpHeader = ["Department", "CreatedAt", "UpdatedAt", "CreatedBy","UpdatedBy","Remarks", "Status"]
+    
 
+    const followUpHeader = ["Department", "CreatedAt", "UpdatedAt", "CreatedBy","UpdatedBy","Remarks", "Status"]
+      
     const followUpRow = departmentRemarks?.map(dep => (
         dep?.departments?.remarks.map(rem => (
             <tr key={`document_id_${rem?.id}`}>
@@ -155,6 +170,16 @@ export default function Followups() {
                 <td><Typography level="body-xs">{rem?.updatedUser.userName}</Typography></td>
                 <td><Typography level="body-xs">{rem?.remarks}</Typography></td>
                 <td><Typography level="body-xs">{rem?.status}</Typography></td>
+                <td>
+                    <Box>
+                        <Button 
+                        slots={{ root: IconButton }}
+                        slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
+                        >
+                            <EditIcon onClick={() => editfn(rem)}/>
+                        </Button>
+                    </Box>
+                </td>
             </tr>
         ))
 
@@ -174,7 +199,7 @@ export default function Followups() {
 
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [editfollowupstatus]);
 
     return (
         <React.Fragment>
@@ -205,6 +230,7 @@ export default function Followups() {
             </Box>
 
             <TableSection tableHeaders={followUpHeader} tableRows={followUpRow} action={true}/>
+            <FollowupsModalForm open={open} setOpen={setOpen} row={row}/>
         </React.Fragment>
 
 

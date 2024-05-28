@@ -27,6 +27,7 @@ import deleteroleSlice from '../Reducers/DeleteRoleSlice';
 import editroleSlice from '../Reducers/editRoleSlice';
 import deletedocumentSlice from '../Reducers/DeleteDocumetSlice';
 import createdocumentSlice from '../Reducers/CreateDocumentSlice';
+import editfollowupstatusSlice from '../Reducers/editFolloupsstatusSlice';
 const persistConfig = {
   key: 'root',
   storage,
@@ -50,6 +51,7 @@ const appReducer = combineReducers({
   deleteroles: deleteroleSlice,
   editroles: editroleSlice,
   deletedocuments: deletedocumentSlice,
+  editfollowupstatus: editfollowupstatusSlice,
 });
 
 const rootReducer = (state:any, action:any) => {
