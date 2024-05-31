@@ -23,60 +23,102 @@ import { useAuth } from '@/app/hooks/useAuth';
 import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
 import { RootState } from '@/app/Store/store';
+import { Remark } from '@/app/types';
+import { API_BASE_URL } from '@/app/config';
 
 const schema = z.object({
-    rolesId: z.preprocess((a) => parseInt(z.string().parse(a)), z.number().min(1, { message: "Please Select the Roles" })),
-    name: z.string().min(1, { message: 'Please Enter the Name' }),
-    userName: z.string().trim().nonempty({ message: "Please Enter the User Name" }),
-    password: z.string().min(1, { message: 'Please Enter the Password' }),
-    statusId: z.preprocess((a) => parseInt(z.string().parse(a)), z.number().min(1, { message: "Please Select the Status" })),
+    // rolesId: z.preprocess((a) => parseInt(z.string().parse(a)), z.number().min(1, { message: "Please Select the Roles" })),
+    // name: z.string().min(1, { message: 'Please Enter the Name' }),
+    // userName: z.string().trim().nonempty({ message: "Please Enter the User Name" }),
+    // password: z.string().min(1, { message: 'Please Enter the Password' }),
+    // statusId: z.preprocess((a) => parseInt(z.string().parse(a)), z.number().min(1, { message: "Please Select the Status" })),
 });
 
 const FollowupModalForm = (props: any) => {
+
     const logintype = useSelector((state: RootState) => state?.user.data);
+    const [currentRemark, setCurrentRemark] = useState<Remark>(props.selectedRemark)
+
     const methods = useForm({
         resolver: zodResolver(schema),
         reValidateMode: 'onChange',
     });
 
-    const dispatch = useDispatch<AppDispatch>();
-    const router = useRouter();
-    const row: any = useContext(modalContext);
+
     const auth = useAuth();
 
     // Initialize state with props to avoid resetting on re-render
-    const [status, setStatus] = useState(props.initialStatus || '');
-    const [remarks, setRemarks] = useState(props.initialRemarks || '');
-    const [created, setCreated] = useState(props.initialCreatedBy || '');
-    const [updated, setUpdated] = useState(props.initialUpdatedBy || '');
+    ;
 
-    const handleRemarks = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRemarks(event.target.value);
-        props.onInputChange(event.target.value);
+    const handleChange = (event: React.FormEvent) => {
+        event.preventDefault();
+        interface Map {
+            [key: string]: string | undefined
+        }
+        let updatedObj: Map = {}
+        updatedObj[event.currentTarget.id] = (event.target as HTMLInputElement).value
+
+        let updatedRemarkObj = Object.assign({}, currentRemark, updatedObj)
+        setCurrentRemark(updatedRemarkObj)
+
+    }
+
+    const handleSelectChange = (
+        event: React.SyntheticEvent | null,
+        newValue: string | null,
+    ) => {
+        // alert(`You chose "${newValue}"`);
+        if (event) {
+            interface Map {
+                [key: string]: string | null
+            }
+            let updatedObj: Map = {}
+            updatedObj[(event.target as HTMLSelectElement).id] = newValue
+
+            let updatedRemarkObj = Object.assign({}, currentRemark, updatedObj)
+            setCurrentRemark(updatedRemarkObj)
+        }
     };
 
-    const handleCreate = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setCreated(event.target.value);
-        props.onCreateChange(event.target.value);
-    };
+    const updateRemark = async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/remarks/update`, {
+                method: 'PUT',
+                headers: {
+                    Accept: "application/json",
+                    'Content-Type': 'application/json',
+                    Authorization: "Bearer "  + auth,
+                },
+                body : JSON.stringify({
+                    id:currentRemark.id,
+                    remarks:currentRemark.remarks,
+                    status:currentRemark.status,
+                    updatedBy:logintype.data.id
+                })
+            });
 
-    const handleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setUpdated(event.target.value);
-        props.onUpdateChange(event.target.value);
-    };
+            if (!response.ok) {
+                throw new Error('Failed to fetch user details: ' + response.statusText);
+            }
+            if(response.ok){
+                toast.success('Form submitted successfully!');
+            }
+            const data = await response.json();
+            return data
+        } catch (error) {
+            console.error('Error fetching user details:', error);
+        }
+    }
+
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
         props.setOpen(false); // Close the modal
-        toast.success('Form submitted successfully!');
+        updateRemark();
+        
+
     };
 
-    const handleStatusChange = (event: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null, value: string | null) => {
-        if (value !== null) {
-            setStatus(value);
-            props.onStatusChange(value);
-        }
-    };
 
     return (
         <Sheet
@@ -97,37 +139,37 @@ const FollowupModalForm = (props: any) => {
                 fontWeight="lg"
                 mb={1}
             >
-                {props.label} User
+                Edit Remarks
             </Typography>
             <Stack className='p-8'>
                 <FormProvider {...methods}>
                     <form style={{ display: 'flex', flexDirection: 'column', gap: '8' }} onSubmit={handleSubmit}>
                         <Box component="div" display="flex" alignItems="center" flexDirection={{ xs: 'column', sm: 'column', md: 'row' }} py={1} gap={2}>
                             <Box component="div" width={{ xs: '100%', sm: '100%', md: '50%' }}>
-                                <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>CreatedBy</Typography>
-                                <Input size="sm" placeholder="CreatedBy" value={created} onChange={handleCreate} />
+                                <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Remark Id</Typography>
+                                <Input size="sm" placeholder="CreatedBy" value={currentRemark.id} id='id' disabled />
                             </Box>
                             <Box component="div" width={{ xs: '100%', sm: '100%', md: '50%' }}>
-                                <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>UpdatedBy</Typography>
-                                <Input size="sm" placeholder="UpdatedBy" value={updated} onChange={handleUpdate} />
+                                <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Created By</Typography>
+                                <Input size="sm" placeholder="UpdatedBy" value={currentRemark.createdUser.userName} disabled />
                             </Box>
                         </Box>
                         <Box component="div" display="flex" alignItems="center" flexDirection={{ xs: 'column', sm: 'column', md: 'row' }} py={1} gap={2}>
                             <Box component="div" width={{ xs: '100%', sm: '100%', md: '50%' }}>
-                                <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Remarks</Typography>
-                                <Input size="sm" placeholder="Remarks" value={remarks} onChange={handleRemarks} />
+                                <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }} >Remarks</Typography>
+                                <Input size="sm" placeholder="Remarks" id='remarks' value={currentRemark.remarks} onChange={(e) => handleChange(e)} />
                             </Box>
                             <Box component="div" width={{ xs: '100%', sm: '100%', md: '50%' }}>
                                 <Typography level="h3" fontSize="sm" sx={{ mb: 0.5 }}>Status</Typography>
-                                <Select value={status} onChange={handleStatusChange}>
-                                    <Option value="new">New</Option>
-                                    <Option value="inprogress">InProgress</Option>
-                                    <Option value="pending">Pending</Option>
-                                    <Option value="closed">Closed</Option>
+                                <Select value={currentRemark.status} id='status' onChange={handleSelectChange}>
+                                    <Option id='status' value="New">New</Option>
+                                    <Option id='status' value="InProgress">InProgress</Option>
+                                    <Option id='status' value="Pending">Pending</Option>
+                                    <Option id='status' value="Closed">Closed</Option>
                                 </Select>
                             </Box>
                         </Box>
-                        <Button type="submit"> Submit </Button>
+                        <Button type="submit"> Update Remark </Button>
                     </form>
                 </FormProvider>
             </Stack>

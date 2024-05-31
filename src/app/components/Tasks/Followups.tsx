@@ -28,6 +28,9 @@ import Modal from '@mui/joy/Modal';
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FollowupModalForm from "../followUpsModelForm/followupsmodel";
+import { useAuth } from "@/app/hooks/useAuth";
+
+import { Remark } from "@/app/types";
 
 export default function Followups() {
 
@@ -35,6 +38,7 @@ export default function Followups() {
     const[inputRemarks,setRemarkValue]=useState('')
     const[CreatedBy,setCreatedBy]=useState('')
     const[UpdatedBy,setUpdatedBy]=useState('')
+    const auth = useAuth();
 
     const methods = useForm({
             reValidateMode: 'onChange',
@@ -44,6 +48,22 @@ export default function Followups() {
   const [label, setLabel] = React.useState<string>('');
     // const [rows, setRows] = React.useState();
     const [selectedStatus, setSelectedStatus] = useState<string>('New');
+    const [selectedRemark, setSelectedRemark] = useState<Remark>({
+        "id": 0,
+        "createdAt": "",
+        "updatedAt": "",
+        "createdBy": 0,
+        "departmentId": 0,
+        "remarks": "",
+        "status": "",
+        "updatedBy": 0,
+        "createdUser": {
+            "userName": ""
+        },
+        "updatedUser": {
+            "userName": ""
+        }
+    });
 
     const [departmentRemarks, setDepartmentRemark] = React.useState([
         {
@@ -125,6 +145,7 @@ export default function Followups() {
                 headers: {
                     Accept: "application/json",
                     'Content-Type': 'application/json',
+                    Authorization: "Bearer "  + auth,
                 }
             });
 
@@ -145,12 +166,14 @@ export default function Followups() {
                 headers: {
                     Accept: "application/json",
                     'Content-Type': 'application/json',
+                    Authorization: "Bearer "  + auth,
+                    
                 },
-                body: JSON.stringify({ departmentId: remarksDepartment, remarks: userRemarks, createdBy: logintype.data.id, status: 'new', updatedBy: logintype.data.id })
+                body: JSON.stringify({ departmentId: remarksDepartment, remarks: userRemarks, createdBy: logintype.data.id, status: 'New', updatedBy: logintype.data.id })
             });
             if (response.ok) {
                 toast.success('Follow Up created successfully')
-                window.location.reload();
+                // window.location.reload();
             }
             if (!response.ok) {
                 toast.info('Failed to create')
@@ -171,6 +194,7 @@ export default function Followups() {
                 headers: {
                     Accept: "application/json",
                     'Content-Type': 'application/json',
+                    Authorization: "Bearer "  + auth,
                 }
             });
 
@@ -184,8 +208,9 @@ export default function Followups() {
             console.error('Error fetching user details:', error);
         }
     }
-    const handleEditClick = () =>{
+    const handleEditClick = (remarks:Remark) =>{
         setOpen(true)
+        setSelectedRemark(remarks)
     }
     const handleRemarkChange=(value:string)=>{
         setRemarkValue(value)
@@ -205,11 +230,11 @@ export default function Followups() {
                 <td><Typography level="body-xs">{dep?.departments.departmentName}</Typography></td>
                 <td><Typography level="body-xs">{rem?.createdAt}</Typography></td>
                 <td><Typography level="body-xs">{rem?.updatedAt}</Typography></td>
-                <td><Typography level="body-xs">{CreatedBy}</Typography></td>
-                <td><Typography level="body-xs">{UpdatedBy}</Typography></td>
-                <td><Typography level="body-xs">{inputRemarks}</Typography></td>
+                <td><Typography level="body-xs">{rem?.createdUser?.userName}</Typography></td>
+                <td><Typography level="body-xs">{rem?.updatedUser?.userName}</Typography></td>
+                <td><Typography level="body-xs">{rem?.remarks}</Typography></td>
                 <td>
-<Typography level="body-xs">{selectedStatus}</Typography>
+                    <Typography level="body-xs">{rem?.status}</Typography>
                 </td>
                 <td>
                     <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
@@ -221,9 +246,7 @@ export default function Followups() {
                                 slots={{ root: IconButton }}
                                 slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
                             >
-                                <EditIcon
-                               onClick={handleEditClick}
-                                />
+                                <EditIcon onClick={()=>handleEditClick(rem)}/>
                             </Button>
 
                         </Box>
@@ -294,14 +317,7 @@ export default function Followups() {
              <FollowupModalForm 
            setOpen={setOpen}
            onFormSubmit={handleFormSubmit}
-           onUpdateChange={setUpdatedBy}
-           onCreateChange={setCreatedBy}
-           onStatusChange={setSelectedStatus}
-           onInputChange={handleRemarkChange}
-           initialRemarks={inputRemarks}
-           initialCreatedBy={CreatedBy}
-           initialUpdatedBy={UpdatedBy}
-           initialStatus={selectedStatus}
+           selectedRemark = {selectedRemark}
              />
              </Modal>
         </React.Fragment>
