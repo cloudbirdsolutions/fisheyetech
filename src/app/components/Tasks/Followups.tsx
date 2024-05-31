@@ -286,7 +286,7 @@ export default function Followups() {
                 </Stack>
             </Box>
 
-            <TableSection tableHeaders={followUpHeader} tableRows={followUpRow} />
+            <TableSection tableHeaders={followUpHeader} tableRows={followUpRow} action={true} />
 
         <Modal
             aria-labelledby="modal-title"

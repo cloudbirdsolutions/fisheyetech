@@ -40,17 +40,10 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 
 type Order = 'asc' | 'desc';
 
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key,
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string },
-) => number {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
+interface TableSectionProops{
+    tableHeaders : String[],
+    tableRows: React.ReactNode[],
+    action : Boolean
 
 function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
@@ -235,13 +228,13 @@ export default function TableSection(props: TableSectionProops) {
               </th>
               {headers && headers.map((head, i) => (
                 <th key={i} style={{ padding: '12px 6px' }} >{head}</th>
-              ))}
-
-              <th style={{ padding: '12px 6px' }}>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* {rows && stableSort(rows, getComparator(order, 'id')).map((row:any) => (
+            ))}
+      
+            {props.action && <th style={{padding: '12px 6px' }}>Action</th>}
+          </tr>
+        </thead>
+        <tbody>
+          {/* {rows && stableSort(rows, getComparator(order, 'id')).map((row:any) => (
             <tr key={row?.id}>
               <td>
                 <Typography level="body-xs">{row?.id}</Typography>
