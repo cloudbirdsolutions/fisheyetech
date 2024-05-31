@@ -189,3 +189,20 @@ export type ShiftDetails = {
     "shiftType": string
   }
 }
+
+export type Remark = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "createdBy": number,
+  "departmentId": number,
+  "remarks": string,
+  "status": string,
+  "updatedBy": number,
+  "createdUser": {
+      "userName": string
+  },
+  "updatedUser": {
+      "userName": string
+  }
+}

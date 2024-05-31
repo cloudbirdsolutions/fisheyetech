@@ -17,65 +17,98 @@ import { Stack } from "@mui/joy";
 import TableSection from "../Common/TableSection";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/Store/store";
-import { ToastContainer,toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useAuth } from "@/app/hooks/useAuth";
-import FollowupsModalForm from "../followupsmodalform/FollowupsModalForm";
-
+import { Inter } from "next/font/google";
 const jmespath = require('jmespath');
 
-export default function Followups() {
-    const auth = useAuth();
+import FollowUpsModalForm from "../followUpsModelForm/followupsmodel";
+import { useState } from "react";
+import Modal from '@mui/joy/Modal';
+import { useForm, FormProvider, useFormContext } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import FollowupModalForm from "../followUpsModelForm/followupsmodel";
+import { useAuth } from "@/app/hooks/useAuth";
 
-    const editfollowupstatus = useSelector((state: RootState) => state?.editfollowupstatus.data);
+import { Remark } from "@/app/types";
+import { editfollowupstatus } from "@/app/Reducers/editFolloupsstatusSlice";
+
+export default function Followups() {
 
     const [userRemarks, setUserRemarks] = React.useState('');
+    const[inputRemarks,setRemarkValue]=useState('')
+    const[CreatedBy,setCreatedBy]=useState('')
+    const[UpdatedBy,setUpdatedBy]=useState('')
+    const auth = useAuth();
+
+    const methods = useForm({
+            reValidateMode: 'onChange',
+    });
+    
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [label, setLabel] = React.useState<string>('');
     // const [rows, setRows] = React.useState();
-    const [departmentRemarks, setDepartmentRemark] = React.useState([{
-        "departments": {
-        "id": null,
+    const [selectedStatus, setSelectedStatus] = useState<string>('New');
+    const [selectedRemark, setSelectedRemark] = useState<Remark>({
+        "id": 0,
         "createdAt": "",
         "updatedAt": "",
-        "departmentName": "",
-        "remarks": [
-            {
-                "id": null,
-                "createdAt": "",
-                "updatedAt": "",
-                "createdBy": null,
-                "departmentId": null,
-                "remarks": "",
-                "status": "",
-                "updatedBy": null,
-                "createdUser": {
-                    "userName": ""
-                },
-                "updatedUser": {
-                    "userName": ""
-                }
-            }]
-    }
-}])
+        "createdBy": 0,
+        "departmentId": 0,
+        "remarks": "",
+        "status": "",
+        "updatedBy": 0,
+        "createdUser": {
+            "userName": ""
+        },
+        "updatedUser": {
+            "userName": ""
+        }
+    });
+
+    const [departmentRemarks, setDepartmentRemark] = React.useState([
+        {
+            "departments": {
+                "id": 1,
+                "createdAt": "2024-04-20T08:20:59.096Z",
+                "updatedAt": "2024-04-20T08:20:59.096Z",
+                "departmentName": "CHP",
+                "remarks": [
+                    {
+                        "id": 1,
+                        "createdAt": "2024-04-29T10:43:38.583Z",
+                        "updatedAt": "2024-04-29T10:43:38.583Z",
+                        "createdBy": 1,
+                        "departmentId": 1,
+                        "remarks": "Power shutdown",
+                        "status": "Active",
+                        "updatedBy": 2,
+                        "createdUser": {
+                            "userName": "Moses"
+                        },
+                        "updatedUser": {
+                            "userName": "Bharani1"
+                        }
+                    }]
+            }
+        }])
     const [remarksDepartment, setRemarksDepartment] = React.useState(0);
 
     const [departmentList, setDepartmentList] = React.useState([
-        {id:'1',departmentName:'CHP'},
-        {id:'2',departmentName:'EMD'},
-        {id:'3',departmentName:'IMD'},
-        {id:'4',departmentName:'MAIN_PLANT'},
-        {id:'5',departmentName:'WTP'},
+        {
+
+            "id": 1,
+            "departmentName": "CHP"
+        }
     ])
-
-    const [department, setDepartment] = React.useState([]);
-
-    const [open, setOpen] = React.useState<boolean>(false);
-    const [row, setRow] = React.useState(null!);
-
-    const editfn = (row: any) => {
-      setOpen(true);
-      setRow(row);
-    }
-
+    const [department, setDepartment] = React.useState([
+        {
+            "id": 1,
+            "createdAt": "2024-04-20T08:20:59.096Z",
+            "updatedAt": "2024-04-20T08:20:59.096Z",
+            "departmentName": "CHP"
+        }
+    ])
     const handleChange = (
         event: React.SyntheticEvent | null,
         newValue: string | null,
@@ -114,12 +147,13 @@ export default function Followups() {
                     Accept: "application/json",
                     'Content-Type': 'application/json',
                     Authorization: "Bearer "  + auth,
+                    
                 },
-                body: JSON.stringify({ departmentId: remarksDepartment, remarks: userRemarks, createdBy: logintype.data.id, status:'new',updatedBy: logintype.data.id })
+                body: JSON.stringify({ departmentId: remarksDepartment, remarks: userRemarks, createdBy: logintype.data.id, status: 'New', updatedBy: logintype.data.id })
             });
-            if(response.ok){
+            if (response.ok) {
                 toast.success('Follow Up created successfully')
-                window.location.reload();
+                // window.location.reload();
             }
             if (!response.ok) {
                 toast.info('Failed to create')
@@ -135,29 +169,41 @@ export default function Followups() {
 
     const getDepartment = async () => {
         try {
-          const response = await fetch(`${API_BASE_URL}/departments/get`, {
-            method: 'GET',
-            headers: {
-              Accept: "application/json",
-              'Content-Type': 'application/json',
-              Authorization: "Bearer "  + auth,
+            const response = await fetch(`${API_BASE_URL}/departments/get`, {
+                method: 'GET',
+                headers: {
+                    Accept: "application/json",
+                    'Content-Type': 'application/json',
+                    Authorization: "Bearer "  + auth,
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch user details: ' + response.statusText);
             }
-          });
-    
-          if (!response.ok) {
-            throw new Error('Failed to fetch user details: ' + response.statusText);
-          }
-    
-          const data = await response.json();
-          return data;
+
+            const data = await response.json();
+            return data;
         } catch (error) {
-          console.error('Error fetching user details:', error);
+            console.error('Error fetching user details:', error);
         }
-      }
+    }
+    const handleEditClick = (remarks:Remark) =>{
+        setOpen(true)
+        setSelectedRemark(remarks)
+    }
+    const handleRemarkChange=(value:string)=>{
+        setRemarkValue(value)
+    }
+    const handleFormSubmit = (value: any) => {
+        // You can do something with the value received from the child component here
+        // console.log("Value received from child:", value);
+    };
 
-    
 
-    const followUpHeader = ["Department", "CreatedAt", "UpdatedAt", "CreatedBy","UpdatedBy","Remarks", "Status"]
+    const followUpHeader = ["Department", "CreatedAt", "UpdatedAt", "CreatedBy", "UpdatedBy", "Remarks", "Status"]
+
+   
       
     const followUpRow = departmentRemarks?.map(dep => (
         dep?.departments?.remarks.map(rem => (
@@ -166,18 +212,29 @@ export default function Followups() {
                 <td><Typography level="body-xs">{dep?.departments?.departmentName}</Typography></td>
                 <td><Typography level="body-xs">{rem?.createdAt}</Typography></td>
                 <td><Typography level="body-xs">{rem?.updatedAt}</Typography></td>
-                <td><Typography level="body-xs">{rem?.createdUser.userName}</Typography></td>
-                <td><Typography level="body-xs">{rem?.updatedUser.userName}</Typography></td>
+                <td><Typography level="body-xs">{rem?.createdUser?.userName}</Typography></td>
+                <td><Typography level="body-xs">{rem?.updatedUser?.userName}</Typography></td>
                 <td><Typography level="body-xs">{rem?.remarks}</Typography></td>
-                <td><Typography level="body-xs">{rem?.status}</Typography></td>
                 <td>
-                    <Box>
-                        <Button 
-                        slots={{ root: IconButton }}
-                        slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
+                    <Typography level="body-xs">{rem?.status}</Typography>
+                </td>
+                <td>
+                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+
+                        <Box
+                        //   id={props.row?.id}
                         >
-                            <EditIcon onClick={() => editfn(rem)}/>
-                        </Button>
+                            <Button
+                                slots={{ root: IconButton }}
+                                slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
+                            >
+                                <EditIcon onClick={()=>handleEditClick(rem)}/>
+                            </Button>
+
+                        </Box>
+                        {/* //   row={row} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} 
+        //   setLabel={props.setLabel} parentFunction={HandleDeleteFunction} */}
+
                     </Box>
                 </td>
             </tr>
@@ -190,7 +247,7 @@ export default function Followups() {
             let department = await getDepartment();
             let departments = await getDepartmentsByUser();
 
-            // setDepartmentList(jmespath.search(departments.data,'[].departments.{id:id,departmentName:departmentName}'))
+            setDepartmentList(jmespath.search(departments.data, '[].departments.{id:id,departmentName:departmentName}'))
             setDepartment(department.data);
             setDepartmentRemark(departments.data)
         }
@@ -208,7 +265,7 @@ export default function Followups() {
 
             </Stack>
             <Box component={'div'} sx={{ width: '100%' }}>
-            <ToastContainer/>
+                <ToastContainer />
 
                 {/* <Typography level="title-sm" >Add New Remarks</Typography> */}
                 <Stack gap={2} flexDirection={'row'}>
@@ -229,8 +286,22 @@ export default function Followups() {
                 </Stack>
             </Box>
 
-            <TableSection tableHeaders={followUpHeader} tableRows={followUpRow} action={true}/>
-            <FollowupsModalForm open={open} setOpen={setOpen} row={row}/>
+            <TableSection tableHeaders={followUpHeader} tableRows={followUpRow} action={true} />
+
+        <Modal
+            aria-labelledby="modal-title"
+            aria-describedby="modal-desc"
+            open={open}
+            onClose={() => { setOpen(false), methods.reset() }}
+            sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}
+        >
+             
+             <FollowupModalForm 
+           setOpen={setOpen}
+           onFormSubmit={handleFormSubmit}
+           selectedRemark = {selectedRemark}
+             />
+             </Modal>
         </React.Fragment>
 
 
