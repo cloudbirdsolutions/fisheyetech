@@ -128,6 +128,6 @@ export default function OrderTable(props:any) {
   );
 
    return (
-    <TableSection tableHeaders={headers} tableRows={tablerows} />
+    <TableSection tableHeaders={headers} tableRows={tablerows} action={true}/>
   );
 }

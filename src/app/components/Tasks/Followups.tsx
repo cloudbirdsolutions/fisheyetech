@@ -1,15 +1,16 @@
 "use client";
 
 import * as React from "react";
-import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import Select from "@mui/joy/Select";
 import Option from "@mui/joy/Option";
-import Table from "@mui/joy/Table";
-import Sheet from "@mui/joy/Sheet";
+
+import IconButton from '@mui/joy/IconButton';
+import { Box, Button } from '@mui/joy';
+import EditIcon from '@mui/icons-material/Edit';
+
 import Typography from "@mui/joy/Typography";
 import { API_BASE_URL } from '@/app/config';
 import { Stack } from "@mui/joy";
@@ -18,7 +19,13 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/Store/store";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+<<<<<<< HEAD
 import { Inter } from "next/font/google";
+=======
+import { useAuth } from "@/app/hooks/useAuth";
+import FollowupsModalForm from "../followupsmodalform/FollowupsModalForm";
+
+>>>>>>> edfd0daaecbc52aeb69cfdd5e24e137c0819f2a1
 const jmespath = require('jmespath');
 import IconButton from '@mui/joy/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
@@ -33,6 +40,12 @@ import { useAuth } from "@/app/hooks/useAuth";
 import { Remark } from "@/app/types";
 
 export default function Followups() {
+<<<<<<< HEAD
+=======
+    const auth = useAuth();
+
+    const editfollowupstatus = useSelector((state: RootState) => state?.editfollowupstatus.data);
+>>>>>>> edfd0daaecbc52aeb69cfdd5e24e137c0819f2a1
 
     const [userRemarks, setUserRemarks] = React.useState('');
     const[inputRemarks,setRemarkValue]=useState('')
@@ -47,6 +60,7 @@ export default function Followups() {
   const [open, setOpen] = React.useState<boolean>(false);
   const [label, setLabel] = React.useState<string>('');
     // const [rows, setRows] = React.useState();
+<<<<<<< HEAD
     const [selectedStatus, setSelectedStatus] = useState<string>('New');
     const [selectedRemark, setSelectedRemark] = useState<Remark>({
         "id": 0,
@@ -108,6 +122,53 @@ export default function Followups() {
             "departmentName": "CHP"
         }
     ])
+=======
+    const [departmentRemarks, setDepartmentRemark] = React.useState([{
+        "departments": {
+        "id": null,
+        "createdAt": "",
+        "updatedAt": "",
+        "departmentName": "",
+        "remarks": [
+            {
+                "id": null,
+                "createdAt": "",
+                "updatedAt": "",
+                "createdBy": null,
+                "departmentId": null,
+                "remarks": "",
+                "status": "",
+                "updatedBy": null,
+                "createdUser": {
+                    "userName": ""
+                },
+                "updatedUser": {
+                    "userName": ""
+                }
+            }]
+    }
+}])
+    const [remarksDepartment, setRemarksDepartment] = React.useState(0);
+
+    const [departmentList, setDepartmentList] = React.useState([
+        {id:'1',departmentName:'CHP'},
+        {id:'2',departmentName:'EMD'},
+        {id:'3',departmentName:'IMD'},
+        {id:'4',departmentName:'MAIN_PLANT'},
+        {id:'5',departmentName:'WTP'},
+    ])
+
+    const [department, setDepartment] = React.useState([]);
+
+    const [open, setOpen] = React.useState<boolean>(false);
+    const [row, setRow] = React.useState(null!);
+
+    const editfn = (row: any) => {
+      setOpen(true);
+      setRow(row);
+    }
+
+>>>>>>> edfd0daaecbc52aeb69cfdd5e24e137c0819f2a1
     const handleChange = (
         event: React.SyntheticEvent | null,
         newValue: string | null,
@@ -117,27 +178,6 @@ export default function Followups() {
 
     const logintype = useSelector((state: RootState) => state?.user.data);
 
-    const getRemarksByUser = async () => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/remarks/get-user-remarks?userId=${logintype.data.rolesId}`,
-                {
-                    method: 'GET',
-                    headers: {
-                        Accept: "application/json",
-                        'Content-Type': 'application/json',
-                    }
-                });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch user details: ' + response.statusText);
-            }
-
-            const data = await response.json();
-            return data
-        } catch (error) {
-            console.error('Error fetching user details:', error);
-        }
-    }
     const getDepartmentsByUser = async () => {
         try {
             const response = await fetch(`${API_BASE_URL}/joballocation/get-user-departments?userId=${logintype.data.id}`, {
@@ -167,7 +207,10 @@ export default function Followups() {
                     Accept: "application/json",
                     'Content-Type': 'application/json',
                     Authorization: "Bearer "  + auth,
+<<<<<<< HEAD
                     
+=======
+>>>>>>> edfd0daaecbc52aeb69cfdd5e24e137c0819f2a1
                 },
                 body: JSON.stringify({ departmentId: remarksDepartment, remarks: userRemarks, createdBy: logintype.data.id, status: 'New', updatedBy: logintype.data.id })
             });
@@ -189,6 +232,7 @@ export default function Followups() {
 
     const getDepartment = async () => {
         try {
+<<<<<<< HEAD
             const response = await fetch(`${API_BASE_URL}/departments/get`, {
                 method: 'GET',
                 headers: {
@@ -200,6 +244,14 @@ export default function Followups() {
 
             if (!response.ok) {
                 throw new Error('Failed to fetch user details: ' + response.statusText);
+=======
+          const response = await fetch(`${API_BASE_URL}/departments/get`, {
+            method: 'GET',
+            headers: {
+              Accept: "application/json",
+              'Content-Type': 'application/json',
+              Authorization: "Bearer "  + auth,
+>>>>>>> edfd0daaecbc52aeb69cfdd5e24e137c0819f2a1
             }
 
             const data = await response.json();
@@ -220,19 +272,26 @@ export default function Followups() {
         // console.log("Value received from child:", value);
     };
 
+<<<<<<< HEAD
 
     const followUpHeader = ["Department", "CreatedAt", "UpdatedAt", "CreatedBy", "UpdatedBy", "Remarks", "Status"]
+=======
+    
+>>>>>>> edfd0daaecbc52aeb69cfdd5e24e137c0819f2a1
 
-    const followUpRow = departmentRemarks.map(dep => (
-        dep.departments.remarks.map(rem => (
-            <tr key={`document_id_${rem.id}`}>
+    const followUpHeader = ["Department", "CreatedAt", "UpdatedAt", "CreatedBy","UpdatedBy","Remarks", "Status"]
+      
+    const followUpRow = departmentRemarks?.map(dep => (
+        dep?.departments?.remarks.map(rem => (
+            <tr key={`document_id_${rem?.id}`}>
                 <td><Typography level="body-xs">{rem?.id}</Typography></td>
-                <td><Typography level="body-xs">{dep?.departments.departmentName}</Typography></td>
+                <td><Typography level="body-xs">{dep?.departments?.departmentName}</Typography></td>
                 <td><Typography level="body-xs">{rem?.createdAt}</Typography></td>
                 <td><Typography level="body-xs">{rem?.updatedAt}</Typography></td>
                 <td><Typography level="body-xs">{rem?.createdUser?.userName}</Typography></td>
                 <td><Typography level="body-xs">{rem?.updatedUser?.userName}</Typography></td>
                 <td><Typography level="body-xs">{rem?.remarks}</Typography></td>
+<<<<<<< HEAD
                 <td>
                     <Typography level="body-xs">{rem?.status}</Typography>
                 </td>
@@ -253,6 +312,17 @@ export default function Followups() {
                         {/* //   row={row} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} 
         //   setLabel={props.setLabel} parentFunction={HandleDeleteFunction} */}
 
+=======
+                <td><Typography level="body-xs">{rem?.status}</Typography></td>
+                <td>
+                    <Box>
+                        <Button 
+                        slots={{ root: IconButton }}
+                        slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
+                        >
+                            <EditIcon onClick={() => editfn(rem)}/>
+                        </Button>
+>>>>>>> edfd0daaecbc52aeb69cfdd5e24e137c0819f2a1
                     </Box>
                 </td>
             </tr>
@@ -265,7 +335,11 @@ export default function Followups() {
             let department = await getDepartment();
             let departments = await getDepartmentsByUser();
 
+<<<<<<< HEAD
             setDepartmentList(jmespath.search(departments.data, '[].departments.{id:id,departmentName:departmentName}'))
+=======
+            // setDepartmentList(jmespath.search(departments.data,'[].departments.{id:id,departmentName:departmentName}'))
+>>>>>>> edfd0daaecbc52aeb69cfdd5e24e137c0819f2a1
             setDepartment(department.data);
             setDepartmentRemark(departments.data)
         }
@@ -274,7 +348,7 @@ export default function Followups() {
 
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [editfollowupstatus]);
 
     return (
         <React.Fragment>
@@ -290,7 +364,7 @@ export default function Followups() {
                     <FormControl orientation="horizontal">
                         <FormLabel>Department</FormLabel>
                         <Select placeholder="Select a department" onChange={handleChange}>
-                            {department.map(dep => (<Option key={dep?.id} value={dep?.id}>
+                            {departmentList.map(dep => (<Option key={dep?.id} value={dep?.id}>
                                 {dep?.departmentName}
                             </Option>))}
                         </Select>
@@ -304,6 +378,7 @@ export default function Followups() {
                 </Stack>
             </Box>
 
+<<<<<<< HEAD
             <TableSection tableHeaders={followUpHeader} tableRows={followUpRow} />
 
         <Modal
@@ -320,6 +395,10 @@ export default function Followups() {
            selectedRemark = {selectedRemark}
              />
              </Modal>
+=======
+            <TableSection tableHeaders={followUpHeader} tableRows={followUpRow} action={true}/>
+            <FollowupsModalForm open={open} setOpen={setOpen} row={row}/>
+>>>>>>> edfd0daaecbc52aeb69cfdd5e24e137c0819f2a1
         </React.Fragment>
 
 

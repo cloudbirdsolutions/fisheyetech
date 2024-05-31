@@ -16,6 +16,8 @@ import { FormData, Reccod,RecordReading } from '@/app/types';
 import { fieldMappingInitialState, formDataInitalState, recordMasterInitialState } from '@/app/InitialStates/initialState';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/hooks/useAuth';
+import TransitionTable from '@/app/components/TransitionAudit/TransitionTable';
+import TransitionList from '@/app/components/TransitionAudit/TransitionList';
 var _array = require('lodash/array');
 
 
@@ -633,7 +635,7 @@ export default function Log() {
             >{JSON.stringify(sheetPermissionId)}</Typography> */}
             <CardContent>
               <Tabs
-                aria-label="tabs"
+                aria-label="tabs" defaultValue={0}
               // value={index}
               // onChange={(event, newValue) => setIndex(newValue as number)}
               >
@@ -643,9 +645,23 @@ export default function Log() {
                     <Typography> Reviews</Typography>
                     {/* </Badge> */}
                   </Tab>
+                  <Tab indicatorPlacement="top" variant='soft' color='neutral'>
+                    {/* <Badge badgeContent={reviews.length} variant='solid' color='danger'> */}
+                    <Typography> Transition Audit</Typography>
+                    {/* </Badge> */}
+                  </Tab>
                 </TabList>
-                <TabPanel>
+                <TabPanel value={0}>
                   {showReview && <MyMessages chats={reviews} permissionId={sheetPermissionId} docId={parseInt(params.document)} selectedShift={selectedShift}/>}
+                </TabPanel>
+                <TabPanel value={1}>
+                  {
+                    <>
+                    <TransitionTable docId={parseInt(params.document)}/>
+                    <TransitionList docId={parseInt(params.document)}/>
+                    </>
+                   
+                  }
                 </TabPanel>
               </Tabs>
             </CardContent>

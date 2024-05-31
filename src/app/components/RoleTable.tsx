@@ -139,7 +139,7 @@ export default function RoleTable(props: any) {
 
   return (
     <React.Fragment>
-      <TableSection tableHeaders={headers} tableRows={tablerows} />
+      <TableSection tableHeaders={headers} tableRows={tablerows} action={true}/>
     </React.Fragment>
   );
 }

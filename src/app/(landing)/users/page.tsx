@@ -70,13 +70,13 @@ export default function Users() {
               >
                 Add New User
               </Button>
-              <Button
+              {/* <Button
                 color="primary"
                 startDecorator={<DownloadRoundedIcon />}
                 size="sm"
               >
                 Download Excel
-              </Button>
+              </Button> */}
             </Stack>
           </Box>
 

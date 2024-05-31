@@ -49,7 +49,13 @@ export default function TasksTable() {
         "updatedAt": "2024-04-20T08:04:49.113Z",
         "sheetName": "AUTOMOBILE CHECKLIST & DAILY MAINTENANCE REPORT",
         "description": ""
-      }
+      },
+      "shiftMaster": {
+        "id": 3,
+        "createdAt": "2024-04-20T10:32:23.803Z",
+        "updatedAt": "2024-04-20T10:32:23.803Z",
+        "shiftType": "Shift C"
+    }
     }
   ]);
 
@@ -187,7 +193,7 @@ const auth = useAuth();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
-  const headers = ["Department", "Entity", "Permission", "Assigned To"]
+  const headers = ["Department", "Entity", "Shift","Permission", "Assigned To"]
   const tablerows =  stableSort(rows, getComparator(order, "id")).map((row: any) => (
     <tr key={row?.id}>
       <td>
@@ -201,6 +207,11 @@ const auth = useAuth();
       <td>
         <Typography level="body-xs">
           {row?.sheetMaster.sheetName}
+        </Typography>
+      </td>
+      <td>
+        <Typography level="body-xs">
+          {row?.shiftMaster?.shiftType}
         </Typography>
       </td>
       <td>
@@ -244,6 +255,6 @@ const auth = useAuth();
   ))
 
   return (
-    <TableSection tableHeaders={headers} tableRows={tablerows} />
+    <TableSection tableHeaders={headers} tableRows={tablerows} action={true}/>
   );
 }
