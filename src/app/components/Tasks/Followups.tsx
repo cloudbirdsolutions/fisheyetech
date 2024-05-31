@@ -93,7 +93,21 @@ export default function Followups() {
             }
         }])
     const [remarksDepartment, setRemarksDepartment] = React.useState(0);
-
+    const [DepartmentOnly, setDepartmentOnly] = React.useState([
+        {
+            "id": 278,
+            "createdAt": "2024-05-07T06:58:04.000Z",
+            "updatedAt": "2024-05-07T06:58:04.000Z",
+            "userId": 60,
+            "departmentId": 1,
+            "permissionId": 3,
+            "sheetId": 1,
+            "shiftId": 4,
+            "departments": {
+                "departmentName": "CHP"
+            }
+        }
+    ]);
     const [departmentList, setDepartmentList] = React.useState([
         {
 
@@ -101,6 +115,7 @@ export default function Followups() {
             "departmentName": "CHP"
         }
     ])
+    
     const [department, setDepartment] = React.useState([
         {
             "id": 1,
@@ -109,11 +124,12 @@ export default function Followups() {
             "departmentName": "CHP"
         }
     ])
-    const handleChange = (
+    const handleChange = async(
         event: React.SyntheticEvent | null,
         newValue: string | null,
     ) => {
         setRemarksDepartment(parseInt(newValue ? newValue : "0"));
+        
     };
 
     const logintype = useSelector((state: RootState) => state?.user.data);
@@ -121,6 +137,27 @@ export default function Followups() {
     const getDepartmentsByUser = async () => {
         try {
             const response = await fetch(`${API_BASE_URL}/joballocation/get-user-departments?userId=${logintype.data.id}`, {
+                method: 'GET',
+                headers: {
+                    Accept: "application/json",
+                    'Content-Type': 'application/json',
+                    Authorization: "Bearer "  + auth,
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch user details: ' + response.statusText);
+            }
+
+            const data = await response.json();
+            return data
+        } catch (error) {
+            console.error('Error fetching user details:', error);
+        }
+    }
+    const getDepartmentsOnly = async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/joballocation/getdept?userId=${logintype.data.id}`, {
                 method: 'GET',
                 headers: {
                     Accept: "application/json",
@@ -246,14 +283,15 @@ export default function Followups() {
             // let depRem = await getRemarksByUser()
             let department = await getDepartment();
             let departments = await getDepartmentsByUser();
+            let departmentOnly =await getDepartmentsOnly();
 
             setDepartmentList(jmespath.search(departments.data, '[].departments.{id:id,departmentName:departmentName}'))
             setDepartment(department.data);
             setDepartmentRemark(departments.data)
+            setDepartmentOnly(departmentOnly.data)
         }
 
         fetchRemarks();
-
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editfollowupstatus]);
@@ -264,6 +302,7 @@ export default function Followups() {
                 <Typography level="h2">Follow Ups</Typography>
 
             </Stack>
+          
             <Box component={'div'} sx={{ width: '100%' }}>
                 <ToastContainer />
 
@@ -272,8 +311,9 @@ export default function Followups() {
                     <FormControl orientation="horizontal">
                         <FormLabel>Department</FormLabel>
                         <Select placeholder="Select a department" onChange={handleChange}>
-                            {departmentList.map(dep => (<Option key={dep?.id} value={dep?.id}>
-                                {dep?.departmentName}
+                            {DepartmentOnly.map(dep => 
+                                (<Option key={dep?.id} value={dep?.id}>
+                                {dep?.departments?.departmentName}
                             </Option>))}
                         </Select>
                     </FormControl>
@@ -286,7 +326,7 @@ export default function Followups() {
                 </Stack>
             </Box>
 
-            <TableSection tableHeaders={followUpHeader} tableRows={followUpRow} action={true} />
+            <TableSection tableHeaders={followUpHeader} tableRows={followUpRow} />
 
         <Modal
             aria-labelledby="modal-title"

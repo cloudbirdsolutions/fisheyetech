@@ -282,7 +282,7 @@ export default function Log() {
         </Stack>
         <Divider/>
       </Box>
-      <TableSection tableHeaders={headers} tableRows={rows} action={true}/>
+      <TableSection tableHeaders={headers} tableRows={rows} />
       </>
     )
     : 
