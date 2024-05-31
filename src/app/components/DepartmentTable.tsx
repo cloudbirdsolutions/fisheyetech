@@ -110,7 +110,11 @@ export default function DepartmentTable(props: any) {
 
   return (
   <>
-  <TableSection tableHeaders={headers} tableRows={tablerows} action={true}/>
+  <TableSection 
+  tableHeaders={headers} 
+  tableRows={tablerows} 
+  // action={true}
+  />
   </>
   )
 }
