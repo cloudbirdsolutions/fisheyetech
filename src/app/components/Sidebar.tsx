@@ -23,7 +23,7 @@ import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import BrightnessAutoRoundedIcon from '@mui/icons-material/BrightnessAutoRounded';
 import DeleteOutlineRounded from '@mui/icons-material/DeleteOutlineRounded';
 import PeopleIcon from '@mui/icons-material/People';
-
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import ColorSchemeToggle from './ColorSchemeToggle';
 import { closeSidebar } from '../utils';
 import { useDispatch, useSelector } from 'react-redux';
@@ -148,12 +148,13 @@ const sidebarItems = [
     icon: <CloseIcon/>,
     roles: ['admin','superadmin']
   },
-  // {
-  //   label: 'Reviews',
-  //   navPath: '/reviews',
-  //   icon: <AssignmentRoundedIcon />,
-  //   roles: ['admin', 'user']
-  // },
+  
+  {
+    label: 'Paremeter Trend',
+    navPath: "/parametertrend",
+    icon: <TrendingUpIcon/>,
+    roles: ['admin','superadmin']
+  },
   // {
   //   label: 'Comments',
   //   navPath: '/messages',

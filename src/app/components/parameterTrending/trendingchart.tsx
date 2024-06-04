@@ -22,7 +22,7 @@ interface LineChartsParams {
   width: number;
   height: number;
 }
-export default function DashboardChart() {
+export default function TrendingChart() {
 const theme = useTheme()
   const [chartData, setChartData] = useState<any[]>([]);
   // Get the current month and year
@@ -46,7 +46,8 @@ const theme = useTheme()
 
 
   
-const Tasks = [
+const Reading_1 = [
+    {  date: '2024-06-30', value: 49},
     {  date: '2024-05-30', value: 99},
     {  date: '2024-04-30', value: 85 },
     {  date: '2024-03-02', value: 61 },
@@ -60,7 +61,8 @@ const Tasks = [
     {  date: '2023-07-30', value: 43 },
     {  date: '2023-06-30', value: 41 }
   ].slice(0, 10);
-const Reviews =  [
+const Reading_2 =  [
+    {  date: '2024-06-30', value: 59},
   {  date: '2024-05-30', value:   65},
     {  date: '2024-04-30', value: 81 },
     {  date: '2024-03-02', value: 76 },
@@ -75,7 +77,8 @@ const Reviews =  [
     {  date: '2023-06-30', value: 34 }
   ].slice(0, 10);
 
-const Followups =  [
+const Reading_3 =  [
+    {  date: '2024-06-30', value: 77},
     {  date: '2024-05-30', value: 55},
     {  date: '2024-04-30', value: 52 },
     {  date: '2024-03-02', value: 44 },
@@ -89,7 +92,8 @@ const Followups =  [
     {  date: '2023-07-30', value: 8 },
     {  date: '2023-06-30', value: 2 }
   ].slice(0, 10);
-const Pending =  [
+const Reading_4 =  [
+    {  date: '2024-06-30', value: 44},
   {  date: '2024-05-30', value: 74},
   {  date: '2024-04-30', value: 63 },
   {  date: '2024-03-02', value: 42 },
@@ -106,23 +110,23 @@ const Pending =  [
 
 useEffect(() => {
   // Fetch or process data here
-  const formattedData = Tasks.map(item => item.value);
+  const formattedData = Reading_1.map(item => item.value);
   setChartData(formattedData);
   // eslint-disable-next-line react-hooks/exhaustive-deps
 }, []);
 
-const TasksData = getChartData(Tasks, months);
-  const ReviewsData = getChartData(Reviews, months);
-  const FollowupsData = getChartData(Followups, months);
-  const PendingData = getChartData(Pending, months);
+const Reading_1Data = getChartData(Reading_1, months);
+  const Reading_2Data = getChartData(Reading_2, months);
+  const Reading_3Data = getChartData(Reading_3, months);
+  const Reading_4Data = getChartData(Reading_4, months);
 
   // Line chart parameters
   const lineChartsParams = {
     series: [
-      { label: 'Tasks ', data: TasksData, showMark: false, color: theme.palette.success[500] }, 
-      { label: 'Reviews  ', data: ReviewsData, showMark: false , color: theme.palette.primary[500]},
-      { label: 'Follow Ups ', data: FollowupsData, showMark: false , color: theme.palette.warning[500]},
-      { label: 'Pending ', data: PendingData, showMark: false , color: theme.palette.danger[500]},
+      { label: 'Reading_1 ', data: Reading_1Data, showMark: false, color: theme.palette.success[500] }, 
+      { label: 'Reading_2  ', data: Reading_2Data, showMark: false , color: theme.palette.primary[500]},
+      { label: 'Reading_3 ', data: Reading_3Data, showMark: false , color: theme.palette.warning[500]},
+      { label: 'Reading_4 ', data:Reading_4Data, showMark: false , color: theme.palette.danger[500]},
     ],
     width: 1000,
     height: 400,

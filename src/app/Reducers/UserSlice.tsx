@@ -12,7 +12,8 @@ export const fetchUserData = createAsyncThunk('user/fetchUserData', async (userd
 // Define the user slice
 const userSlice = createSlice({
   name: 'user',
-  initialState: { entities: [], loading: 'idle', data: 
+  initialState: { entities: [], loading: 'idle', 
+  data: 
     {
       "status": "",
       "message": "",
