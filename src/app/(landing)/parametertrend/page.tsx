@@ -18,8 +18,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/hooks/useAuth';
 import { AppDispatch } from '@/app/Store/store';
 import { useDispatch } from 'react-redux';
-import TrendingChoose from '@/app/components/parameterTrending/trendings';
-import TrendingChart from '@/app/components/parameterTrending/trendingchart';
+import TrendSelectorComponent from '@/app/components/ParameterTrending/TrendSelectorComponent';
+import TrendChartComponent from '@/app/components/ParameterTrending/TrendChartComponent';
 
 
 interface ChartType {
@@ -60,9 +60,9 @@ export default function ParameterTrend() {
     <>
       {auth ? (
         <>
-          <TrendingChoose/>
+          <TrendSelectorComponent/>
 
-          {/* <TrendingChart /> */}
+          {/* <TrendChart /> */}
         </>
       ) : ('Session Timed Out')
       }

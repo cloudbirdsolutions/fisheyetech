@@ -22,7 +22,7 @@ interface LineChartsParams {
   width: number;
   height: number;
 }
-export default function TrendingChart() {
+export default function TrendChartComponent() {
 const theme = useTheme()
   const [chartData, setChartData] = useState<any[]>([]);
   // Get the current month and year

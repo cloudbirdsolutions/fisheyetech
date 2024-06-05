@@ -206,3 +206,81 @@ export type Remark = {
       "userName": string
   }
 }
+
+export type User = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "name": string,
+  "userName": string,
+  "address": string,
+  "phone": string,
+  "password": string,
+  "statusId": number,
+  "rolesId": number,
+  "statusMaster": {
+    "statusName":string,
+  }
+}
+
+export type Department = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "departmentName": string
+}
+
+export type Designation = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "sheetId": number,
+  "designationId": number,
+  "actionId": number,
+  "designationMaster": {
+    "designationName": string
+  }
+}
+
+export type Shift = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "sheetId": number,
+  "shiftId": number,
+  "shiftMaster": {
+    "id": number,
+    "createdAt": string,
+    "updatedAt": string,
+    "shiftType": string
+  }
+}
+
+export type UserJob = {
+  "id": number,
+  "users": {
+    "userName": string
+  },
+  "departments": {
+    "id": number,
+    "createdAt": string,
+    "updatedAt": string,
+    "departmentName": string
+  },
+  "sheetMaster": {
+    "id": number,
+    "createdAt": string,
+    "updatedAt": string,
+    "sheetName": string
+    "description": string
+  },
+  "shiftMaster": {
+    "id": number,
+    "createdAt": string,
+    "updatedAt": string,
+    "shiftType": string
+  },
+  "designationMaster": {
+    "designationName": string
+  }
+}
