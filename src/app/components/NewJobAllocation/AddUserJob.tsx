@@ -5,6 +5,7 @@ import Input from "@mui/joy/Input/Input";
 import Button from "@mui/joy/Button";
 import {Sheet} from "@mui/joy";
 import {useApi} from "@/app/api/hooks/useApi";
+import userJobList from "@/app/api/hooks/useUserJobList";
 import {Department, Designation, Shift} from "@/app/types"
 import {useState} from "react";
 import Select from "@mui/joy/Select";
@@ -15,6 +16,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 interface AddUserJobProps {
     id: string,
+    cb: Function
 }
 
 export default function AddUserJob(props: AddUserJobProps) {
@@ -24,6 +26,7 @@ export default function AddUserJob(props: AddUserJobProps) {
     const [selectedSheetId, setSelectedSheetId] = useState<number>(0);
     const [selectedDesignationId, setSelectedDesignationId] = useState<number>(0);
     const [selectedShiftId, setSelectedShiftId] = useState<number>(0);
+
 
     const {
         data: departments,
@@ -82,7 +85,7 @@ export default function AddUserJob(props: AddUserJobProps) {
     const handleSubmit = () => {
         createJobApi().then(r=>{
             toast.success("Job allocaition success")
-          window.location.reload();
+            props.cb()
         })
     }
 
@@ -156,9 +159,9 @@ export default function AddUserJob(props: AddUserJobProps) {
     return (
         <>
         <ToastContainer/>
-        <Sheet variant="outlined" color="neutral" sx={{p: 4, borderRadius: "lg"}}>
+        <Sheet variant="outlined" color="neutral" sx={{p: 2, borderRadius: "lg"}}>
 
-            <Typography level={"title-lg"}>Add New Job</Typography>
+            <Typography level={"title-lg"} component={'h1'}>Add New Job</Typography>
 
             <Box component="div" display="flex" alignItems="center" width={'100%'}
                  flexDirection={{xs: 'column', sm: 'column', md: 'row'}} py={1} gap={2}>
@@ -199,7 +202,7 @@ export default function AddUserJob(props: AddUserJobProps) {
 
             </Box>
             <Box component="div" >
-                <Button onClick={() => {
+                <Button  onClick={() => {
                     handleSubmit()
                 }} loading={isCreateJobLoading}> Add Job</Button>
             </Box>

@@ -114,7 +114,7 @@ const sidebarItems = [
   },
   {
     label: 'Job Allocation',
-    navPath: '/joballocation',
+    navPath: '/new-job-allocation',
     icon: <AssignmentRoundedIcon />,
     roles: ['admin','superadmin']
   },

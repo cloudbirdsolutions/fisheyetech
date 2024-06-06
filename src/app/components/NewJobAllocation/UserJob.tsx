@@ -1,7 +1,6 @@
-import {useEffect, useState} from "react";
-import {UserJob} from "@/app/types";
-import {useApi} from "@/app/api/hooks/useApi";
 import UserJobList from "./UserJobList";
+import useUserJobList from "@/app/api/hooks/useUserJobList";
+import {useEffect} from "react";
 
 
 
@@ -12,16 +11,15 @@ interface UserJobProps {
 
 export default function UserJobComponent(props:UserJobProps) {
 
-    const {data,isLoading,error, fetchData} = useApi<UserJob>(`/joballocation/get-user-jobs?id=${parseInt(props.id)}`,{method:'GET'})
+    const {userJobList, fetchUserJobList} = useUserJobList({userId:parseInt(props.id)});
 
     useEffect(() => {
-        fetchData();
-
+        fetchUserJobList()
     }, []);
 
 
     return <>
-        {data && <UserJobList userJobs={data}></UserJobList>}
+        {userJobList && <UserJobList userJobs={userJobList}></UserJobList>}
     </>
 
 

@@ -267,13 +267,7 @@ export type UserJob = {
     "updatedAt": string,
     "departmentName": string
   },
-  "sheetMaster": {
-    "id": number,
-    "createdAt": string,
-    "updatedAt": string,
-    "sheetName": string
-    "description": string
-  },
+  "sheetMaster": SheetRaw,
   "shiftMaster": {
     "id": number,
     "createdAt": string,
@@ -281,6 +275,5 @@ export type UserJob = {
     "shiftType": string
   },
   "designationMaster": {
-    "designationName": string
-  }
+    "designationName": string  }
 }

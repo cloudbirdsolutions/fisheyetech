@@ -19,182 +19,45 @@ import { Stack, Tooltip } from "@mui/joy";
 import TableSection from "../Common/TableSection";
 import {stableSort, getComparator} from '@/app/helper/sorting';
 import { useAuth } from "@/app/hooks/useAuth";
+import {UserJob} from "@/app/types";
+import useUserTaskApi from "@/app/api/hooks/useUserTaskApi";
+import {log} from "node:util";
 type Order = "asc" | "desc";
 
 export default function TasksTable() {
   const [order, setOrder] = React.useState<Order>("desc");
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [open, setOpen] = React.useState(false);
-  const [rows, setRows] = React.useState([
-    {
-      "id": 1,
-      "users": {
-        "userName": "Bharani1"
-      },
-      "departments": {
-        "id": 1,
-        "createdAt": "2024-04-20T08:20:59.096Z",
-        "updatedAt": "2024-04-20T08:20:59.096Z",
-        "departmentName": "CHP"
-      },
-      "permissionType": {
-        "id": 1,
-        "createdAt": "2024-04-20T08:38:18.589Z",
-        "updatedAt": "2024-04-20T08:38:18.589Z",
-        "permissionType": "Operator"
-      },
-      "sheetMaster": {
-        "id": 1,
-        "createdAt": "2024-04-20T08:04:49.113Z",
-        "updatedAt": "2024-04-20T08:04:49.113Z",
-        "sheetName": "AUTOMOBILE CHECKLIST & DAILY MAINTENANCE REPORT",
-        "description": ""
-      },
-      "shiftMaster": {
-        "id": 3,
-        "createdAt": "2024-04-20T10:32:23.803Z",
-        "updatedAt": "2024-04-20T10:32:23.803Z",
-        "shiftType": "Shift C"
-    }
-    }
-  ]);
 
-  const [departmentRemarks, setDepartmentRemark] = React.useState([
-    {
-      "id": 1,
-      "createdAt": "",
-      "updatedAt": "",
-      "createdBy": 1,
-      "departmentId": 1,
-      "remarks": "",
-      "departments": {
-        "id": 1,
-        "createdAt": "",
-        "updatedAt": "",
-        "departmentName": ""
-      }
-    }
-  ]) 
-
-  const [departmentList, setDepartmentList] = React.useState([
-    {
-        "departments": {
-            "id": 1,
-            "createdAt": "2024-04-20T08:20:59.096Z",
-            "updatedAt": "2024-04-20T08:20:59.096Z",
-            "departmentName": "CHP"
-        }
-    }
-])
+  const router = useRouter()
 
   const logintype = useSelector((state: RootState) => state?.user.data);
 
+  const {userJobList} = useUserTaskApi({userId:logintype.data.id})
+  // const {userJobList} = useUserJobList({userId:logintype.data.id})
 
-  const getRemarksByUser = async () => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/remarks/get-user-remarks?userId=${logintype.data.id}`, {
-        method: 'GET',
-        headers: {
-          Accept: "application/json",
-          'Content-Type': 'application/json',
-          Authorization: "Bearer "  + auth,
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch user details: ' + response.statusText);
-      }
-
-      const data = await response.json();
-      return data
-    } catch (error) {
-      console.error('Error fetching user details:', error);
-    }
-  }
-  const getDepartmentsByUser = async () => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/joballocation/get-user-departments?userId=${logintype.data.id}`, {
-        method: 'GET',
-        headers: {
-          Accept: "application/json",
-          'Content-Type': 'application/json',
-          Authorization: "Bearer "  + auth,
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch user details: ' + response.statusText);
-      }
-
-      const data = await response.json();
-      return data
-    } catch (error) {
-      console.error('Error fetching user details:', error);
-    }
-  }
- 
-  const RowMenu = (props: { sheetid: any; sheetName: any }) => {
+  const RowMenu = (props: { sheetid: any}) => {
     return (
-      <Tooltip title="Documents" arrow color="primary" placement="right">
         <Button
           color="primary"
           variant="outlined"
           size="sm"
-          onClick={() => router.push(`/tasks/sheet/${props.sheetid}`)}
+          onClick={() => {
+
+              router.push(`/tasks/sheet/${props.sheetid}`)}}
+
         >
           {/* Documents */} <AssignmentIcon />
         </Button>
-      </Tooltip>
     );
   };
 
-  const router = useRouter();
-const auth = useAuth();
+  const auth = useAuth();
   // const data = await getData()
-  React.useEffect(() => {
-    const getData = async () => {
-      try {
 
-        const url = [2,3].includes(logintype.data.rolesId) ? `${process.env.NEXT_PUBLIC_API_HOST}/joballocation/get-all-jobs` : `${process.env.NEXT_PUBLIC_API_HOST}/joballocation/get-user-jobs?id=${logintype.data.id}`
-        // const url = `http://51.79.147.139:3000/joballocation/get-user-jobs?id=${logintype.data.id}`
-        const response = await fetch(url, {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer "  + auth,
-          },
-        });
 
-        if (!response.ok) {
-          throw new Error(
-            "Failed to fetch user details: " + response.statusText
-          );
-        }
-
-        const data = await response.json();
-
-        setRows(data.data);
-      } catch (error) {
-        console.error("Error fetching user details:", error);
-      }
-    };
-
-    getData();
-
-    const fetchRemarks = async () => {
-      let depRem = await getRemarksByUser()
-      let departments = await getDepartmentsByUser()
-      setDepartmentRemark(depRem?.data)
-      setDepartmentList(departments?.data) 
-    }
-
-    fetchRemarks();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
-
-  const headers = ["Department", "Entity", "Shift","Permission", "Assigned To"]
-  const tablerows =  stableSort(rows, getComparator(order, "id")).map((row: any) => (
+  const headers = ["Department", "Entity", "Shift","Designation", "Assigned To"]
+  const tablerows =  stableSort(userJobList || [], getComparator(order, "id")).map((row: any) => (
     <tr key={row?.id}>
       <td>
         <Typography level="body-xs">{row?.id}</Typography>
@@ -215,28 +78,9 @@ const auth = useAuth();
         </Typography>
       </td>
       <td>
-        <Chip
-          variant="soft"
-          size="sm"
-          startDecorator={
-            row.status === "ACTIVE" ? (
-              <CheckRoundedIcon />
-            ) : row.permissionType.permissionType === "Operator" ? (
-              <AutorenewRoundedIcon />
-            ) : (
-              <BlockIcon />
-            )
-          }
-          color={
-            row.permissionType.permissionType === "ACTIVE"
-              ? "success"
-              : row.permissionType.permissionType === "Operator"
-                ? "success"
-                : "danger"
-          }
-        >
-          {row.permissionType.permissionType}
-        </Chip>
+        <Typography level="body-xs">
+          {row?.designationMaster?.designationName}
+        </Typography>
       </td>
       <td>
         <Typography level="body-xs">
@@ -247,7 +91,7 @@ const auth = useAuth();
         <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
           <RowMenu
             sheetid={row.sheetMaster.id}
-            sheetName={row.sheetMaster.sheetName}
+            // sheetName={row.sheetMaster.sheetName}
           />
         </Box>
       </td>

@@ -1,20 +1,13 @@
 'use client';
 import * as React from 'react';
-import { CssVarsProvider } from '@mui/joy/styles';
-import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
-import { useCallback, useState } from 'react';
 import { useParams } from 'next/navigation'
-import { AccordionGroup, FormControl, FormLabel, Tab, TabList, TabPanel, Tabs, Typography, Table, Sheet, Button, Stack, Link, Divider, Chip } from '@mui/joy';
-import { Accordion, AccordionDetails, AccordionSummary, Input } from '@mui/joy';
+import { Typography, Button, Stack, Link, Divider, Chip } from '@mui/joy';
 import TableSection from '@/app/components/Common/TableSection';
 import { Add } from '@mui/icons-material';
-
 import { useRouter } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux';
-
 import { AppDispatch, RootState } from '@/app/Store/store';
-
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {createdocument} from '@/app/Reducers/CreateDocumentSlice';
@@ -23,30 +16,20 @@ import DownloadIcon from '@mui/icons-material/Download';
 import EditIcon from '@mui/icons-material/Edit';
 import { saveAs } from 'file-saver';
 import {useAuth} from '@/app/hooks/useAuth';
-import { useEffect } from 'react';
-
-interface LogProps {
-  sheetid: string
-}
-const accessToken = localStorage.getItem('accessToken');
+import { useState,useEffect } from 'react';
+import {useApi} from "@/app/api/hooks/useApi";
+import {SheetRaw} from "@/app/types";
 
 
 export default function Log() {
   const auth =  useAuth();
+  const params = useParams<{ sheet: string, id: string }>()
 
   const createdocuments = useSelector((state:any) => state?.createdocuments?.data);
 
+  const {data:sheetMaster, isLoading, fetchData:fetSheetMaster } = useApi<SheetRaw>(`/sheetmaster/get-sheets?id=${parseInt(params.id)}`,{method:"GET"})
+
   const dispatch:any = useDispatch<AppDispatch>();
-  const params = useParams<{ sheet: string, id: string }>()
-  const [permision,setPermission] = useState({
-    "permissionType": {
-        "id": 0,
-        "createdAt": "",
-        "updatedAt": "",
-        "permissionType": ""
-    }
-})
-  const [sheetName, setSheetName]= useState('');
 
   const [documentList, setDocumentList] = useState([{
     id: "", createdAt: "", transitionId: "", updatedAt: "", sheetId: "", userId: "", users: { userName: "" }, "transitionMaster": {
@@ -64,30 +47,6 @@ export default function Log() {
     //setuser('')
     router.push("/", { scroll: false }) ): ( '' )
   }, [])
-
-  async function getSheetDetails(sheetid: string) {
-
-
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetmaster/get-sheets?id=${sheetid}`, {
-        method: 'GET',
-        headers: {
-          Accept: "application/json",
-          'Content-Type': 'application/json',
-          Authorization: "Bearer "  + auth,
-        }
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to fetch user details: ' + response.statusText);
-      }
-  
-      const data = await response.json();
-      return data
-    } catch (error) {
-      console.error('Error fetching user details:', error);
-    }
-  }
 
   async function getUserPermission() {
     try {
@@ -224,21 +183,9 @@ export default function Log() {
 
   ))
 
-  React.useEffect(()=>{
-
-    let fetchData = async () =>{
-      let sheetDetails = await getSheetDetails(params.id)
-      let permissionResponse = await getUserPermission()
-      setSheetName(sheetDetails.data[0].sheetName)
-      setPermission(permissionResponse.data[0])
-    }
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[createdocuments])
-
-
   React.useEffect(() => {
 
+    fetSheetMaster()
     const fetchData = async () => {
       let resposne = await getDocumentList(params.id)
       setDocumentList(resposne.data)
@@ -246,7 +193,7 @@ export default function Log() {
     fetchData()
 
   //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params,permision,refreshListIndicator])
+  }, [params,refreshListIndicator])
 
 
   return (
@@ -259,14 +206,13 @@ export default function Log() {
         <Divider/>
         <Stack direction={'row'}  justifyContent="space-between"  spacing={3} marginBottom={2} marginTop={2}>
         <Stack>
-          <Typography level='title-sm' component="h1">{sheetName}</Typography>
-          <Chip variant='soft' color="primary">{permision?.permissionType.permissionType}</Chip>
+          {sheetMaster && <Typography level='title-sm' component="h1">{sheetMaster[0].sheetName}</Typography>}
           {/* <Typography level='title-sm' component="h1" sx={{ marginBottom: "12px" }}>{permision.permissionType.id}</Typography> */}
         </Stack>
         <Stack direction={'row'} spacing={2} justifyContent={'flex-end'} alignItems={'flex-end'}>
-        { [1].includes(permision?.permissionType.id) && <Button size='sm' color='primary' startDecorator={<Add />} onClick={() => createDocument(params.id, logintype.data.id, 1)}>
-            Create New Document
-          </Button>}
+        {/*{ [1].includes(permision?.permissionType.id) && <Button size='sm' color='primary' startDecorator={<Add />} onClick={() => createDocument(params.id, logintype.data.id, 1)}>*/}
+        {/*    Create New Document*/}
+        {/*  </Button>}*/}
           <Link
             underline="hover"
             color="primary"
