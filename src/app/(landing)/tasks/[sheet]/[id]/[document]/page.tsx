@@ -10,50 +10,24 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MyMessages from '@/app/components/MyMessages';
 import { API_BASE_URL } from '@/app/config';
-import { ChatProps } from '@/app/types';
+import {ChatProps, DesignationAction, DocShift, JobAllocationDesignation,AllowedTransitionAction} from '@/app/types';
 import LogForm from '@/app/components/Forms/LogForm'
-import { FormData, Reccod,RecordReading } from '@/app/types';
+import { FormData, Reccod,RecordReading,SheetDocId } from '@/app/types';
 import { fieldMappingInitialState, formDataInitalState, recordMasterInitialState } from '@/app/InitialStates/initialState';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/hooks/useAuth';
 import TransitionTable from '@/app/components/TransitionAudit/TransitionTable';
 import TransitionList from '@/app/components/TransitionAudit/TransitionList';
+import {useApi} from "@/app/api/hooks/useApi";
 var _array = require('lodash/array');
 
 
 var jmespath = require("jmespath");
 
-interface LogProps {
-  sheetid: string;
-}
-
-const accessToken = localStorage.getItem('accessToken');
+const accessToken = window.localStorage.getItem('accessToken');
 
 
 
-async function getSheetFields(sheetid: string) {
-  
-  try {
-
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/forms/get?id=${sheetid}`, {
-      method: 'GET',
-      headers: {
-        Accept: "application/json",
-        'Content-Type': 'application/json',
-        Authorization: "Bearer "  + accessToken,
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch user details: " + response.statusText);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching user details:", error);
-  }
-}
 async function getDocumentShift(documentId: string) {
   
   try {
@@ -147,27 +121,27 @@ async function getDocumentReviews(documentId: string, shiftId:number) {
     console.error('Error fetching user details:', error);
   }
 }
-async function getUserPermission(sheetId: string, userId: number) {
-  try {
-
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/joballocation/get-permissions?userId=${userId}&sheetId=${sheetId}`, {
-      method: 'GET',
-      headers: {
-        Accept: "application/json",
-        'Content-Type': 'application/json',
-        Authorization: "Bearer "  + accessToken,
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch user details: ' + response.statusText);
-    }
-    const data = await response.json();
-    return data
-  } catch (error) {
-    console.error('Error fetching user details:', error);
-  }
-}
+// async function getUserPermission(sheetId: string, userId: number) {
+//   try {
+//
+//     const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/joballocation/get-permissions?userId=${userId}&sheetId=${sheetId}`, {
+//       method: 'GET',
+//       headers: {
+//         Accept: "application/json",
+//         'Content-Type': 'application/json',
+//         Authorization: "Bearer "  + accessToken,
+//       }
+//     });
+//
+//     if (!response.ok) {
+//       throw new Error('Failed to fetch user details: ' + response.statusText);
+//     }
+//     const data = await response.json();
+//     return data
+//   } catch (error) {
+//     console.error('Error fetching user details:', error);
+//   }
+// }
 async function getDocumentTransitionId(documentId: string) {
   
   try {
@@ -232,17 +206,27 @@ const prepareFields = (formData: FormData[]):RecordReading[] => {
 
 export default function Log() {
 
-  const router = useRouter();
-  const [index, setIndex] = React.useState(0);
-  const [expandIndex, setExpandIndex] = React.useState<number | null>(0);
-  const [sheetPermissionId, setSheetPermissionId] = React.useState<number>(0);
-  const [isInputDisabled, setIsInputDisabled] = React.useState(false);
-
-
-  const [formData, setFormData] = React.useState<FormData[]>(formDataInitalState);
-  const [isUserInputDisabled, setIsUserInoutDisabled] = React.useState(false);
-
   const params = useParams<{ id: string, document: string }>()
+  const router = useRouter();
+  const logintype = useSelector((state: RootState) => state?.user.data);
+  const [designationId, setDesignationId] = useState(0)
+  const [index, setIndex] = React.useState(0);
+  const [sheetPermissionId, setSheetPermissionId] = React.useState<number>(0);
+
+  // const [formData, setFormData] = React.useState<FormData[]>(formDataInitalState);
+
+  const{data:formData,fetchData:fetchFormData} = useApi<FormData>(`/forms/get?id=${parseInt(params.id)}`,{method:"GET"})
+  const{data:shiftDetails,fetchData:fetchShiftDetails} = useApi<DocShift>(`/docshiftstate/get?id=${parseInt(params.document)}`,{method:"GET"})
+  const {data:designationList, fetchData:fetchDesignationList } = useApi<JobAllocationDesignation>(`/joballocation/designation?userId=${logintype.data.id}&sheetId=${parseInt(params.id)}`,{method:"GET"})
+  const {data:actionList, fetchData:fetchActionList } = useApi<DesignationAction>(`/designation/actions?sheetId=${parseInt(params.id)}&designationId=${designationId}`,{method:"GET"})
+  const {data:documentDetails, fetchData:fetchDocumentDetails } = useApi<SheetDocId>(`/sheetdocid/get-user-docs?id=${parseInt(params.document)}`,{method:"GET"})
+  const {data:allowedTransition, fetchData:fetchAllowedTransitions } = useApi<AllowedTransitionAction>(`/transitionaction/document/${parseInt(params.document)}`,{method:"GET"})
+
+  const allowedActionPerTransition = allowedTransition[0]? allowedTransition[0].transitionMaster.transitionActions.map(action=>(action.actionMaster.actionName)) : []
+
+  const [isUserInputDisabled, setIsUserInoutDisabled] = React.useState(true);
+
+
   const [documentTransitionId, setDocumentTransistionId] = useState({
     "id": 0,
     "createdAt": "",
@@ -254,27 +238,12 @@ export default function Log() {
       "transitionName": "Draft"
     }
   });
-  const [parameters, setParameters] = useState({ id: "", sheetName: "", description: "", parameterMaster: [{ id: "", parameterName: "", fieldMaster: [{ id: "", fieldName: "", fieldId: "" }] }] });
 
-  const logintype = useSelector((state: RootState) => state?.user.data);
 
-  const [relaodData, setReloadData] = useState(Date.now());
 
   const [showReview, setShowReview] = useState(false);
 
 
-  const [shiftDetails, setShiftDetails] = useState([{
-
-    "id": 1,
-    "createdAt": "2024-04-21T13:20:09.387Z",
-    "updatedAt": "2024-04-21T13:20:09.387Z",
-    "docId": 1,
-    "shiftId": 1,
-    "shiftStatus": "Active",
-    "shiftMaster": {
-      "shiftType": "Loading..."
-    }
-  }])
 
   const [selectedShift, setSelectedShift] = useState(shiftDetails[0])
 
@@ -352,6 +321,14 @@ export default function Log() {
 
   }
 
+  React.useEffect(()=>{
+    if(designationList.length > 0)
+      setDesignationId(designationList[0].designationId)
+  },[designationList])
+
+  useEffect(() => {
+    fetchActionList()
+  }, [designationId]);
 
   React.useEffect(() => {
     decideShowReview();
@@ -360,24 +337,29 @@ export default function Log() {
 
   React.useEffect(() => {
 
+    fetchFormData()
+    fetchShiftDetails()
+    fetchDesignationList()
+    fetchDocumentDetails()
+    fetchAllowedTransitions()
+
     let fetchFromServer = async () => {
       let reviewResp = await getDocumentReviews(params.document, currentShift);
       // let permissionData = await getUserPermission(params.id, logintype.data.id)
 
-      let fieldResp = await getSheetFields(params.id)
-      let shiftResp = await getDocumentShift(params.document)
-      let permissionData = await getUserPermission(params.id, logintype.data.id)
+
+
+      // let permissionData = await getUserPermission(params.id, logintype.data.id)
       let sheetdet = await getsheetName(params.document)
       let fieldMappingResp = await getFieldMapping(params.id)
       let documentTransitioResp = await getDocumentTransitionId(params.document)
 
       // setParameters(fieldResp.data)
-      setFormData(fieldResp.data)
+
       setFieldRecord(fieldMappingResp.data)
-      setShiftDetails(shiftResp.data)
-      setSelectedShift(shiftResp.data[0])
-      setCurrentShift((shiftResp.data[0]?.shiftId))
-      setSheetPermissionId(permissionData.data[0]?.permissionType.id)
+
+      // setCurrentShift((shiftResp.data[0]?.shiftId))
+      // setSheetPermissionId(permissionData.data[0]?.permissionType.id)
       setSheetName(sheetdet.data)
       setReivews(reviewResp.data)
       setDocumentTransistionId(documentTransitioResp.data[0])
@@ -388,6 +370,9 @@ export default function Log() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params])
 
+  React.useEffect(()=>{
+    setCurrentShift(shiftDetails[0]?.shiftId)
+  },[shiftDetails])
 
   const decideDisable = () =>{
     return (documentTransitionId.transitionId !=1 || sheetPermissionId !=1 || shiftDetails[index].shiftStatus !='Active')
@@ -395,8 +380,8 @@ export default function Log() {
 
   React.useEffect(() => {
     // decideShowReview();
-    setCurrentShift(shiftDetails[index].shiftId)
-    setIsInputDisabled(decideDisable())
+    setCurrentShift(shiftDetails[index]?.shiftId)
+    // setIsInputDisabled(decideDisable())
     setSelectedShift(shiftDetails[index])
     const fetchReview = async () => {
       let reviewResp = await getDocumentReviews(params.document, shiftDetails[index].shiftId);
@@ -408,11 +393,6 @@ export default function Log() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index])
 
-  // React.useEffect(() => {
-  //   let records = jmespath.search(parameters, "parameterMaster[].fieldMaster[].{fieldId:id,parameterId:parameterId}")
-  //   setFieldRecord(records)
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [parameters])
 
   React.useEffect(() => {
 
@@ -436,10 +416,18 @@ export default function Log() {
 
     }
     fetchData();
-    setIsInputDisabled(decideDisable())
+    // setIsInputDisabled(decideDisable())
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentShift, fieldRecord, relaodData])
+  }, [currentShift, fieldRecord])
 
+  React.useEffect(()=>{
+
+    let inputDisabled = allowedActionPerTransition.includes('SAVE_DRAFT') && actionList.map(action=> action.actionMaster.actionName).includes('SAVE_DRAFT')
+
+    setIsUserInoutDisabled(!inputDisabled)
+
+
+  },[allowedTransition,actionList])
 
 
 
@@ -455,7 +443,7 @@ export default function Log() {
         },
         body: JSON.stringify({ "data": setDocumentRecordTransitionState })
       });
-      setReloadData(Date.now());
+
       toast.success("Record Changes Saved Successfully");
       router.push('/tasks', { scroll: false })
 
@@ -471,7 +459,7 @@ export default function Log() {
       console.error("Error fetching user details:", error);
     }
   };
-  const sendForApproval = async (docId: number, shiftId:number,transitionId:number) => {
+  const sendForApproval = async (transitionId:number) => {
     try {
       
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetdocid/send-approval`, {
@@ -481,9 +469,9 @@ export default function Log() {
           "Content-Type": "application/json",
           Authorization: "Bearer "  + accessToken,
         },
-      body : JSON.stringify({docId,shiftId,transitionId,userId:logintype.data.id})
+      body : JSON.stringify({docId : parseInt(params.document),shiftId:currentShift,transitionId,userId:logintype.data.id})
       });
-      setReloadData(Date.now());
+
       toast.success("Record Changes Saved Successfully");
       router.push('/tasks', { scroll: false })
 
@@ -499,6 +487,14 @@ export default function Log() {
       console.error("Error fetching user details:", error);
     }
   };
+
+
+  const ACTION_FUNC_MAP : {[key:string]:Function} = {
+    'SAVE_DRAFT' : saveRecordChnages,
+    'SEND_FOR_REVIEW' : sendForApproval,
+    'SEND_FOR_APPROVAL' : sendForApproval,
+    'COMPLETE' : sendForApproval,
+  }
 
   return (
     <>
@@ -509,8 +505,8 @@ export default function Log() {
         
         <Box>
           <Stack direction={'row'} justifyContent="space-between" spacing={2} marginBottom={2}>
-            <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{sheetNames[0].sheetMaster.sheetName}</Typography>
-            {/* <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{sheetPermissionId}</Typography> */}
+            <Typography level='title-lg' component="h1" sx={{ marginBottom: "12px" }}>{documentDetails[0]?.sheetMaster.sheetName}</Typography>
+            <Typography level='title-sm' component="h4" sx={{ marginBottom: "12px" }}>{documentDetails[0]?.transitionMaster.transitionName}</Typography>
 
             <Link
               underline="hover"
@@ -541,51 +537,7 @@ export default function Log() {
                   }
                 </TabList>
                 <TabPanel value={index} variant='soft' color='primary' >
-                  {/* {parameters.parameterMaster && <AccordionGroup size='sm' sx={{ minWidth: "60dvw", borderRadius: 'md', }} variant="outlined"
-                    transition="0.2s" color='neutral' >
-                    {
-                      parameters.parameterMaster.map((paramter, index) => (
-                        <Accordion key={`paramater_${paramter.id}`}
-                          expanded={index === expandIndex}
-                          onChange={(event, expanded) => {
-                            setExpandIndex(expanded ? index : null);
-                          }}
-                          variant='soft'
-                          sx={{ borderRadius: 'md' }}
-                        >
-                          <AccordionSummary >
-                            {paramter.parameterName}
-                          </AccordionSummary>
-                          <AccordionDetails>
-                            <Sheet sx={{ height: 400, overflow: 'auto' }}>
-                              <Table hoverRow >
-                                <tbody>
-                                  {
 
-                                    paramter.fieldMaster && paramter.fieldMaster.map((field) => (
-
-                                      <tr key={`field_${field.fieldId}`}>
-                                        <td>
-                                          {field.fieldName}
-                                        </td>
-                                        <td>
-                                          <Input key={`input_key_${field.id}`} size='sm' value={getFieldValue(field.id, paramter.id)} onChange={(e) => updateValue(e, field.id, paramter.id)} disabled={documentTransitionId.transitionId!=1} />
-                                        </td>
-                                      </tr>
-
-                                    ))
-
-                                  }
-                                </tbody>
-                              </Table>
-                            </Sheet>
-                          </AccordionDetails>
-                        </Accordion>
-                      ))
-                    }
-
-                  </AccordionGroup>
-                  } */}
                    
                   <LogForm formData={formData} recordMasterData={documentRecord} setDocumentRecord={setDocumentRecord} documentTransitionState={documentTransitionId.transitionId} fieldMapping={fieldRecord} sheetPermissionId={sheetPermissionId} isInputDisabled={isUserInputDisabled} />
                 </TabPanel>
@@ -593,18 +545,12 @@ export default function Log() {
             </CardContent>
             <CardActions buttonFlex="0 1 220px">
 
-              {([1].includes(documentTransitionId.transitionId) && sheetPermissionId == 1) && <Button size='sm' variant='outlined' color='primary' onClick={() => { saveRecordChnages(1) }} sx={{ ml: 'auto' }} disabled={!(shiftDetails[index].shiftStatus.toLowerCase() === 'active')}>
-                Save draft
-              </Button>}
-              {sheetPermissionId == 1 && <Button size='sm' color='success' onClick={() => { saveRecordChnages(2) }} disabled={documentTransitionId.transitionId != 1 || !(shiftDetails[index].shiftStatus.toLowerCase() === 'active')} sx={{ ml: 'auto' }}>
-                Send for Supervisor Approval
-              </Button>}
-              {(sheetPermissionId == 2 ) && <Button size='sm' color='success' onClick={() => { saveRecordChnages(3) }} disabled={documentTransitionId.transitionId != 2 || !(shiftDetails[index].shiftStatus.toLowerCase() === 'active')} sx={{ ml: 'auto' }}>
-                Send for Engineer Approval
-              </Button>}
-              {(sheetPermissionId == 3 ) && <Button size='sm' color='success' onClick={() => { sendForApproval(parseInt(params.document),currentShift,4) }} disabled={documentTransitionId.transitionId != 3 || !(shiftDetails[index].shiftStatus.toLowerCase() === 'active')} sx={{ ml: 'auto' }}>
-                Approve Document
-              </Button>}
+              {
+                actionList.length > 0 && actionList.map((action, index) => (
+                    <Button size='sm' variant='solid' key={action.actionId+action.actionMaster.actionName}  disabled={!allowedActionPerTransition.includes(action.actionMaster.actionName)} onClick={() => { ACTION_FUNC_MAP[action.actionMaster.actionName](action.actionMaster.transitionMaster.id) }} >{action.actionMaster.buttonName}</Button>
+                  ))
+              }
+
             </CardActions>
 
 

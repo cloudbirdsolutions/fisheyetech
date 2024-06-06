@@ -206,3 +206,175 @@ export type Remark = {
       "userName": string
   }
 }
+
+export type User = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "name": string,
+  "userName": string,
+  "address": string,
+  "phone": string,
+  "password": string,
+  "statusId": number,
+  "rolesId": number,
+  "statusMaster": {
+    "statusName":string,
+  }
+}
+
+export type Department = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "departmentName": string
+}
+
+export type Designation = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "sheetId": number,
+  "designationId": number,
+  "actionId": number,
+  "designationMaster": {
+    "designationName": string
+  }
+}
+
+export type Shift = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "sheetId": number,
+  "shiftId": number,
+  "shiftMaster": {
+    "id": number,
+    "createdAt": string,
+    "updatedAt": string,
+    "shiftType": string
+  }
+}
+
+export type UserJob = {
+  "id": number,
+  "users": {
+    "userName": string
+  },
+  "departments": {
+    "id": number,
+    "createdAt": string,
+    "updatedAt": string,
+    "departmentName": string
+  },
+  "sheetMaster": SheetRaw,
+  "shiftMaster": {
+    "id": number,
+    "createdAt": string,
+    "updatedAt": string,
+    "shiftType": string
+  },
+  "designationMaster": {
+    "designationName": string  }
+}
+
+export type Document = {
+  id: number,
+  createdAt: string,
+  transitionId: string,
+  updatedAt: string,
+  sheetId: number,
+  userId: number,
+  users: { userName: string },
+  "transitionMaster": {
+    "transitionName": string
+  }
+}
+
+export type JobAllocationDesignation =         {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "userId": number,
+  "departmentId": number,
+  "sheetId": number,
+  "shiftId": number,
+  "designationId": number,
+  "designationMaster": {
+    "designationName": string
+  }
+}
+
+export type DesignationAction = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "sheetId": number,
+  "designationId": number,
+  "actionId": number,
+  "actionMaster": {
+    "transitionMaster": {
+      "transitionName": string,
+      "id": number
+    },
+    "buttonName": string,
+    "actionName": string
+  }
+}
+
+export type DocShift = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "docId": number,
+  "shiftId": number,
+  "shiftStatus": string,
+  "shiftMaster": {
+    "shiftType": string
+  }
+}
+
+export type SheetDocId = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "sheetId": number,
+  "userId": number,
+  "transitionId": number,
+  "users": {
+    "userName": string
+  },
+  "transitionMaster": {
+    "transitionName": string
+  },
+  "sheetMaster": {
+    "sheetName": string
+  }
+}
+
+export type AllowedTransitionAction = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "sheetId": number,
+  "userId": number,
+  "transitionId": number,
+  "transitionMaster": {
+    "transitionActions": [
+      {
+        "actionMaster": {
+          "id": number,
+          "actionName": string,
+          "buttonName": string
+        }
+      },
+      {
+        "actionMaster": {
+          "id": number,
+          "actionName": string,
+          "buttonName": string
+        }
+      }
+    ]
+  }
+}

@@ -19,6 +19,7 @@
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@mui/x-charts": "^7.3.1",
     "@reduxjs/toolkit": "^2.2.3",
+    "axios": "^1.7.2",
     "chartjs-node-canvas": "^4.1.6",
     "file-saver": "^2.0.5",
     "jmespath": "^0.16.0",

@@ -67,3 +67,7 @@ export function toggleMessagesPane() {
     }
   }
 }
+
+
+
+export const deepGet = (obj:any, keys:string[]) => keys.reduce((xs, x) => xs?.[x] ?? null, obj);
