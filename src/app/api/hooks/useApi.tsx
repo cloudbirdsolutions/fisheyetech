@@ -6,7 +6,7 @@ export function useApi <T>(path:string, options?:AxiosRequestConfig) {
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(false);
-    const [data, setData] = useState<T[]>();
+    const [data, setData] = useState<T[]>([]);
     const [baseEndpoint, setBaseEndpoint] = useState(process.env.NEXT_PUBLIC_API_HOST);
     const auth = useAuth();
 

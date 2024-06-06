@@ -6,7 +6,8 @@ import {createdocumentapi} from '../api/Createdocument';
 // Define the async thunk for fetching document data
 export const createdocument = createAsyncThunk('createdocuments/createdocument', async (passData:any) => {
  
-    const data = await createdocumentapi(passData.sheetId, passData.userId, passData.transitionId);
+    const data = await createdocumentapi(passData.sheetId, passData.userId, passData.
+        transitionId);
     return data;
  });
 // Define the document slice

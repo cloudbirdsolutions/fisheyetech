@@ -277,3 +277,104 @@ export type UserJob = {
   "designationMaster": {
     "designationName": string  }
 }
+
+export type Document = {
+  id: number,
+  createdAt: string,
+  transitionId: string,
+  updatedAt: string,
+  sheetId: number,
+  userId: number,
+  users: { userName: string },
+  "transitionMaster": {
+    "transitionName": string
+  }
+}
+
+export type JobAllocationDesignation =         {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "userId": number,
+  "departmentId": number,
+  "sheetId": number,
+  "shiftId": number,
+  "designationId": number,
+  "designationMaster": {
+    "designationName": string
+  }
+}
+
+export type DesignationAction = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "sheetId": number,
+  "designationId": number,
+  "actionId": number,
+  "actionMaster": {
+    "transitionMaster": {
+      "transitionName": string,
+      "id": number
+    },
+    "buttonName": string,
+    "actionName": string
+  }
+}
+
+export type DocShift = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "docId": number,
+  "shiftId": number,
+  "shiftStatus": string,
+  "shiftMaster": {
+    "shiftType": string
+  }
+}
+
+export type SheetDocId = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "sheetId": number,
+  "userId": number,
+  "transitionId": number,
+  "users": {
+    "userName": string
+  },
+  "transitionMaster": {
+    "transitionName": string
+  },
+  "sheetMaster": {
+    "sheetName": string
+  }
+}
+
+export type AllowedTransitionAction = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "sheetId": number,
+  "userId": number,
+  "transitionId": number,
+  "transitionMaster": {
+    "transitionActions": [
+      {
+        "actionMaster": {
+          "id": number,
+          "actionName": string,
+          "buttonName": string
+        }
+      },
+      {
+        "actionMaster": {
+          "id": number,
+          "actionName": string,
+          "buttonName": string
+        }
+      }
+    ]
+  }
+}

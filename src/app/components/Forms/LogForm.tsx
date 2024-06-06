@@ -138,8 +138,8 @@ export default function LogForm(props: LogFormProps) {
                                                                             <Input
                                                                                 value={getMatchedFieldRecord(group.groupId, groupParam.parameterId, paramField.fieldId, fieldReading.readingId)?.fieldValue}
                                                                                 onChange={(e) => { updateValue(e, group.groupId, groupParam.parameterId, paramField.fieldId, fieldReading.readingId) }}
-                                                                                disabled={getMatchedFieldRecord(group.groupId, groupParam.parameterId, paramField.fieldId, fieldReading.readingId)?.transitionId != 1 || props.sheetPermissionId!=1 || props.documentTransitionState !=1} 
-                                                                                // disabled={props.isInputDisabled} 
+                                                                                // disabled={getMatchedFieldRecord(group.groupId, groupParam.parameterId, paramField.fieldId, fieldReading.readingId)?.transitionId != 1 || props.sheetPermissionId!=1 || props.documentTransitionState !=1}
+                                                                                disabled={props.isInputDisabled}
                                                                                 
                                                                                 />
                                                                                 </Tooltip>
