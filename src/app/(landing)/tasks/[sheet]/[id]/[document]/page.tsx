@@ -9,48 +9,22 @@ import { AppDispatch, RootState } from "@/app/Store/store";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MyMessages from '@/app/components/MyMessages';
-import { API_BASE_URL } from '@/app/config';
 import {ChatProps, DesignationAction, DocShift, JobAllocationDesignation,AllowedTransitionAction} from '@/app/types';
 import LogForm from '@/app/components/Forms/LogForm'
 import { FormData, Reccod,RecordReading,SheetDocId } from '@/app/types';
-import { fieldMappingInitialState, formDataInitalState, recordMasterInitialState } from '@/app/InitialStates/initialState';
+import { fieldMappingInitialState, recordMasterInitialState } from '@/app/InitialStates/initialState';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/hooks/useAuth';
 import TransitionTable from '@/app/components/TransitionAudit/TransitionTable';
 import TransitionList from '@/app/components/TransitionAudit/TransitionList';
 import {useApi} from "@/app/api/hooks/useApi";
-var _array = require('lodash/array');
+// var _array = require('lodash/array');
 
 
-var jmespath = require("jmespath");
+// var jmespath = require("jmespath");
 
 const accessToken = window.localStorage.getItem('accessToken');
 
-
-
-async function getDocumentShift(documentId: string) {
-  
-  try {
-
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/docshiftstate/get?id=${documentId}`, {
-      method: 'GET',
-      headers: {
-        Accept: "application/json",
-        'Content-Type': 'application/json',
-        Authorization: "Bearer "  + accessToken,
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch user details: ' + response.statusText);
-    }
-
-    const data = await response.json();
-    return data
-  } catch (error) {
-    console.error('Error fetching user details:', error);
-  }
-}
 
 async function getsheetName(documentId: string){
   
@@ -69,8 +43,8 @@ async function getsheetName(documentId: string){
       throw new Error('Failed to fetch user details: ' + response.statusText);
     }
 
-    const data = await response.json();
-    return data
+    let data_json = await response.json();
+    return data_json
   } catch (error) {
     console.error('Error fetching user details:', error);
   }
@@ -187,21 +161,21 @@ async function getFieldMapping(sheetId: string) {
   }
 }
 
-const prepareFields = (formData: FormData[]):RecordReading[] => {
-  const arr:any = []
-  formData.forEach(gr => {
-    gr.groupMaster.groupParameters.forEach(gp => {
-      gp.parameterMaster.paramterFields.forEach(pf => {
-        pf.fieldMaster.fieldReading.forEach(read => {
-          arr.push({ readingId: read.readingId, fieldId: read.fieldId, parameterId: gp.parameterMaster.id, groupId: gr.id})
-        })
-      })
-    })
-  })
-
-  return arr.flat()
-
-}
+// const prepareFields = (formData: FormData[]):RecordReading[] => {
+//   const arr:any = []
+//   formData.forEach(gr => {
+//     gr.groupMaster.groupParameters.forEach(gp => {
+//       gp.parameterMaster.paramterFields.forEach(pf => {
+//         pf.fieldMaster.fieldReading.forEach(read => {
+//           arr.push({ readingId: read.readingId, fieldId: read.fieldId, parameterId: gp.parameterMaster.id, groupId: gr.id})
+//         })
+//       })
+//     })
+//   })
+//
+//   return arr.flat()
+//
+// }
 
 
 export default function Log() {
@@ -210,7 +184,7 @@ export default function Log() {
   const router = useRouter();
   const logintype = useSelector((state: RootState) => state?.user.data);
   const [designationId, setDesignationId] = useState(0)
-  const [index, setIndex] = React.useState(0);
+
   const [sheetPermissionId, setSheetPermissionId] = React.useState<number>(0);
 
   // const [formData, setFormData] = React.useState<FormData[]>(formDataInitalState);
@@ -222,7 +196,9 @@ export default function Log() {
   const {data:documentDetails, fetchData:fetchDocumentDetails } = useApi<SheetDocId>(`/sheetdocid/get-user-docs?id=${parseInt(params.document)}`,{method:"GET"})
   const {data:allowedTransition, fetchData:fetchAllowedTransitions } = useApi<AllowedTransitionAction>(`/transitionaction/document/${parseInt(params.document)}`,{method:"GET"})
 
+  const [index, setIndex] = React.useState(0);
   const allowedActionPerTransition = allowedTransition[0]? allowedTransition[0].transitionMaster.transitionActions.map(action=>(action.actionMaster.actionName)) : []
+  const checkAddNewReviewPermission = actionList.map(action => (action.actionMaster.actionName)).some(action=> ['SEND_FOR_APPROVAL','COMPLETE'].includes(action))
 
   const [isUserInputDisabled, setIsUserInoutDisabled] = React.useState(true);
 
@@ -240,10 +216,7 @@ export default function Log() {
   });
 
 
-
   const [showReview, setShowReview] = useState(false);
-
-
 
   const [selectedShift, setSelectedShift] = useState(shiftDetails[0])
 
@@ -314,9 +287,8 @@ export default function Log() {
   const decideShowReview = () => {
 
     // Permission operator and review length < 1 don't show
-    // operator 1, // shift 2 // sec 3
-    let show = false;
-    show = [2, 3].includes(sheetPermissionId) ? true : [1].includes(sheetPermissionId) && reviews.length > 0 ? true : false
+
+    let show = reviews.length > 0 ? true : checkAddNewReviewPermission;
     setShowReview(show)
 
   }
@@ -380,18 +352,20 @@ export default function Log() {
 
   React.useEffect(() => {
     // decideShowReview();
-    setCurrentShift(shiftDetails[index]?.shiftId)
-    // setIsInputDisabled(decideDisable())
-    setSelectedShift(shiftDetails[index])
-    const fetchReview = async () => {
-      let reviewResp = await getDocumentReviews(params.document, shiftDetails[index].shiftId);
-      setReivews(reviewResp.data)
-      decideShowReview();
+    if(shiftDetails[index]) {
+      setCurrentShift(shiftDetails[index]?.shiftId)
+      // setIsInputDisabled(decideDisable())
+      setSelectedShift(shiftDetails[index])
+      const fetchReview = async () => {
+        let reviewResp = await getDocumentReviews(params.document, shiftDetails[index].shiftId);
+        setReivews(reviewResp.data)
+        decideShowReview();
+      }
+      fetchReview();
     }
-    fetchReview();
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [index])
+  }, [shiftDetails,index])
 
 
   React.useEffect(() => {
@@ -405,7 +379,7 @@ export default function Log() {
         delete f.id;
         let initialObject = { "createdBy": logintype.data.id, "updatedBy": logintype.data.id, "transitionId": 1, "fieldValue": "", "documentId": parseInt(params.document), "shiftId": currentShift }
         let combinedInitialFiled = Object.assign(initialObject, f)
-        let matchedRecord = documentRecordResp.data.find((rec: Reccod) => rec.readingId === f.readingId && rec.fieldId === f.fieldId && rec.groupId===f.groupId && rec.parameterId===f.parameterId)
+        let matchedRecord = documentRecordResp?.data.find((rec: Reccod) => rec.readingId === f.readingId && rec.fieldId === f.fieldId && rec.groupId===f.groupId && rec.parameterId===f.parameterId)
         let finalFiledDocumentRecord = Object.assign(combinedInitialFiled, matchedRecord)
         return finalFiledDocumentRecord
       })
@@ -460,32 +434,36 @@ export default function Log() {
     }
   };
   const sendForApproval = async (transitionId:number) => {
-    try {
-      
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetdocid/send-approval`, {
-        method: 'POST',
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer "  + accessToken,
-        },
-      body : JSON.stringify({docId : parseInt(params.document),shiftId:currentShift,transitionId,userId:logintype.data.id})
-      });
 
-      toast.success("Record Changes Saved Successfully");
-      router.push('/tasks', { scroll: false })
+    saveRecordChnages(transitionId).then(async ()=>{
+      try {
 
-      if (!response.ok) {
-        throw new Error(
-          "Failed to save record changes: " + response.statusText
-        );
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetdocid/send-approval`, {
+          method: 'POST',
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer "  + accessToken,
+          },
+          body : JSON.stringify({docId : parseInt(params.document),shiftId:currentShift,transitionId,userId:logintype.data.id})
+        });
+
+        toast.success("Moved Document to next Level");
+        router.push('/tasks', { scroll: false })
+
+        if (!response.ok) {
+          throw new Error(
+              "Failed to change document status: " + response.statusText
+          );
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error fetching user details:", error);
       }
+    })
 
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error fetching user details:", error);
-    }
   };
 
 
@@ -598,7 +576,7 @@ export default function Log() {
                   </Tab>
                 </TabList>
                 <TabPanel value={0}>
-                  {showReview && <MyMessages chats={reviews} permissionId={sheetPermissionId} docId={parseInt(params.document)} selectedShift={selectedShift}/>}
+                  {showReview && <MyMessages chats={reviews} permissionId={sheetPermissionId} allowAddNew={checkAddNewReviewPermission} docId={parseInt(params.document)} selectedShift={selectedShift}/>}
                 </TabPanel>
                 <TabPanel value={1}>
                   {
