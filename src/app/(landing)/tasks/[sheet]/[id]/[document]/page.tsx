@@ -352,15 +352,17 @@ export default function Log() {
 
   React.useEffect(() => {
     // decideShowReview();
-    setCurrentShift(shiftDetails[index]?.shiftId)
-    // setIsInputDisabled(decideDisable())
-    setSelectedShift(shiftDetails[index])
-    const fetchReview = async () => {
-      let reviewResp = await getDocumentReviews(params.document, shiftDetails[index].shiftId);
-      setReivews(reviewResp.data)
-      decideShowReview();
+    if(shiftDetails[index]) {
+      setCurrentShift(shiftDetails[index]?.shiftId)
+      // setIsInputDisabled(decideDisable())
+      setSelectedShift(shiftDetails[index])
+      const fetchReview = async () => {
+        let reviewResp = await getDocumentReviews(params.document, shiftDetails[index].shiftId);
+        setReivews(reviewResp.data)
+        decideShowReview();
+      }
+      fetchReview();
     }
-    fetchReview();
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shiftDetails,index])
@@ -377,7 +379,7 @@ export default function Log() {
         delete f.id;
         let initialObject = { "createdBy": logintype.data.id, "updatedBy": logintype.data.id, "transitionId": 1, "fieldValue": "", "documentId": parseInt(params.document), "shiftId": currentShift }
         let combinedInitialFiled = Object.assign(initialObject, f)
-        let matchedRecord = documentRecordResp.data.find((rec: Reccod) => rec.readingId === f.readingId && rec.fieldId === f.fieldId && rec.groupId===f.groupId && rec.parameterId===f.parameterId)
+        let matchedRecord = documentRecordResp?.data.find((rec: Reccod) => rec.readingId === f.readingId && rec.fieldId === f.fieldId && rec.groupId===f.groupId && rec.parameterId===f.parameterId)
         let finalFiledDocumentRecord = Object.assign(combinedInitialFiled, matchedRecord)
         return finalFiledDocumentRecord
       })
@@ -432,32 +434,36 @@ export default function Log() {
     }
   };
   const sendForApproval = async (transitionId:number) => {
-    try {
-      
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetdocid/send-approval`, {
-        method: 'POST',
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer "  + accessToken,
-        },
-      body : JSON.stringify({docId : parseInt(params.document),shiftId:currentShift,transitionId,userId:logintype.data.id})
-      });
 
-      toast.success("Record Changes Saved Successfully");
-      router.push('/tasks', { scroll: false })
+    saveRecordChnages(transitionId).then(async ()=>{
+      try {
 
-      if (!response.ok) {
-        throw new Error(
-          "Failed to save record changes: " + response.statusText
-        );
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetdocid/send-approval`, {
+          method: 'POST',
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer "  + accessToken,
+          },
+          body : JSON.stringify({docId : parseInt(params.document),shiftId:currentShift,transitionId,userId:logintype.data.id})
+        });
+
+        toast.success("Moved Document to next Level");
+        router.push('/tasks', { scroll: false })
+
+        if (!response.ok) {
+          throw new Error(
+              "Failed to change document status: " + response.statusText
+          );
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error fetching user details:", error);
       }
+    })
 
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error fetching user details:", error);
-    }
   };
 
 
