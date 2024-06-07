@@ -93,7 +93,7 @@ export default function RoleTable(props: any) {
   }, [createrole, deleteroles, editrole])
 
 
-  const headers = [ "Role Name", "Role Status", "Permisson"];
+  const headers = [ "Role Name", "Role Status"];
 
   const tablerows = stableSort(rows, getComparator(order, "id")).map(
     (row: any) => (
@@ -114,9 +114,9 @@ export default function RoleTable(props: any) {
                     {row?.statusMaster?.statusName}
                   </Chip>
                 </td>
-                <td>
+                {/* <td>
                   <Typography level="body-xs">{row?.permissionId}</Typography>
-                </td>
+                </td> */}
 
                 <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
