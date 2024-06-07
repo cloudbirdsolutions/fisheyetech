@@ -389,6 +389,7 @@ export default function Log() {
       decideShowReview()
 
     }
+    if(currentShift)
     fetchData();
     // setIsInputDisabled(decideDisable())
     // eslint-disable-next-line react-hooks/exhaustive-deps

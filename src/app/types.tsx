@@ -378,3 +378,27 @@ export type AllowedTransitionAction = {
     ]
   }
 }
+
+export type ChartAttributes = {
+  "groupId": number,
+  "sheetId": number,
+  "parameterId": number,
+  "fieldId": number,
+  "readingId": number,
+  "groupMaster": {
+    "groupName": string,
+    "id": number
+  },
+  "parameterMaster": {
+    "parameterName": string,
+    "id": number
+  },
+  "fieldMaster": {
+    "fieldName": string,
+    "id": number
+  },
+  "readingMaster": {
+    "readingName": string,
+    "id": number
+  }
+}

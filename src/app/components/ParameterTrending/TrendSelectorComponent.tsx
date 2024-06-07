@@ -9,23 +9,28 @@ import {createjob} from '../../Reducers/CreateJobSlice';
 import {useRouter} from "next/navigation";
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {useApi} from "@/app/api/hooks/useApi";
 import {useAuth} from "@/app/hooks/useAuth";
 import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import {deepGet} from '@/app/utils'
+import {Department, Shift, ChartAttributes} from "@/app/types";
+var jmespath = require("jmespath");
+var _= require('lodash');
+
 
 
 export default function TrendSelectorComponent(props: any) {
 
 
     // All List
-    const [departmentList, setDepartmentList] = useState([]);
-    const [sheetList, setSheetList] = useState([]);
-    const [shiftList, setShiftList] = useState([]);
-    const [groupList, setGroupList] = useState([]);
-    const [parameterList, setParameterList] = useState([]);
-    const [fieldList, setFieldList] = useState([]);
-    const [readingList, setReadingList] = useState([]);
+    // const [departmentList, setDepartmentList] = useState([]);
+    // const [sheetList, setSheetList] = useState([]);
+    // const [shiftList, setShiftList] = useState([]);
+    // const [groupList, setGroupList] = useState([]);
+    // const [parameterList, setParameterList] = useState([]);
+    // const [fieldList, setFieldList] = useState([]);
+    // const [readingList, setReadingList] = useState([]);
 
     // user selected items
 
@@ -38,174 +43,65 @@ export default function TrendSelectorComponent(props: any) {
     const [selectedReadingId, setSelectedReadingId] = useState(0);
 
 
-    // const [formData, setFormData] = useState({
-    //     userId: props?.selectedrows?.id,
-    //     departmentId: 0,
-    //     permissionId: 0,
-    //     sheetId: 0,
-    //     shiftId: 0
-    // });
+
+    const {
+        data: departmentList,
+        isLoading: isDepartmentLoading,
+        error: departmentError,
+        fetchData: fetchDepartmentList
+    } = useApi<Department>(`/departments/get`, {method: 'GET'});
+    const {
+        data: sheetList,
+        isLoading: isSheetLoading,
+        error: sheetError,
+        fetchData: fetchSheetList
+    } = useApi<Department>(`/departmentsheets/get-sheets?id=${selectedDepartmentId}`, {method: 'GET'});
+    const {
+        data: shiftList,
+        isLoading: isShiftLoading,
+        error: shiftError,
+        fetchData: fetchShiftList
+    } = useApi<Shift>(`/sheetshiftmaster/get-shift?id=${selectedSheetId}`, {method: 'GET'});
+    const {
+        data: attributeList,
+        isLoading: isAttributeLoading,
+        error: attributeError,
+        fetchData: fetchAttributeList
+    } = useApi<ChartAttributes>(`/charts/getvalues?sheetId=${selectedSheetId}`, {method: 'GET'});
 
 
-    const auth = useAuth();
+
+    const groupList = _.uniqWith(jmespath.search(attributeList,'[].{groupId:groupId,groupName:groupMaster.groupName}'),_.isEqual)
+    const parameterList = _.uniqWith(jmespath.search(attributeList,`[?groupId==\`${selectedGroupId}\`].{parameterId:parameterMaster.id,parameterName:parameterMaster.parameterName}`),_.isEqual)
+    const fieldList = _.uniqWith(jmespath.search(attributeList,`[?parameterId==\`${selectedParamterId}\`].{fieldId:fieldMaster.id,fieldName:fieldMaster.fieldName}`),_.isEqual)
+    const readingList = _.uniqWith(jmespath.search(attributeList,`[?parameterId==\`${selectedParamterId}\`].{readingId:readingMaster.id,readingName:readingMaster.readingName}`),_.isEqual)
+
 
     useEffect(() => {
-
-        const getDepartment = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/departments/get`, {
-                    method: 'GET',
-                    headers: {
-                        Accept: "application/json",
-                        'Content-Type': 'application/json',
-                        Authorization: "Bearer " + auth,
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch user details: ' + response.statusText);
-                }
-
-                const data = await response.json();
-
-                setDepartmentList(data.data);
-            } catch (error) {
-                console.error('Error fetching user details:', error);
-            }
-
-        }
-        getDepartment();
-
-
+        fetchDepartmentList()
     }, [])
 
     useEffect(() => {
-
-        const getSheetList = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/departmentsheets/get-sheets?id=${selectedDepartmentId}`, {
-                    method: 'GET',
-                    headers: {
-                        Accept: "application/json",
-                        'Content-Type': 'application/json',
-                        Authorization: "Bearer " + auth,
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch sheet details: ' + response.statusText);
-                }
-                const data = await response.json();
-                setSheetList(data.data);
-            } catch {
-
-            }
-
-        }
-
-        getSheetList();
-
-
+        fetchSheetList()
     }, [selectedDepartmentId])
     
     useEffect(() => {
-
-        const getShiftList = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetshiftmaster/get-shift?id=${selectedSheetId}`, {
-                    method: 'GET',
-                    headers: {
-                        Accept: "application/json",
-                        'Content-Type': 'application/json',
-                        Authorization: "Bearer " + auth,
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch sheet details: ' + response.statusText);
-                }
-                const data = await response.json();
-                setShiftList(data.data);
-            } catch {
-
-            }
-
-        }
-
-        getShiftList();
-
-
+        fetchAttributeList()
+        fetchShiftList()
     }, [selectedSheetId])
-    
+
     useEffect(() => {
+        //update prameter list
+    }, [selectedGroupId]);
 
-        const getSheetGroupList = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/charts/getvalues?sheetId=${selectedSheetId}`, {
-                    method: 'GET',
-                    headers: {
-                        Accept: "application/json",
-                        'Content-Type': 'application/json',
-                        Authorization: "Bearer " + auth,
-                    }
-                });
+    useEffect(() => {
+        //update Field list
+    }, [selectedParamterId]);
 
-                if (!response.ok) {
-                    throw new Error('Failed to fetch sheet details: ' + response.statusText);
-                }
-                const data = await response.json();
-                setGroupList(data.data);
-                setParameterList(data.data);
-                setFieldList(data.data);
-                setReadingList(data.data);
-            } catch {
-
-            }
-
-        }
-
-        getSheetGroupList();
-
-
-    }, [selectedSheetId])
-
-    const uniqueGroupList = Array.from(new Set(groupList.map((item: any) => item.groupMaster.id)))
-    .map(groupId => groupList.find((item: any) => item.groupMaster.id === groupId))
-    .filter(item => item !== undefined);
-
-    const uniqueParameterList = Array.from(new Set(parameterList.map((item: any) => item.parameterMaster.id)))
-    .map(parameterId => parameterList.find((item: any) => item.parameterMaster.id === parameterId))
-    .filter(item => item !== undefined);
-
-    const uniqueFieldList = Array.from(new Set(fieldList.map((item: any) => item.fieldMaster.id)))
-    .map(fieldId => fieldList.find((item: any) => item.fieldMaster.id === fieldId))
-    .filter(item => item !== undefined);
-
-    // useEffect(() => {
-    //     if (selectedGroupId) {
-    //         const filteredParameters = groupList.find(group => group.id === selectedGroupId)?.data?.filter(
-    //             item => item.groupId === selectedGroupId
-    //         );
-    //         setParameterList(filteredParameters || []); // Set filtered parameters or empty array if no group selected
-    //     } else {
-    //         setParameterList(groupList.flatMap(group => group.data) || []); // Use all parameters if no group selected
-    //     }
-    // }, [selectedGroupId]
-    // )
-    const uniqueReadingList = Array.from(new Set(readingList.map((item: any) => item.readingMaster.id)))
-    .map(readingId => readingList.find((item: any) => item.readingMaster.id === readingId))
-    .filter(item => item !== undefined);
-
-    // useEffect(() => {
-
-    //     const getShiftGroupParameterReadingList = async()=>{
-    //         try {
-    //         }
-    //         catch {
-    //         }
-    //     }
-    //     getShiftGroupParameterReadingList()
-    //  }, [selectedSheetId])
+    useEffect(() => {
+        //update reading list
+    }, [selectedReadingId]);
+    
 
 
     const userSelectItems = [
@@ -258,9 +154,9 @@ export default function TrendSelectorComponent(props: any) {
         {
             formHead:'Group',
             name:'group',
-            selectList:uniqueGroupList,
+            selectList:groupList,
             valueId: 'groupId',
-            optionLabel:'groupMaster.groupName',
+            optionLabel:'groupName',
             selected:selectedGroupId,
             handleChange:(
                 event: React.MouseEvent<Element,MouseEvent> | React.KeyboardEvent<Element> | React.FocusEvent<Element, Element> | null,
@@ -273,9 +169,9 @@ export default function TrendSelectorComponent(props: any) {
         {
             formHead:'Parameter',
             name:'parameter',
-            selectList:uniqueParameterList,
+            selectList:parameterList,
             valueId: 'parameterId',
-            optionLabel:'parameterMaster.parameterName',
+            optionLabel:'parameterName',
             selected:selectedParamterId,
             handleChange:(
                 event: React.MouseEvent<Element,MouseEvent> | React.KeyboardEvent<Element> | React.FocusEvent<Element, Element> | null,
@@ -288,9 +184,9 @@ export default function TrendSelectorComponent(props: any) {
         {
             formHead:'Field Name',
             name:'field name',
-            selectList:uniqueFieldList,
+            selectList:fieldList,
             valueId: 'fieldId',
-            optionLabel:'fieldMaster.fieldName',
+            optionLabel:'fieldName',
             selected:selectedFieldId,
             handleChange:(
                 event: React.MouseEvent<Element,MouseEvent> | React.KeyboardEvent<Element> | React.FocusEvent<Element, Element> | null,
@@ -303,9 +199,9 @@ export default function TrendSelectorComponent(props: any) {
         {
             formHead:'Reading',
             name:'Reading',
-            selectList:uniqueReadingList,
+            selectList:readingList,
             valueId: 'readingId',
-            optionLabel:'readingMaster.readingName',
+            optionLabel:'readingName',
             selected:selectedReadingId,
             handleChange:(
                 event: React.MouseEvent<Element,MouseEvent> | React.KeyboardEvent<Element> | React.FocusEvent<Element, Element> | null,
@@ -336,7 +232,6 @@ export default function TrendSelectorComponent(props: any) {
     return (
         <>
             <ToastContainer/>
-            <form style={{gap: '8'}} onSubmit={handleSubmit}>
                 <Box component="div" display="flex" alignItems="center" width={'100%'}
                      flexDirection={{xs: 'column', sm: 'column', md: 'row'}} py={1} gap={2}>
 
@@ -355,7 +250,7 @@ export default function TrendSelectorComponent(props: any) {
                                                 width: '100%'
                                             }} value={i.selected}>
                                         <Option value={0}>Select</Option>
-                                        {i.selectList.map((r: any, idx) => {
+                                        {i.selectList.map((r: any, idx:number) => {
                                             return <Option key={idx}
                                                            value={r[i.valueId]}>{deepGet(r, i.optionLabel.replace(/\[([^\[\]]*)\]/g, '.$1.').split('.').filter(t => t !== ''))}</Option>
                                         })
@@ -372,8 +267,9 @@ export default function TrendSelectorComponent(props: any) {
                 </Box>
 
                 <Button type="submit" > Generate Trend</Button>
-            </form>
             <Typography display={"flex"} level="h2" component="h1">Chart</Typography>
+            {JSON.stringify(readingList)}
+
         </>
     )
 }
