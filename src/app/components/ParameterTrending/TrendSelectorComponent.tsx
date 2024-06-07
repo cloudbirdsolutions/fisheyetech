@@ -107,22 +107,104 @@ export default function TrendSelectorComponent(props: any) {
 
 
     }, [selectedDepartmentId])
+    
+    useEffect(() => {
+
+        const getShiftList = async () => {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetshiftmaster/get-shift?id=${selectedSheetId}`, {
+                    method: 'GET',
+                    headers: {
+                        Accept: "application/json",
+                        'Content-Type': 'application/json',
+                        Authorization: "Bearer " + auth,
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch sheet details: ' + response.statusText);
+                }
+                const data = await response.json();
+                setShiftList(data.data);
+            } catch {
+
+            }
+
+        }
+
+        getShiftList();
+
+
+    }, [selectedSheetId])
+    
+    useEffect(() => {
+
+        const getSheetGroupList = async () => {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/charts/getvalues?sheetId=${selectedSheetId}`, {
+                    method: 'GET',
+                    headers: {
+                        Accept: "application/json",
+                        'Content-Type': 'application/json',
+                        Authorization: "Bearer " + auth,
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch sheet details: ' + response.statusText);
+                }
+                const data = await response.json();
+                setGroupList(data.data);
+                setParameterList(data.data);
+                setFieldList(data.data);
+                setReadingList(data.data);
+            } catch {
+
+            }
+
+        }
+
+        getSheetGroupList();
+
+
+    }, [selectedSheetId])
+
+    const uniqueGroupList = Array.from(new Set(groupList.map((item: any) => item.groupMaster.id)))
+    .map(groupId => groupList.find((item: any) => item.groupMaster.id === groupId))
+    .filter(item => item !== undefined);
+
+    const uniqueParameterList = Array.from(new Set(parameterList.map((item: any) => item.parameterMaster.id)))
+    .map(parameterId => parameterList.find((item: any) => item.parameterMaster.id === parameterId))
+    .filter(item => item !== undefined);
+
+    const uniqueFieldList = Array.from(new Set(fieldList.map((item: any) => item.fieldMaster.id)))
+    .map(fieldId => fieldList.find((item: any) => item.fieldMaster.id === fieldId))
+    .filter(item => item !== undefined);
+
+    // useEffect(() => {
+    //     if (selectedGroupId) {
+    //         const filteredParameters = groupList.find(group => group.id === selectedGroupId)?.data?.filter(
+    //             item => item.groupId === selectedGroupId
+    //         );
+    //         setParameterList(filteredParameters || []); // Set filtered parameters or empty array if no group selected
+    //     } else {
+    //         setParameterList(groupList.flatMap(group => group.data) || []); // Use all parameters if no group selected
+    //     }
+    // }, [selectedGroupId]
+    // )
+    const uniqueReadingList = Array.from(new Set(readingList.map((item: any) => item.readingMaster.id)))
+    .map(readingId => readingList.find((item: any) => item.readingMaster.id === readingId))
+    .filter(item => item !== undefined);
 
     // useEffect(() => {
 
     //     const getShiftGroupParameterReadingList = async()=>{
     //         try {
-
     //         }
     //         catch {
-
     //         }
-
     //     }
-
     //     getShiftGroupParameterReadingList()
-
-
     //  }, [selectedSheetId])
 
 
@@ -147,7 +229,7 @@ export default function TrendSelectorComponent(props: any) {
             formHead: 'Sheet Name',
             name: 'sheetId',
             selectList: sheetList,
-            valueId: 'id',
+            valueId: 'sheetId',
             optionLabel: 'sheetMaster.sheetName',
             selected: selectedSheetId,
             handleChange: (
@@ -158,7 +240,83 @@ export default function TrendSelectorComponent(props: any) {
                 setSelectedSheetId(newValue)
 
             }
+        },{
+            formHead:'Shift',
+            name:'shift',
+            selectList:shiftList,
+            valueId: 'shiftId',
+            optionLabel:'shiftMaster.shiftType',
+            selected:selectedShiftId,
+            handleChange:(
+                event: React.MouseEvent<Element,MouseEvent> | React.KeyboardEvent<Element> | React.FocusEvent<Element, Element> | null,
+                newValue: number | null,
+            ) => {
+                if(newValue)
+                    setSelectedShiftId(newValue)
+            }
         },
+        {
+            formHead:'Group',
+            name:'group',
+            selectList:uniqueGroupList,
+            valueId: 'groupId',
+            optionLabel:'groupMaster.groupName',
+            selected:selectedGroupId,
+            handleChange:(
+                event: React.MouseEvent<Element,MouseEvent> | React.KeyboardEvent<Element> | React.FocusEvent<Element, Element> | null,
+                newValue: number | null,
+            ) => {
+                if(newValue)
+                    setSelectedGroupId(newValue)
+            }
+        },
+        {
+            formHead:'Parameter',
+            name:'parameter',
+            selectList:uniqueParameterList,
+            valueId: 'parameterId',
+            optionLabel:'parameterMaster.parameterName',
+            selected:selectedParamterId,
+            handleChange:(
+                event: React.MouseEvent<Element,MouseEvent> | React.KeyboardEvent<Element> | React.FocusEvent<Element, Element> | null,
+                newValue: number | null,
+            ) => {
+                if(newValue)
+                    setSelectedParamterId(newValue)
+            }
+        },
+        {
+            formHead:'Field Name',
+            name:'field name',
+            selectList:uniqueFieldList,
+            valueId: 'fieldId',
+            optionLabel:'fieldMaster.fieldName',
+            selected:selectedFieldId,
+            handleChange:(
+                event: React.MouseEvent<Element,MouseEvent> | React.KeyboardEvent<Element> | React.FocusEvent<Element, Element> | null,
+                newValue: number | null,
+            ) => {
+                if(newValue)
+                    setSelectedFieldId(newValue)
+            }
+        },
+        {
+            formHead:'Reading',
+            name:'Reading',
+            selectList:uniqueReadingList,
+            valueId: 'readingId',
+            optionLabel:'readingMaster.readingName',
+            selected:selectedReadingId,
+            handleChange:(
+                event: React.MouseEvent<Element,MouseEvent> | React.KeyboardEvent<Element> | React.FocusEvent<Element, Element> | null,
+                newValue: number | null,
+            ) => {
+                if(newValue)
+                    setSelectedReadingId(newValue)
+            }
+        },
+        
+        
 
     ]
 
