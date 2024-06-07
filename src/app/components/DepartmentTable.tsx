@@ -11,10 +11,9 @@ import { AppDispatch } from "../Store/store";
 import { useRouter } from "next/navigation";
 import { deletedepartment } from "@/app/Reducers/DeleteDepartmentSlice";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-import {stableSort, getComparator} from '@/app/helper/sorting';
+import "react-toastify/dist/ReactToastify.css";
+import { stableSort, getComparator } from "@/app/helper/sorting";
 import { useAuth } from "../hooks/useAuth";
-
 
 type Order = "asc" | "desc";
 
@@ -40,12 +39,9 @@ export default function DepartmentTable(props: any) {
 
   const HandleDeleteFunction = (id: any) => {
     dispatch(deletedepartment(id)).then((res) => {
-      res.payload.statusCode == 200 ? (
-        toast.success(res.payload.message),
-      router.push("/departmentlist")
-      ) : (
-        toast.error(res.payload.message)
-      )
+      res.payload.statusCode == 200
+        ? (toast.success(res.payload.message), router.push("/departmentlist"))
+        : toast.error(res.payload.message);
     });
   };
 
@@ -53,28 +49,28 @@ export default function DepartmentTable(props: any) {
   const auth = useAuth();
   React.useEffect(() => {
     const getData = async () => {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_HOST}/departments/get`,
-          {
-            // const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/departments/get`, {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              Authorization: "Bearer "  + auth,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          toast.error(errorData.message)
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_HOST}/departments/get`,
+        {
+          // const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/departments/get`, {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + auth,
+          },
         }
+      );
 
-        const data = await response.json();
-       //toast.success(data.message)
-        setRows(data.data);
-    }
+      if (!response.ok) {
+        const errorData = await response.json();
+        toast.error(errorData.message);
+      }
+
+      const data = await response.json();
+      //toast.success(data.message)
+      setRows(data.data);
+    };
 
     getData();
   }, [createdepartment, deletedepartments, editdepartment]);
@@ -109,8 +105,8 @@ export default function DepartmentTable(props: any) {
   );
 
   return (
-  <>
-  <TableSection tableHeaders={headers} tableRows={tablerows} />
-  </>
-  )
+    <>
+      <TableSection tableHeaders={headers} tableRows={tablerows} action={true} />
+    </>
+  );
 }
