@@ -11,7 +11,8 @@ interface MyMessagesProps {
   chats : ChatProps[],
   permissionId : number,
   docId:number;
-  selectedShift:ShiftDetails
+  selectedShift:ShiftDetails;
+  allowAddNew : boolean
 }
 
 export default function MyMessages(props:MyMessagesProps) {
@@ -54,6 +55,7 @@ export default function MyMessages(props:MyMessagesProps) {
           permissionId={permissionId}
           docId={docId}
           selectedShift = {props.selectedShift}
+          allowAddNew = {props.allowAddNew}
         />
       </Sheet>
      {props.chats.length > 0 && <MessagesPane chat={selectedChat} />}

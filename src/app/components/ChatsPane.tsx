@@ -23,7 +23,8 @@ type ChatsPaneProps = {
   selectedChatId: string;
   permissionId: number;
   docId: number;
-  selectedShift:ShiftDetails
+  selectedShift:ShiftDetails;
+  allowAddNew:boolean
 };
 
 export default function ChatsPane(props: ChatsPaneProps) {
@@ -140,7 +141,7 @@ export default function ChatsPane(props: ChatsPaneProps) {
       >
         {/* {permissionId} */}
         {
-          [2, 3].includes(permissionId) && <Box sx={{ px: 2, pb: 1.5 }}> <Button size="sm" onClick={() => { setShowNewReviewForm(true) }} disabled={props.selectedShift.shiftStatus.toLowerCase() === 'closed'}>Add New Review</Button></Box>
+            props.allowAddNew && <Box sx={{ px: 2, pb: 1.5 }}> <Button size="sm" onClick={() => { setShowNewReviewForm(true) }} disabled={props.selectedShift.shiftStatus.toLowerCase() === 'closed'}>Add New Review</Button></Box>
         }
         {showNewReviewForm && <>
           <FormControl>
