@@ -18,6 +18,7 @@ import { Sheet, Input,IconButton,Modal, ModalDialog,
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { SearchComponent } from '../../search';
 // import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 // import BlockIcon from '@mui/icons-material/Block';
 // import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
@@ -90,7 +91,7 @@ return (
         </ModalDialog>
       </Modal>
     </Sheet>
-    <Sheet variant='outlined' sx={{borderRadius: 'sm', width:'100%'}}>
+    {/* <Sheet variant='outlined' sx={{borderRadius: 'sm', width:'100%'}}>
     <Box
       className="SearchAndFilters-tabletUp"
       sx={{
@@ -111,8 +112,9 @@ return (
         <Input size="sm" placeholder="Search" startDecorator={<SearchIcon />} />
       </FormControl>
       {/* {renderFilters()} */}
-    </Box>
-    </Sheet>
+   {/* </Box>
+    </Sheet> */}
+    <SearchComponent/>
     <Sheet
       className="OrderTableContainer"
       variant="outlined"
