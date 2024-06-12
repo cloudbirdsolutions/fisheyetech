@@ -66,6 +66,7 @@ export default function ParameterTrend() {
         </>
       ) : ('Session Timed Out')
       }
+    
     </>
 
   )
