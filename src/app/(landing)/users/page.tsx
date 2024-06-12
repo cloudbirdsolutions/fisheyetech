@@ -20,6 +20,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../Store/store';
 import { useRouter, usePathname, useSelectedLayoutSegment } from "next/navigation";
 import { useAuth } from "@/app/hooks/useAuth";
+import {SearchComponent} from "@/app/components/Common/search";
+import {FilterItem} from "@/app/types";
+import SearchIcon from "@mui/icons-material/Search";
 
 
 
@@ -33,6 +36,25 @@ export default function Users() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const auth =  useAuth();
+
+  const userFilterItems:FilterItem[] = [
+    {
+      searchLabel : 'Search',
+      filterType : 'INPUT',
+      handleChange : ()=>{},
+      placeholder : "Search user by name",
+      startDecoration : <SearchIcon/>
+    },
+    {
+      searchLabel : 'Search',
+      filterType : 'INPUT',
+      handleChange : ()=>{},
+      placeholder : "Search user by name",
+      startDecoration : <SearchIcon/>
+    }
+  ]
+
+
   useEffect(() => {
     !auth ? (
     localStorage.removeItem('accessToken'),
@@ -79,7 +101,7 @@ export default function Users() {
               </Button> */}
             </Stack>
           </Box>
-
+          <SearchComponent filterItems={userFilterItems}></SearchComponent>
           <OrderTable open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
 
           <OrderList open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>

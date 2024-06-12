@@ -1,3 +1,5 @@
+import * as React from "react";
+
 export type UserProps = {
   avatar: string;
   online: any;
@@ -401,4 +403,12 @@ export type ChartAttributes = {
     "readingName": string,
     "id": number
   }
+}
+
+export type FilterItem = {
+  searchLabel:string,
+  placeholder:string,
+  startDecoration: React.ReactElement,
+  handleChange: Function,
+  filterType : 'INPUT' | 'DATE_PICKER' | 'DROP_DOWN'
 }

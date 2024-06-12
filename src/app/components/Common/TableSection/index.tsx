@@ -18,7 +18,7 @@ import { Sheet, Input,IconButton,Modal, ModalDialog,
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { SearchComponent } from '../../search';
+import { SearchComponent } from '../search';
 // import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 // import BlockIcon from '@mui/icons-material/Block';
 // import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
@@ -114,7 +114,7 @@ return (
       {/* {renderFilters()} */}
    {/* </Box>
     </Sheet> */}
-    <SearchComponent/>
+
     <Sheet
       className="OrderTableContainer"
       variant="outlined"
