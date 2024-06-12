@@ -80,7 +80,7 @@ export default function Log() {
       'transitionId' : transitionId
     }
     dispatch(createdocument(passData)).then((res:any) => {
-     alert(res.payload.status)
+
       res.payload.status == 200 ? (
         toast.success(res.payload.message),
         fetchDocumentList()
