@@ -402,3 +402,30 @@ export type ChartAttributes = {
     "id": number
   }
 }
+export type ChartFieldValue =  {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "sheetId": number,
+  "userId": number,
+  "transitionId": number,
+  "recordMaster": [
+      {
+          "id": number,
+          "createdAt": string,
+          "updatedAt": string,
+          "createdBy": number,
+          "updatedBy": number,
+          "documentId": number,
+          "shiftId": number,
+          "fieldId": number,
+          "fieldValue": string,
+          "transitionId": number,
+          "parameterId": number,
+          "readingId": number,
+          "groupId": number,
+          "worksheetId": number,
+          "cellValue": string
+      },
+  ]
+}
