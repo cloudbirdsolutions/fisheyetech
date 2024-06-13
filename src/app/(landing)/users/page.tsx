@@ -1,31 +1,25 @@
 'use client';
 import * as React from 'react';
+import {useEffect} from 'react';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Typography from '@mui/joy/Typography';
-
-
-import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-
 import UserTable from '../../components/UserTable';
 import UserList from '../../components/UserList';
 import Stack from '@mui/joy/Stack';
 import UserModalForm from '@/app/components/UserModalForm/UserModalForm';
-import { createContext, useContext, useEffect, useState } from 'react';
 import modalContext from '@/app/context/modalContext';
-import { ToastContainer } from 'react-toastify';
+import {ToastContainer} from 'react-toastify';
 import Loader from '@/app/components/Loader/Loader';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../Store/store';
-import { useRouter, usePathname, useSelectedLayoutSegment } from "next/navigation";
-import { useAuth } from "@/app/hooks/useAuth";
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch} from '../../Store/store';
+import {useRouter} from "next/navigation";
+import {useAuth} from "@/app/hooks/useAuth";
 import {SearchComponent} from "@/app/components/Common/search";
-import {FilterItem} from "@/app/types";
+import {FilterItem, User} from "@/app/types";
 import SearchIcon from "@mui/icons-material/Search";
 import {useApi} from "@/app/api/hooks/useApi";
-import {User} from "@/app/types"
-
 
 
 export default function Users() {

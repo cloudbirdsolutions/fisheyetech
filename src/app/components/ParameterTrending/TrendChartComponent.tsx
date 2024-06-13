@@ -7,8 +7,9 @@ import {ChartsYAxis} from '@mui/x-charts/ChartsYAxis';
 import {Box, Card, CardContent} from '@mui/joy';
 import {mangoFusionPalette} from '@mui/x-charts/colorPalettes';
 import moment from 'moment';
-import {BarPlot, ChartsGrid, ChartsTooltip} from "@mui/x-charts";
+import {ChartsGrid, ChartsLegend, ChartsTooltip} from "@mui/x-charts";
 import Typography from "@mui/joy/Typography";
+
 
 let twix = require('twix');
 
@@ -53,13 +54,13 @@ export default function TrendChartComponent() {
 
     return (
         <Box sx={{width: '100%'}}>
-            <Card variant="soft" color="neutral">
+            <Card variant="outlined" color="neutral">
                 <Typography level={"title-lg"}>Turbine DCS Log Book</Typography>
                 <CardContent>
                     <ResponsiveChartContainer series={[
-                        {type: 'line', dataKey: 'min' },
-                        {type: 'line', dataKey: 'max' },
-                        {type: 'bar', dataKey: 'precip', yAxisKey: 'rightAxis'},
+                        {type: 'line', dataKey: 'min', label:'min' },
+                        {type: 'line', dataKey: 'max',label:'max' },
+                        {type: 'line', dataKey: 'precip', label:'percip'},
 
                     ]} colors={mangoFusionPalette}
                                               xAxis={[
@@ -74,21 +75,26 @@ export default function TrendChartComponent() {
                                               height={400}
                                               yAxis={[
                                                   {id: 'leftAxis',},
-                                                  {id: 'rightAxis',},
+
                                               ]}
+
                     >
+                        <ChartsLegend direction={'row'} hidden={false} position={{vertical: 'top', horizontal:'right'}} />
                         <ChartsGrid horizontal/>
                         <ChartsXAxis/>
                         <ChartsYAxis axisId="leftAxis" label="temerature (°C)"/>
-                        <ChartsYAxis
-                            axisId="rightAxis"
-                            position="right"
-                            label="precipitation (mm)"
-                        />
-                        <BarPlot/>
+                        {/*<ChartsYAxis*/}
+                        {/*    axisId="rightAxis"*/}
+                        {/*    position="right"*/}
+                        {/*    label="precipitation (mm)"*/}
+                        {/*/>*/}
+                        {/*<BarPlot/>*/}
                         <LinePlot/>
                         <MarkPlot/>
-                        <ChartsTooltip/>
+
+                        <ChartsTooltip />
+
+
                     </ResponsiveChartContainer>
                 </CardContent>
             </Card>

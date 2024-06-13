@@ -1,14 +1,13 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Box from "@mui/joy/Box";
 import Typography from "@mui/joy/Typography";
-import Button from "@mui/joy/Button";
-import {ToastContainer, toast} from 'react-toastify';
+import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {useApi} from "@/app/api/hooks/useApi";
 import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import {deepGet} from '@/app/utils'
-import {Department, Shift, ChartAttributes, ChartFieldValue} from "@/app/types";
+import {ChartAttributes, ChartFieldValue, Department, Shift} from "@/app/types";
 import TrendChartComponent from "@/app/components/ParameterTrending/TrendChartComponent";
 
 var jmespath = require("jmespath");
@@ -27,6 +26,7 @@ export default function TrendSelectorComponent(props: any) {
         fieldEffect: true,
         readingEffect: true
     });
+
     const [selectedDepartmentId, setSelectedDepartmentId] = useState(0);
     const [selectedSheetId, setSelectedSheetId] = useState(0);
     const [selectedShiftId, setSelectedShiftId] = useState(0);
@@ -68,14 +68,10 @@ export default function TrendSelectorComponent(props: any) {
         fetchData: fetchFieldttributeList
     } = useApi<ChartFieldValue>(`/charts/getchart?sheetId=${selectedSheetId}&fieldId=${selectedFieldId}`, {method: 'GET'});
 
-
     const groupList = _.uniqWith(jmespath.search(attributeList, '[].{groupId:groupId,groupName:groupMaster.groupName}'), _.isEqual)
     const parameterList = _.uniqWith(jmespath.search(attributeList, `[?groupId==\`${selectedGroupId}\`].{parameterId:parameterMaster.id,parameterName:parameterMaster.parameterName}`), _.isEqual)
     const fieldList = _.uniqWith(jmespath.search(attributeList, `[?parameterId==\`${selectedParameterId}\`].{fieldId:fieldMaster.id,fieldName:fieldMaster.fieldName}`), _.isEqual)
     const readingList = _.uniqWith(jmespath.search(attributeList, `[?parameterId==\`${selectedParameterId}\`].{readingId:readingMaster.id,readingName:readingMaster.readingName}`), _.isEqual)
-    // const fieldvaluelist = _.uniqWith(jmespath.search(fieldAttributeList,`[].recordMaster[?sheetId == \`${selectedSheetId}\` && fieldId == \`${selectedFieldId}\`].fieldValue` ),_.isEqual);
-    // const fieldvaluelist = _.uniqWith(jmespath.search(fieldAttributeList,`[?sheetId == \`${se}\`].recordMaster[].{fieldvalues: fieldValue, fieldid: fieldId}` ),_.isEqual);
-
 
     const resetValuesToDefault = ()=>{
 
@@ -291,9 +287,8 @@ export default function TrendSelectorComponent(props: any) {
                 }
             </Box>
             {/*<Button type="submit"> Generate Trend</Button>*/}
-            <Typography display={"flex"} level="h2" component="h1">Chart</Typography>
 
-            <TrendChartComponent isLoading={isFieldAttributeLoading}/>
+            <TrendChartComponent />
 
             </>
     )
