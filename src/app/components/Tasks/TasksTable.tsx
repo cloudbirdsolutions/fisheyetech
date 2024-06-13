@@ -24,17 +24,17 @@ import useUserTaskApi from "@/app/api/hooks/useUserTaskApi";
 import {log} from "node:util";
 type Order = "asc" | "desc";
 
-export default function TasksTable() {
+interface TasksTableProps {
+    userJobList : UserJob[]
+}
+
+export default function TasksTable(props:TasksTableProps) {
   const [order, setOrder] = React.useState<Order>("desc");
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [open, setOpen] = React.useState(false);
 
   const router = useRouter()
 
-  const logintype = useSelector((state: RootState) => state?.user.data);
-
-  const {userJobList} = useUserTaskApi({userId:logintype.data.id})
-  // const {userJobList} = useUserJobList({userId:logintype.data.id})
 
   const RowMenu = (props: { sheetid: any}) => {
     return (
@@ -57,7 +57,7 @@ export default function TasksTable() {
 
 
   const headers = ["Department", "Entity", "Shift","Designation", "Assigned To"]
-  const tablerows =  stableSort(userJobList || [], getComparator(order, "id")).map((row: any) => (
+  const tablerows =  stableSort(props.userJobList, getComparator(order, "id")).map((row: any) => (
     <tr key={row?.id}>
       <td>
         <Typography level="body-xs">{row?.id}</Typography>

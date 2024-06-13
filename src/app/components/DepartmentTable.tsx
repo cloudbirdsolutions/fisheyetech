@@ -14,10 +14,21 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { stableSort, getComparator } from "@/app/helper/sorting";
 import { useAuth } from "../hooks/useAuth";
+import {Department, User} from "@/app/types";
 
 type Order = "asc" | "desc";
 
-export default function DepartmentTable(props: any) {
+interface DepartmentTableProps {
+  open:boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  label:string;
+  setLabel:React.Dispatch<React.SetStateAction<string>>;
+  setRow:React.Dispatch<(prevState: never) => never>;
+  departmentList:Department[];
+  fetchDepartments:Function;
+}
+
+export default function DepartmentTable(props: DepartmentTableProps) {
   const [order, setOrder] = React.useState<Order>("desc");
   const [rows, setRows] = React.useState([
     { id: "", createdAt: "", updatedAt: "", departmentName: "" },
@@ -48,36 +59,13 @@ export default function DepartmentTable(props: any) {
   // const data = await getData()
   const auth = useAuth();
   React.useEffect(() => {
-    const getData = async () => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_HOST}/departments/get`,
-        {
-          // const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/departments/get`, {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + auth,
-          },
-        }
-      );
+    props.fetchDepartments();
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        toast.error(errorData.message);
-      }
-
-      const data = await response.json();
-      //toast.success(data.message)
-      setRows(data.data);
-    };
-
-    getData();
   }, [createdepartment, deletedepartments, editdepartment]);
 
   const headers = ["Department"];
 
-  const tablerows = stableSort(rows, getComparator(order, "id")).map(
+  const tablerows = stableSort(props.departmentList, getComparator(order, "id")).map(
     (row: any) => (
       <tr key={row?.id}>
         <td>
