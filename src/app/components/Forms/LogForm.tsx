@@ -130,7 +130,6 @@ export default function LogForm(props: LogFormProps) {
                                                             <> {checkGroupParamFieldExistence(group.groupId, groupParam.parameterId, paramField.fieldId) && <tr key={`trow_id_${pfindex}`}>
                                                                 <td style={{ width: 200 }}>{paramField.fieldMaster.fieldName}</td>
                                                                 <td style={{ width: 200 }}>{paramField.fieldMaster.fieldValue}</td>
-                                                         
                                                                 {paramField.fieldMaster.fieldReading.map((fieldReading) => {
                                                                   return (<> { checkGroupParamFieldReadingExistence(group.groupId, groupParam.parameterId, paramField.fieldId,fieldReading.readingId) &&<td key={`td_id_${fieldReading.readingId}`}  style={{ width: 200 }}>
                                                                         <FormControl>
