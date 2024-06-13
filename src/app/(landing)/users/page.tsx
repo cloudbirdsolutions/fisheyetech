@@ -8,8 +8,8 @@ import Typography from '@mui/joy/Typography';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
-import OrderTable from '../../components/OrderTable';
-import OrderList from '../../components/OrderList';
+import UserTable from '../../components/UserTable';
+import UserList from '../../components/UserList';
 import Stack from '@mui/joy/Stack';
 import UserModalForm from '@/app/components/UserModalForm/UserModalForm';
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -23,6 +23,8 @@ import { useAuth } from "@/app/hooks/useAuth";
 import {SearchComponent} from "@/app/components/Common/search";
 import {FilterItem} from "@/app/types";
 import SearchIcon from "@mui/icons-material/Search";
+import {useApi} from "@/app/api/hooks/useApi";
+import {User} from "@/app/types"
 
 
 
@@ -37,22 +39,25 @@ export default function Users() {
   const dispatch = useDispatch<AppDispatch>();
   const auth =  useAuth();
 
+  const [endPoint, setEndPoint] = React.useState<string>('/users/get');
+
+  const {data,isLoading,error,fetchData} = useApi<User>(endPoint,{method:'GET'})
+
   const userFilterItems:FilterItem[] = [
     {
       searchLabel : 'Search',
       filterType : 'INPUT',
-      handleChange : ()=>{},
-      placeholder : "Search user by name",
-      startDecoration : <SearchIcon/>
-    },
-    {
-      searchLabel : 'Search',
-      filterType : 'INPUT',
-      handleChange : ()=>{},
+      handleChange : (value:string)=>{
+        setEndPoint(`/users/get?name=${value}`);
+      },
       placeholder : "Search user by name",
       startDecoration : <SearchIcon/>
     }
   ]
+
+  useEffect(() => {
+        fetchData()
+  }, [endPoint]);
 
 
   useEffect(() => {
@@ -102,9 +107,9 @@ export default function Users() {
             </Stack>
           </Box>
           <SearchComponent filterItems={userFilterItems}></SearchComponent>
-          <OrderTable open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
+          <UserTable open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow} userList={data} fetchUers={fetchData}/>
 
-          <OrderList open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
+          <UserList open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
           <modalContext.Provider value={row}>
           <UserModalForm open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
           </modalContext.Provider>

@@ -10,6 +10,7 @@ import {
 import {FilterItem} from "@/app/types"
 import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/joy/Typography";
+import DebounceInput from "@/app/components/Common/DebouncedInput";
 
 
 
@@ -30,14 +31,10 @@ export const SearchComponent = (props:SearchProps) => {
   ]
 
   const renderFilterItem = props.filterItems? props.filterItems.map((filterItem)=>{
-      return( <FormControl sx={{ flex: 1 }} size="sm" key={filterItem.searchLabel}>
+      return<FormControl sx={{ flex: 1 }} size="sm" key={filterItem.searchLabel}>
           <FormLabel> <Typography level={'title-lg'}>{filterItem.searchLabel}</Typography></FormLabel>
-          <Input
-              size="sm"
-              placeholder={filterItem.placeholder}
-              startDecorator={filterItem.startDecoration}
-          />
-      </FormControl>)
+          <DebounceInput handleDebounce={filterItem.handleChange} debounceTimeout={1000}  placeholder={filterItem.placeholder} startDecorator={filterItem.startDecoration}/>
+      </FormControl>
   }) : <>No Search Filter</>
 
   return (

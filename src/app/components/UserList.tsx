@@ -36,7 +36,7 @@ type Order = "asc" | "desc";
 
 
 
-export default function OrderList(props:any) {
+export default function UserList(props:any) {
   const [listItems, setlistItems] = React.useState([]);
   const createuser = useSelector((state:any) => state?.createusers?.data);
   const deleteusers = useSelector((state:any) => state?.deleteusers?.data);
