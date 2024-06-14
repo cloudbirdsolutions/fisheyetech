@@ -452,4 +452,30 @@ export type ForceCloseSheet ={
         userName: string;
     }
 
+};
+export type departmentnames = {
+  departments: {
+      id: number,
+      createdAt: string,
+      updatedAt: string,
+      departmentName: string,
+      remarks: [
+          {
+              id: number,
+              createdAt: string,
+              updatedAt: string,
+              createdBy: number,
+              departmentId: number,
+              remarks: string,
+              status: string,
+              updatedBy: number,
+              createdUser: {
+                  userName: string
+              },
+              updatedUser: {
+                  userName: string
+              }
+          }
+      ]
+  }
 }

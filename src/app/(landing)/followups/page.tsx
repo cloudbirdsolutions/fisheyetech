@@ -8,10 +8,47 @@ import { useAuth } from '@/app/hooks/useAuth';
 import { AppDispatch } from '@/app/Store/store';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import {Department, FilterItem} from "@/app/types";
+import {useApi} from "@/app/api/hooks/useApi";
+import SearchIcon from "@mui/icons-material/Search";
+import {SearchComponent} from "@/app/components/Common/search";
+import { useSelector} from 'react-redux';
+import {RootState} from '@/app/Store/store';
+import { departmentnames } from "@/app/types";
+
 export default function Dashboard() {
     const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
 const auth =  useAuth();
+
+const logintype = useSelector((state: RootState) => state?.user.data);
+// const baseurl = [2, 3].includes(logintype.data.rolesId) ? `/joballocation/get-user-departments?userId=${logintype.data.id}` : '/departments/get'; 
+const baseurl = `/joballocation/get-user-departments?userId=${logintype.data.id}`;
+
+const [endPoint, setEndPoint] = React.useState<string>(baseurl);
+
+// const [endPoint, setEndPoint] = React.useState<string>('/departments/get');
+  const {data,isLoading,error,fetchData} = useApi<departmentnames>(endPoint,{method:'GET'})
+
+  // const {data:userJobList,isLoading,error, fetchData} = useApi<UserJob>(endPoint,{method:'GET'})
+
+
+  const userFilterItems:FilterItem[] = [
+    {
+      searchLabel : 'Search',
+      filterType : 'INPUT',
+      handleChange : (value:string)=>{
+        setEndPoint(`/joballocation/get-user-departments?departmentName=${value}`);
+      },
+      placeholder : "Search user by department name",
+      startDecoration : <SearchIcon/>
+    }
+  ]
+
+  useEffect(() => {
+    fetchData()
+  }, [endPoint]);
+
 useEffect(() => {
   !auth ? (
   localStorage.removeItem('accessToken'),
@@ -23,7 +60,9 @@ useEffect(() => {
         <>
         {auth ? (
             <>
-            <Followups />
+                    <SearchComponent filterItems={userFilterItems}></SearchComponent>
+
+            <Followups departmentList={data} />
             </>
     ) : ('Session Timed Out')
   }
