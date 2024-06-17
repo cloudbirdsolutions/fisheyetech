@@ -21,6 +21,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Inter } from "next/font/google";
 const jmespath = require("jmespath");
+import {Department, User} from "@/app/types";
 
 import FollowUpsModalForm from "../followUpsModelForm/followupsmodel";
 import { useState } from "react";
@@ -29,11 +30,15 @@ import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FollowupModalForm from "../followUpsModelForm/followupsmodel";
 import { useAuth } from "@/app/hooks/useAuth";
-
+import { departmentnames } from "@/app/types";
 import { Remark } from "@/app/types";
 import { editfollowupstatus } from "@/app/Reducers/editFolloupsstatusSlice";
 
-export default function Followups() {
+interface DepartmentTable {
+  departmentList:departmentnames[];
+}
+
+export default function Followups(props: DepartmentTable) {
   const [userRemarks, setUserRemarks] = React.useState("");
   const [inputRemarks, setRemarkValue] = useState("");
   const [CreatedBy, setCreatedBy] = useState("");
@@ -258,56 +263,57 @@ export default function Followups() {
     
   ];
 
-  const followUpRow = departmentRemarks?.map((dep) =>
-    dep?.departments?.remarks.map((rem) => (
-      <tr key={`document_id_${rem?.id}`}>
-        <td>
-          <Typography level="body-xs">{rem?.id}</Typography>
-        </td>
-        <td>
-          <Typography level="body-xs">
-            {dep?.departments?.departmentName}
-          </Typography>
-        </td>
-        <td>
-          <Typography level="body-xs">{rem?.createdAt}</Typography>
-        </td>
-        <td>
-          <Typography level="body-xs">{rem?.updatedAt}</Typography>
-        </td>
-        <td>
-          <Typography level="body-xs">{rem?.createdUser?.userName}</Typography>
-        </td>
-        <td>
-          <Typography level="body-xs">{rem?.updatedUser?.userName}</Typography>
-        </td>
-        <td>
-          <Typography level="body-xs">{rem?.remarks}</Typography>
-        </td>
-        <td>
-          <Typography level="body-xs">{rem?.status}</Typography>
-        </td>
-        <td>
-          <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-            <Box
+ const followUpRow = props.departmentList?.map((dep) =>
+  dep?.departments?.remarks.map((rem) => (
+    <tr key={`document_id_${rem?.id}`}>
+      <td>
+        <Typography level="body-xs">{rem?.id}</Typography>
+      </td>
+      <td>
+        <Typography level="body-xs">
+          {dep?.departments?.departmentName}
+        </Typography>
+      </td>
+      <td>
+        <Typography level="body-xs">{rem?.createdAt}</Typography>
+      </td>
+      <td>
+        <Typography level="body-xs">{rem?.updatedAt}</Typography>
+      </td>
+      <td>
+        <Typography level="body-xs">{rem?.createdUser?.userName}</Typography>
+      </td>
+      <td>
+        <Typography level="body-xs">{rem?.updatedUser?.userName}</Typography>
+      </td>
+      <td>
+        <Typography level="body-xs">{rem?.remarks}</Typography>
+      </td>
+      <td>
+        <Typography level="body-xs">{rem?.status}</Typography>
+      </td>
+      <td>
+        <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+          <Box
             //   id={props.row?.id}
+          >
+            <Button
+              slots={{ root: IconButton }}
+              slotProps={{
+                root: { variant: "plain", color: "neutral", size: "sm" },
+              }}
             >
-              <Button
-                slots={{ root: IconButton }}
-                slotProps={{
-                  root: { variant: "plain", color: "neutral", size: "sm" },
-                }}
-              >
-                <EditIcon onClick={() => handleEditClick(rem)} />
-              </Button>
-            </Box>
-            {/* //   row={row} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} 
-        //   setLabel={props.setLabel} parentFunction={HandleDeleteFunction} */}
+              <EditIcon onClick={() => handleEditClick(rem)} />
+            </Button>
           </Box>
-        </td>
-      </tr>
-    ))
-  );
+          {/* //   row={row} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} 
+        //   setLabel={props.setLabel} parentFunction={HandleDeleteFunction} */}
+        </Box>
+      </td>
+    </tr>
+  ))
+);
+
   React.useEffect(() => {
     const fetchRemarks = async () => {
       // let depRem = await getRemarksByUser()
