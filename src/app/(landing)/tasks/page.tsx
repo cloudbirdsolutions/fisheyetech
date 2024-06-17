@@ -17,6 +17,7 @@ export default function Task() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const auth = useAuth();
+  
   const logintype = useSelector((state: RootState) => state?.user.data);
   const baseurl = [2,3].includes(logintype.data.rolesId) ? `/joballocation/get-all-jobs` : `/joballocation/get-user-jobs?id=${logintype.data.id}`
 
