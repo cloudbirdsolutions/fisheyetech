@@ -19,9 +19,12 @@ import { useAuth } from '@/app/hooks/useAuth';
 import { AppDispatch } from '@/app/Store/store';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import {useApi} from "@/app/api/hooks/useApi";
+import { Entity , FilterItem} from "@/app/types";
+import SearchIcon from "@mui/icons-material/Search";
+import {SearchComponent} from "@/app/components/Common/search";
 
-
-export default function Entity() {  
+export default function EntityPage() {  
 
   const [label, setLabel] = React.useState<string>('');
   const [open, setOpen] = React.useState<boolean>(false);
@@ -31,6 +34,24 @@ export default function Entity() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
 const auth =  useAuth();
+const [endPoint, setEndPoint] = React.useState<string>('/sheetMaster/get');
+  const {data,isLoading,error,fetchData} = useApi<Entity>(endPoint,{method:'GET'})
+
+  const userFilterItems:FilterItem[] = [
+    {
+      searchLabel : 'Search',
+      filterType : 'INPUT',
+      handleChange : (value:string)=>{
+        setEndPoint(`/sheetmaster/get?sheetName=${value}`);
+      },
+      placeholder : "Search user by Entity name",
+      startDecoration : <SearchIcon/>
+    }
+  ]
+  useEffect(() => {
+    fetchData()
+  }, [endPoint]);
+
 useEffect(() => {
   !auth ? (
   localStorage.removeItem('accessToken'),
@@ -69,7 +90,9 @@ useEffect(() => {
             </Stack>
 
           </Box>
-          <EntityTable open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
+          <SearchComponent filterItems={userFilterItems}/>
+
+          <EntityTable open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow} EntityList={data} fetchSheets={fetchData}/>
          
           <modalContext.Provider value={row}>
           <EntityModalForm open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>

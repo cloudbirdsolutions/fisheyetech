@@ -18,6 +18,11 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/hooks/useAuth';
 import { AppDispatch } from '@/app/Store/store';
 import { useEffect } from 'react';
+import { ForceCloseSheet , FilterItem,} from "@/app/types";
+import SearchIcon from "@mui/icons-material/Search";
+import {SearchComponent} from "@/app/components/Common/search";
+import {useApi} from "@/app/api/hooks/useApi";
+
 
 export default function ForceClose() {
   const [label, setLabel] = React.useState<string>('');
@@ -27,6 +32,24 @@ export default function ForceClose() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
 const auth =  useAuth();
+const [endPoint, setEndPoint] = React.useState<string>('/sheetdocid/forcecomplete');
+  const {data,isLoading,error,fetchData} = useApi<ForceCloseSheet>(endPoint,{method:'GET'})
+  const userFilterItems:FilterItem[] = [
+    {
+      searchLabel : 'Search',
+      filterType : 'INPUT',
+      handleChange : (value:string)=>{
+        setEndPoint(`/sheetmaster/get?sheetName=${value}`);
+      },
+      placeholder : "Search user by Sheet name",
+      startDecoration : <SearchIcon/>
+    }
+  ]
+  useEffect(() => {
+    fetchData()
+  }, [endPoint]);
+
+
 useEffect(() => {
   !auth ? (
   localStorage.removeItem('accessToken'),
@@ -55,7 +78,9 @@ useEffect(() => {
             </Typography>
             
           </Box>
-          <ForceTable open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
+          <SearchComponent filterItems={userFilterItems}/>
+
+          <ForceTable open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow} sheetList={data}  fetchSheets={fetchData} />
           <ForceLists open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
     
 

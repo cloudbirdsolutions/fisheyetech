@@ -17,10 +17,21 @@ import {stableSort, getComparator} from '@/app/helper/sorting';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../hooks/useAuth';
+import { Entity } from "@/app/types";
 
 type Order = "asc" | "desc";
 
-export default function EntityTable(props:any) {
+interface EntityTableProps {
+  open:boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  label:string;
+  setLabel:React.Dispatch<React.SetStateAction<string>>;
+  setRow:React.Dispatch<(prevState: never) => never>;
+  EntityList:Entity[];
+  fetchSheets:Function;
+}
+
+export default function EntityTable(props:EntityTableProps) {
   const [order, setOrder] = React.useState<Order>('desc');
   const [rows, setRows] = React.useState([{id:"",createdAt:"",updatedAt:"",departmentName: ""}]);
   
@@ -55,37 +66,14 @@ export default function EntityTable(props:any) {
   // const data = await getData()
   const auth = useAuth();
   React.useEffect(() => {
-    const getData = async () => {
-      try {
-         
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/sheetMaster/get`, {
-          method: 'GET',
-          headers: {
-            Accept : "application/json",
-            'Content-Type': 'application/json',
-            Authorization: "Bearer "  + auth,
-          }
-        });
+    props.fetchSheets();
   
-        if (!response.ok) {
-          throw new Error('Failed to fetch user details: ' + response.statusText);
-        }
-  
-        const data = await response.json();
-        console.log(data)
-        setRows(data.data);
-      } catch (error) {
-        console.error('Error fetching user details:', error);
-      }
-    };
-  
-    getData(); 
 
   }, [createentity, deleteentitys, editentity])
 
   const headers = ["Sheet Name"];
 
-  const tablerows =  stableSort(rows, getComparator(order, 'id')).map((row:any) => (
+  const tablerows =  stableSort(props.EntityList, getComparator(order, 'id')).map((row:any) => (
     <tr key={row?.id}>
       <td>
         <Typography level="body-xs">{row?.id}</Typography>
