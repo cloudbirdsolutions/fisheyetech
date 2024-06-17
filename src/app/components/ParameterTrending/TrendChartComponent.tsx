@@ -1,29 +1,21 @@
 import * as React from 'react';
-import {useEffect, useMemo} from 'react';
 import {ResponsiveChartContainer} from '@mui/x-charts/ResponsiveChartContainer';
 import {LinePlot, MarkPlot} from '@mui/x-charts/LineChart';
 import {ChartsXAxis} from '@mui/x-charts/ChartsXAxis';
 import {ChartsYAxis} from '@mui/x-charts/ChartsYAxis';
 import {Box, Card, CardContent, Divider} from '@mui/joy';
 import {mangoFusionPalette} from '@mui/x-charts/colorPalettes';
-import moment from 'moment';
 import {
     AllSeriesType,
-    BarSeriesType,
     ChartsGrid,
     ChartsLegend,
-    ChartsTooltip, ChartsXAxisProps, ChartsYAxisProps,
-    LineSeriesType,
-    PieSeriesType,
-    PieValueType,
-    ScatterSeriesType
+    ChartsTooltip,
+    ChartsXAxisProps,
+    ChartsYAxisProps
 } from "@mui/x-charts";
 import Typography from "@mui/joy/Typography";
-import ChartControlls from "@/app/components/Charts/ChartControlls";
+import ChartControls from "@/app/components/Charts/ChartControls";
 
-
-
-let twix = require('twix');
 
 // const currentMonth = new Date().getMonth() + 1;
 // const currentYear = new Date().getFullYear();
@@ -33,6 +25,9 @@ interface TrendChartComponentProps {
     series :  AllSeriesType[]
     xAxis : ChartsXAxisProps[]
     yAxis: ChartsYAxisProps[]
+    setChartStartDate : Function,
+    setChartEndDate : Function,
+    chartTitle:string
 
 }
 
@@ -41,9 +36,9 @@ export default function TrendChartComponent(props:TrendChartComponentProps) {
 
     return (
         <Box sx={{width: '100%'}}>
-            <Card variant="outlined" color="neutral">
-                <Typography level={"title-lg"}>Turbine DCS Log Book</Typography>
-                <ChartControlls></ChartControlls>
+            <Card variant="soft" color="neutral">
+                <Typography level={"title-lg"}>{props.chartTitle}</Typography>
+                <ChartControls setChartEndDate={props.setChartEndDate} setChartStartDate={props.setChartStartDate}></ChartControls>
                 <Divider/>
                 <CardContent>
                     <ResponsiveChartContainer series={props.series}

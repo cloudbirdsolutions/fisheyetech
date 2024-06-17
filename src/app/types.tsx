@@ -149,6 +149,17 @@ export type SheetRaw = {
   "description": string
 }
 
+export type Sheet = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "sheetName": string,
+  "sheetId":number
+  "sheetMaster":  {
+    "sheetName":string
+  }
+}
+
 export type GroupRaw =  {
   "id": number,
   "createdAt": string,

@@ -1,3 +1,4 @@
+'use client'
 import React, {useEffect, useRef, useState} from "react";
 import Box from "@mui/joy/Box";
 import Typography from "@mui/joy/Typography";
@@ -7,10 +8,12 @@ import {useApi} from "@/app/api/hooks/useApi";
 import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import {deepGet} from '@/app/utils'
-import {ChartAttributes, ChartFieldValue, Department, Shift} from "@/app/types";
+import {ChartAttributes, ChartFieldValue, Department, Sheet, Shift} from "@/app/types";
 import TrendChartComponent from "@/app/components/ParameterTrending/TrendChartComponent";
 import {Card, CardContent} from "@mui/joy";
 import Grid from "@mui/joy/Grid";
+import moment from "moment";
+let twix = require('twix');
 
 var jmespath = require("jmespath");
 var _ = require('lodash');
@@ -50,7 +53,7 @@ export default function TrendSelectorComponent(props: any) {
         isLoading: isSheetLoading,
         error: sheetError,
         fetchData: fetchSheetList
-    } = useApi<Department>(`/departmentsheets/get-sheets?id=${selectedDepartmentId}`, {method: 'GET'});
+    } = useApi<Sheet>(`/departmentsheets/get-sheets?id=${selectedDepartmentId}`, {method: 'GET'});
     const {
         data: shiftList,
         isLoading: isShiftLoading,
@@ -66,13 +69,13 @@ export default function TrendSelectorComponent(props: any) {
     const {
         data: fieldAttributeList,
         isLoading: isFieldAttributeLoading,
-        error: fieldattributeError,
-        fetchData: fetchFieldttributeList
+        error: fieldAttributeError,
+        fetchData: fetchFieldAttributeList
     } = useApi<ChartFieldValue>(`/charts/getchart?sheetId=${selectedSheetId}&fieldId=${selectedFieldId}`, {method: 'GET'});
 
     const groupList = _.uniqWith(jmespath.search(attributeList, '[].{groupId:groupId,groupName:groupMaster.groupName}'), _.isEqual)
     const parameterList = _.uniqWith(jmespath.search(attributeList, `[?groupId==\`${selectedGroupId}\`].{parameterId:parameterMaster.id,parameterName:parameterMaster.parameterName}`), _.isEqual)
-    const fieldList = _.uniqWith(jmespath.search(attributeList, `[?parameterId==\`${selectedParameterId}\`].{fieldId:fieldMaster.id,fieldName:fieldMaster.fieldName}`), _.isEqual)
+    const fieldList = _.uniqWith(jmespath.search(attributeList, `[?parameterId==\`${selectedParameterId}\`].{fieldId:fieldMaster.id,fieldName:fieldMaster.fieldName, fieldValue:fieldMaster.fieldValue}`), _.isEqual)
     const readingList = _.uniqWith(jmespath.search(attributeList, `[?parameterId==\`${selectedParameterId}\`].{readingId:readingMaster.id,readingName:readingMaster.readingName}`), _.isEqual)
 
     const resetValuesToDefault = () => {
@@ -105,6 +108,11 @@ export default function TrendSelectorComponent(props: any) {
         }
         fetchAttributeList()
         fetchShiftList()
+        if(selectedSheetId > 0){
+            let title = sheetList.find(s=>s.sheetId==selectedSheetId)?.sheetMaster.sheetName
+
+            setChartTitle(title? title: 'No Title')
+        }
 
     }, [selectedSheetId])
 
@@ -125,7 +133,12 @@ export default function TrendSelectorComponent(props: any) {
             initialRenderState.current.fieldEffect = false
             return
         }
-        fetchFieldttributeList();
+        fetchFieldAttributeList();
+        if(selectedFieldId > 0){
+            let found = fieldList.find((s:any)=>s.fieldId==selectedFieldId);
+            setChartSeriesLabel(found.fieldName)
+            setChartYAxisLabel(found.fieldValue)
+        }
 
     }, [selectedFieldId]);
 
@@ -244,37 +257,48 @@ export default function TrendSelectorComponent(props: any) {
         }
     ]
 
+    const [chartStartDate, setChartStartDate] = useState<string>(moment().format('YYYY-MM-DD'))
+    const [chartEndDate, setChartEndDate] = useState<string>(moment().format('YYYY-MM-DD'))
+    const [chartRange,setChartRange] = useState<string[]>([])
+    const [chartDataSet,setChartDataSet] = useState<any[]>([])
+    const [chartTitle, setChartTitle] = useState<string>("Pleas select a sheet")
+    const [chartSeriesLabel,setChartSeriesLabel] = useState<string>("index")
+    const [chartYAxisLabel,setChartYAxisLabel] = useState<string>("Number")
 
-    const dataset = [
-        {min: -12, max: -4, precip: 79, month: 'Jan'},
-        {min: -11, max: -3, precip: 66, month: 'Feb'},
-        {min: -6, max: 2, precip: 76, month: 'Mar'},
-        {min: 1, max: 9, precip: 106, month: 'Apr'},
-        {min: 8, max: 17, precip: 105, month: 'Mai'},
-        {min: 15, max: 24, precip: 114, month: 'Jun'},
-        {min: 18, max: 26, precip: 106, month: 'Jul'},
-        {min: 17, max: 26, precip: 105, month: 'Aug'},
-        {min: 13, max: 21, precip: 100, month: 'Sept'},
-        {min: 6, max: 13, precip: 116, month: 'Oct'},
-        {min: 0, max: 6, precip: 93, month: 'Nov'},
-        {min: -8, max: -1, precip: 93, month: 'Dec'},
+    useEffect(() => {
+        const itr = (moment(chartStartDate) as any).twix(chartEndDate).iterate("days")
+        let range = []
+        while (itr.hasNext()){
+            range.push(moment(itr.next()).format('YYYY-MM-DD'))
+        }
+        setChartRange(range)
+    }, [chartStartDate, chartEndDate]);
 
-    ];
+    useEffect(()=>{
+        let recordMaster = jmespath.search(fieldAttributeList,'[].recordMaster[].{date:updatedAt,value:fieldValue}')
+        recordMaster = recordMaster.map((r:any)=>({date:moment(r.date).format('YYYY-MM-DD'),value:r.value}))
+
+        let dataset = chartRange.map((date,indx)=>{
+            let item = recordMaster.find((r:any)=>r.date===date)
+            let value = item ? Number.isInteger(parseInt(item.value)) ? parseInt(item.value) : 0 : 0
+            return {a:value,date:date};
+        })
+        setChartDataSet(dataset)
+
+    },[chartRange, fieldAttributeList])
+
     const series: { type: "line" | "bar", dataKey: string, label: string }[] = [
-        {type: "line", dataKey: 'min', label: 'min'},
-        {type: "line", dataKey: 'max', label: 'max'},
-        {type: "line", dataKey: 'precip', label: 'percip'},
-
+        {type: "line", dataKey: 'a', label: chartSeriesLabel},
     ]
     const xAxis = [
         {
             scaleType: 'band',
-            dataKey: 'month',
-            label: 'Month',
+            dataKey: 'date',
+            label: 'Date',
 
         },
     ]
-    const yAxis = [{id: 'leftAxis', label: "temperature (°C)"}]
+    const yAxis = [{id: 'leftAxis', label: chartYAxisLabel}]
     return (
         <>
             <ToastContainer/>
@@ -315,7 +339,7 @@ export default function TrendSelectorComponent(props: any) {
 
             {/*<Button type="submit"> Generate Trend</Button>*/}
 
-            <TrendChartComponent dataset={dataset} series={series} xAxis={xAxis} yAxis={yAxis}/>
+            <TrendChartComponent chartTitle={chartTitle} dataset={chartDataSet} series={series} xAxis={xAxis} yAxis={yAxis} setChartStartDate={setChartStartDate} setChartEndDate={setChartEndDate}/>
 
         </>
     )
