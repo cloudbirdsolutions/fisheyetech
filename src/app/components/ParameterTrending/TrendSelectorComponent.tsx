@@ -46,7 +46,7 @@ export default function TrendSelectorComponent(props: any) {
     const [selectedGroupId, setSelectedGroupId] = useState(0);
     const [selectedParameterId, setSelectedParameterId] = useState(0);
     const [selectedFieldId, setSelectedFieldId] = useState(0);
-    const [selectedReadingId, setSelectedReadingId] = useState<number[]>([]);
+    const [selectedReadingId, setSelectedReadingId] = useState(0);
     const [selectedValueId, setSelectedValueId] = useState(0)
     const [selectedSecondFieldId, setSelectedSecondFieldId] = useState(0);
     const [selectedFieldIds, setSelectedFieldIds] = useState<number[]>([]);
@@ -94,7 +94,7 @@ export default function TrendSelectorComponent(props: any) {
         setSelectedGroupId(0);
         setSelectedParameterId(0);
         setSelectedFieldId(0);
-        setSelectedReadingId([]);
+        setSelectedReadingId(0);
     }
 
     useEffect(() => {
@@ -260,7 +260,7 @@ export default function TrendSelectorComponent(props: any) {
             multiple:true,
             handleChange: (
                 event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element> | React.FocusEvent<Element, Element> | null,
-                newValue: number[] | null,
+                newValue: number | null,
             ) => {
                 if (newValue)
                     setSelectedReadingId(newValue)
@@ -339,7 +339,7 @@ export default function TrendSelectorComponent(props: any) {
                                     {
                                         i.selectList &&
                                         <Select 
-                                        {...(i.multiple?{multiple:i.multiple}:{})}
+                                        // {...(i.multiple?{multiple:i.multiple}:{})}
                                         name={i.name} 
                                         onChange={i.handleChange}
                                                 size={'sm'}
