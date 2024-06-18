@@ -274,7 +274,7 @@ export default function TrendSelectorComponent(props: any) {
     const [chartEndDate, setChartEndDate] = useState<string>(moment().format('YYYY-MM-DD'))
     const [chartRange,setChartRange] = useState<string[]>([])
     const [chartDataSet,setChartDataSet] = useState<any[]>([])
-    const [chartTitle, setChartTitle] = useState<string>("Pleas select a sheet")
+    const [chartTitle, setChartTitle] = useState<string>("Please select a sheet")
     const [chartSeriesLabel,setChartSeriesLabel] = useState<string>("index")
     const [chartYAxisLabel,setChartYAxisLabel] = useState<string>("Number")
 
