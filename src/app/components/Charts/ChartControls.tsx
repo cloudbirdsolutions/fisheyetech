@@ -35,17 +35,17 @@ const ChartControls = (props:ChartControlProps) => {
             filterOptions: ["This Week", "This Month", "Last 7 days","This Year"],
             filterValue: quickFilter,
             filterHandleChange: (
-                event: React.SyntheticEvent | null,
                 newValue: string | null,
             ) => {
-                setQuickFilter(newValue);
+                let newVal = newValue? newValue : ''
+                setQuickFilter(newVal);
             }
         },
         {
             filterName: "Start Date",
             filterType: "DATE_PICKER",
             filterValue: startDate,
-            filterHandleChange: (newValue)=>{
+            filterHandleChange: (newValue:any)=>{
                 setStartDate(newValue)
 
             }
@@ -54,7 +54,7 @@ const ChartControls = (props:ChartControlProps) => {
             filterName: "End Date",
             filterType: "DATE_PICKER",
             filterValue: endDate,
-            filterHandleChange: (newValue)=>{
+            filterHandleChange: (newValue:any)=>{
                 setEndDate(newValue)
             }
         }
@@ -89,9 +89,9 @@ const ChartControls = (props:ChartControlProps) => {
                         <FormLabel>{c.filterName}</FormLabel>
                         {c.filterType==="DATE_PICKER"?
                             <Input type={"date"} size={"sm"} value={c.filterValue} onChange={(e)=>c.filterHandleChange(e.target.value)}/> :
-                            <Select value={c.filterValue} onChange={c.filterHandleChange} size={'sm'}>
+                            <Select value={c.filterValue} onChange={(e,newValue)=>c.filterHandleChange(newValue)} size={'sm'}>
                                 {
-                                  c.filterOptions.map((option, i) => (
+                                  c.filterOptions?.map((option, i) => (
                                         <Option value={option} key={i+option}>{option}</Option>
                                     ))
                                 }

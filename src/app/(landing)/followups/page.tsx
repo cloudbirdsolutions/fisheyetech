@@ -14,7 +14,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import {SearchComponent} from "@/app/components/Common/search";
 import { useSelector} from 'react-redux';
 import {RootState} from '@/app/Store/store';
-import { departmentnames } from "@/app/types";
+import { Remarks } from "@/app/types";
 
 export default function Dashboard() {
     const router = useRouter();
@@ -29,7 +29,7 @@ const baseurl = `/joballocation/get-user-departments?userId=${logintype.data.id}
 const [endPoint, setEndPoint] = React.useState<string>(baseurl);
 
 // const [endPoint, setEndPoint] = React.useState<string>('/departments/get');
-  const {data,isLoading,error,fetchData} = useApi<departmentnames>(endPoint,{method:'GET'})
+  const {data,isLoading,error,fetchData} = useApi<Remarks>(endPoint,{method:'GET'})
 
   // const {data:userJobList,isLoading,error, fetchData} = useApi<UserJob>(endPoint,{method:'GET'})
 

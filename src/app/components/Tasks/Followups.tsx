@@ -31,11 +31,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import FollowupModalForm from "../followUpsModelForm/followupsmodel";
 import { useAuth } from "@/app/hooks/useAuth";
 import { departmentnames } from "@/app/types";
-import { Remark } from "@/app/types";
+import { Remarks,Remark } from "@/app/types";
 import { editfollowupstatus } from "@/app/Reducers/editFolloupsstatusSlice";
 
 interface DepartmentTable {
-  departmentList:departmentnames[];
+  departmentList:Remarks[];
 }
 
 export default function Followups(props: DepartmentTable) {
@@ -53,22 +53,7 @@ export default function Followups(props: DepartmentTable) {
   const [label, setLabel] = React.useState<string>("");
   // const [rows, setRows] = React.useState();
   const [selectedStatus, setSelectedStatus] = useState<string>("New");
-  const [selectedRemark, setSelectedRemark] = useState<Remark>({
-    id: 0,
-    createdAt: "",
-    updatedAt: "",
-    createdBy: 0,
-    departmentId: 0,
-    remarks: "",
-    status: "",
-    updatedBy: 0,
-    createdUser: {
-      userName: "",
-    },
-    updatedUser: {
-      userName: "",
-    },
-  });
+  const [selectedRemark, setSelectedRemark] = useState<Remark>();
 
   const [departmentRemarks, setDepartmentRemark] = React.useState([
     {

@@ -421,6 +421,22 @@ export type ChartAttributes = {
     "id": number
   }
 }
+export type ForceCloseSheet ={
+
+  id: number,
+  createdAt: string;
+  updatedAt: string;
+  sheetId: number,
+  userId: number,
+  transitionId: number,
+  sheetMaster: {
+    sheetName: string;
+  },
+  users: {
+    userName: string;
+  }
+
+}
 export type ChartFieldValue =  {
   "id": number,
   "createdAt": string,
@@ -462,4 +478,14 @@ export type departmentnames ={
   updatedAt: string;
   departmentName: string;
   remarks: Remark[];
+}
+
+export type Remarks = {
+  "departments": {
+    "createdAt": string,
+    "departmentName": string,
+    "id": number,
+    "remarks": Remark[],
+    "updatedAt": string
+  }
 }
