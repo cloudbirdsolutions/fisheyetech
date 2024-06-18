@@ -241,6 +241,14 @@ export type Department = {
   "departmentName": string
 }
 
+export type Entity = {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  sheetName: string;
+  description: string;
+};
+
 export type Designation = {
   "id": number,
   "createdAt": string,
