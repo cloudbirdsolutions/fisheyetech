@@ -17,7 +17,15 @@ let twix = require('twix');
 
 var jmespath = require("jmespath");
 var _ = require('lodash');
-
+type SeriesType = {
+    type: "line";
+    dataKey: string;
+    label: string;
+} | {
+    type: "bar";
+    dataKey: string;
+    label: string;
+};
 
 export default function TrendSelectorComponent(props: any) {
 
@@ -38,8 +46,10 @@ export default function TrendSelectorComponent(props: any) {
     const [selectedGroupId, setSelectedGroupId] = useState(0);
     const [selectedParameterId, setSelectedParameterId] = useState(0);
     const [selectedFieldId, setSelectedFieldId] = useState(0);
-    const [selectedReadingId, setSelectedReadingId] = useState(0);
+    const [selectedReadingId, setSelectedReadingId] = useState<number[]>([]);
     const [selectedValueId, setSelectedValueId] = useState(0)
+    const [selectedSecondFieldId, setSelectedSecondFieldId] = useState(0);
+    const [selectedFieldIds, setSelectedFieldIds] = useState<number[]>([]);
 
 
     const {
@@ -72,7 +82,7 @@ export default function TrendSelectorComponent(props: any) {
         error: fieldAttributeError,
         fetchData: fetchFieldAttributeList
     } = useApi<ChartFieldValue>(`/charts/getchart?sheetId=${selectedSheetId}&fieldId=${selectedFieldId}`, {method: 'GET'});
-
+   
     const groupList = _.uniqWith(jmespath.search(attributeList, '[].{groupId:groupId,groupName:groupMaster.groupName}'), _.isEqual)
     const parameterList = _.uniqWith(jmespath.search(attributeList, `[?groupId==\`${selectedGroupId}\`].{parameterId:parameterMaster.id,parameterName:parameterMaster.parameterName}`), _.isEqual)
     const fieldList = _.uniqWith(jmespath.search(attributeList, `[?parameterId==\`${selectedParameterId}\`].{fieldId:fieldMaster.id,fieldName:fieldMaster.fieldName, fieldValue:fieldMaster.fieldValue}`), _.isEqual)
@@ -84,7 +94,7 @@ export default function TrendSelectorComponent(props: any) {
         setSelectedGroupId(0);
         setSelectedParameterId(0);
         setSelectedFieldId(0);
-        setSelectedReadingId(0);
+        setSelectedReadingId([]);
     }
 
     useEffect(() => {
@@ -141,7 +151,7 @@ export default function TrendSelectorComponent(props: any) {
         }
 
     }, [selectedFieldId]);
-
+   
 
     const userSelectItems = [
         {
@@ -247,14 +257,17 @@ export default function TrendSelectorComponent(props: any) {
             valueId: 'readingId',
             optionLabel: 'readingName',
             selected: selectedReadingId,
+            multiple:true,
             handleChange: (
                 event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element> | React.FocusEvent<Element, Element> | null,
-                newValue: number | null,
+                newValue: number[] | null,
             ) => {
                 if (newValue)
                     setSelectedReadingId(newValue)
             }
-        }
+        },
+       
+        
     ]
 
     const [chartStartDate, setChartStartDate] = useState<string>(moment().format('YYYY-MM-DD'))
@@ -265,6 +278,8 @@ export default function TrendSelectorComponent(props: any) {
     const [chartSeriesLabel,setChartSeriesLabel] = useState<string>("index")
     const [chartYAxisLabel,setChartYAxisLabel] = useState<string>("Number")
 
+
+
     useEffect(() => {
         const itr = (moment(chartStartDate) as any).twix(chartEndDate).iterate("days")
         let range = []
@@ -274,22 +289,28 @@ export default function TrendSelectorComponent(props: any) {
         setChartRange(range)
     }, [chartStartDate, chartEndDate]);
 
-    useEffect(()=>{
-        let recordMaster = jmespath.search(fieldAttributeList,'[].recordMaster[].{date:updatedAt,value:fieldValue}')
-        recordMaster = recordMaster.map((r:any)=>({date:moment(r.date).format('YYYY-MM-DD'),value:r.value}))
-
-        let dataset = chartRange.map((date,indx)=>{
-            let item = recordMaster.find((r:any)=>r.date===date)
-            let value = item ? Number.isInteger(parseInt(item.value)) ? parseInt(item.value) : 0 : 0
-            return {a:value,date:date};
-        })
-        setChartDataSet(dataset)
-
-    },[chartRange, fieldAttributeList])
-
-    const series: { type: "line" | "bar", dataKey: string, label: string }[] = [
-        {type: "line", dataKey: 'a', label: chartSeriesLabel},
-    ]
+    useEffect(() => {
+        let recordMasterFirst = jmespath.search(fieldAttributeList, '[].recordMaster[].{date:updatedAt,value:fieldValue}');
+        recordMasterFirst = recordMasterFirst.map((r: any) => ({ date: moment(r.date).format('YYYY-MM-DD'), value: r.value }));
+    
+        
+        let dataset = chartRange.map((date, indx) => {
+            let itemFirst = recordMasterFirst.find((r: any) => r.date === date);
+            let valueFirst = itemFirst ? Number.isInteger(parseInt(itemFirst.value)) ? parseInt(itemFirst.value) : 0 : 0;
+    
+           
+            return { a: valueFirst,  date: date };
+        });
+    
+        setChartDataSet(dataset);
+    }, [chartRange, fieldAttributeList, ]);
+    
+    const series: SeriesType[] = Array.from({ length: fieldList.length }, (_, index) => ({
+        type: "line",
+        dataKey: String.fromCharCode(97 + index), // Assuming 'a', 'b', 'c', ... based on index
+        label: chartSeriesLabel
+    }));
+    
     const xAxis = [
         {
             scaleType: 'band',
@@ -298,7 +319,12 @@ export default function TrendSelectorComponent(props: any) {
 
         },
     ]
-    const yAxis = [{id: 'leftAxis', label: chartYAxisLabel}]
+    const yAxis = [
+        { id: 'leftAxis', label: chartYAxisLabel }, // Label for the first field
+        
+    ];
+    
+    
     return (
         <>
             <ToastContainer/>
@@ -312,7 +338,10 @@ export default function TrendSelectorComponent(props: any) {
                                     <Typography level="title-md"  sx={{mb: 1}}>{i.formHead}</Typography>
                                     {
                                         i.selectList &&
-                                        <Select name={i.name} onChange={i.handleChange}
+                                        <Select 
+                                        {...(i.multiple?{multiple:i.multiple}:{})}
+                                        name={i.name} 
+                                        onChange={i.handleChange}
                                                 size={'sm'}
                                                 style={{
                                                     padding: '8px',

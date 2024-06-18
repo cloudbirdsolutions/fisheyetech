@@ -448,3 +448,10 @@ export type FilterItem = {
   handleChange: Function,
   filterType : 'INPUT' | 'DATE_PICKER' | 'DROP_DOWN'
 }
+export type departmentnames ={
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  departmentName: string;
+  remarks: Remark[];
+}

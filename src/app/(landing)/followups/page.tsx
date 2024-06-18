@@ -24,6 +24,7 @@ const auth =  useAuth();
 const logintype = useSelector((state: RootState) => state?.user.data);
 // const baseurl = [2, 3].includes(logintype.data.rolesId) ? `/joballocation/get-user-departments?userId=${logintype.data.id}` : '/departments/get'; 
 const baseurl = `/joballocation/get-user-departments?userId=${logintype.data.id}`;
+// const baseurl = `/joballocation/get-user-departments`;
 
 const [endPoint, setEndPoint] = React.useState<string>(baseurl);
 

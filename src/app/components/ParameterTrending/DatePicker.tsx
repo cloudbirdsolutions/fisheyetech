@@ -36,3 +36,7 @@ export default function SingleInputDateRangePickerWrapped() {
     </LocalizationProvider>
   );
 }
+
+
+
+// {...(i.multiple?{multiple:i.multiple}:{})}  

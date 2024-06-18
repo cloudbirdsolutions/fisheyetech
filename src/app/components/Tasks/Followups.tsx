@@ -263,56 +263,57 @@ export default function Followups(props: DepartmentTable) {
     
   ];
 
- const followUpRow = props.departmentList?.map((dep) =>
-  dep?.departments?.remarks.map((rem) => (
-    <tr key={`document_id_${rem?.id}`}>
-      <td>
-        <Typography level="body-xs">{rem?.id}</Typography>
-      </td>
-      <td>
-        <Typography level="body-xs">
-          {dep?.departments?.departmentName}
-        </Typography>
-      </td>
-      <td>
-        <Typography level="body-xs">{rem?.createdAt}</Typography>
-      </td>
-      <td>
-        <Typography level="body-xs">{rem?.updatedAt}</Typography>
-      </td>
-      <td>
-        <Typography level="body-xs">{rem?.createdUser?.userName}</Typography>
-      </td>
-      <td>
-        <Typography level="body-xs">{rem?.updatedUser?.userName}</Typography>
-      </td>
-      <td>
-        <Typography level="body-xs">{rem?.remarks}</Typography>
-      </td>
-      <td>
-        <Typography level="body-xs">{rem?.status}</Typography>
-      </td>
-      <td>
-        <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-          <Box
-            //   id={props.row?.id}
-          >
-            <Button
-              slots={{ root: IconButton }}
-              slotProps={{
-                root: { variant: "plain", color: "neutral", size: "sm" },
-              }}
-            >
-              <EditIcon onClick={() => handleEditClick(rem)} />
-            </Button>
-          </Box>
-          {/* //   row={row} open={props.open} setOpen={props.setOpen} label={props.label} setRow={props.setRow} 
-        //   setLabel={props.setLabel} parentFunction={HandleDeleteFunction} */}
-        </Box>
-      </td>
-    </tr>
-  ))
-);
+  const followUpRow = props.departmentList?.map((dep) =>
+    dep?.departments?.remarks.length > 0 ? (
+      dep.departments.remarks.map((rem) => (
+        <tr key={`document_id_${rem.id}`}>
+          <td>
+            <Typography level="body-xs">{rem.id}</Typography>
+          </td>
+          <td>
+            <Typography level="body-xs">{dep.departments.departmentName}</Typography>
+          </td>
+          <td>
+            <Typography level="body-xs">{rem.createdAt}</Typography>
+          </td>
+          <td>
+            <Typography level="body-xs">{rem.updatedAt}</Typography>
+          </td>
+          <td>
+            <Typography level="body-xs">{rem.createdUser?.userName}</Typography>
+          </td>
+          <td>
+            <Typography level="body-xs">{rem.updatedUser?.userName}</Typography>
+          </td>
+          <td>
+            <Typography level="body-xs">{rem.remarks}</Typography>
+          </td>
+          <td>
+            <Typography level="body-xs">{rem.status}</Typography>
+          </td>
+          <td>
+            <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+              <Box>
+                <Button
+                  slots={{ root: IconButton }}
+                  slotProps={{
+                    root: { variant: "plain", color: "neutral", size: "sm" },
+                  }}
+                >
+                  <EditIcon onClick={() => handleEditClick(rem)} />
+                </Button>
+              </Box>
+            </Box>
+          </td>
+        </tr>
+      ))
+    ) : (
+      <tr key="no_data_found">
+        <td colSpan={9}>No data found</td>
+      </tr>
+    )
+  );
+  
 
   React.useEffect(() => {
     const fetchRemarks = async () => {
