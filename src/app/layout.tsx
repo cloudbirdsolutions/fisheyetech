@@ -1,11 +1,10 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type {Metadata} from "next";
+import {Inter} from "next/font/google";
 import "./globals.css";
-import { Providers } from "./Provider/provider";
-
-import { Experimental_CssVarsProvider as MaterialCssVarsProvider } from '@mui/material/styles';
-import { CssVarsProvider as JoyCssVarsProvider } from '@mui/joy/styles';
-import CssBaseline from '@mui/material/CssBaseline'; // Import CssBaseline from Material UI
+import {Providers} from "./Provider/provider";
+import {Experimental_CssVarsProvider as MaterialCssVarsProvider} from '@mui/material/styles';
+import {CssVarsProvider as JoyCssVarsProvider} from '@mui/joy/styles';
+import ThemeRegistry from "@/app/ThemeRegistry";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +27,8 @@ export default function RootLayout({
           >
             <JoyCssVarsProvider defaultMode="system">
 
-              {children}
+              <ThemeRegistry options={{ key: 'joy' }}>{children}</ThemeRegistry>
+
             </JoyCssVarsProvider>
           </MaterialCssVarsProvider>
         </Providers>

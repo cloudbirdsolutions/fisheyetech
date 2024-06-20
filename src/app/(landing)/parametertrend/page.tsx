@@ -1,25 +1,13 @@
 'use client';
 import * as React from 'react';
-import Box from '@mui/joy/Box';
-import Typography from '@mui/joy/Typography';
-import DashboardCard from '@/app/components/dashboard/dashboardcard';
+import {useEffect} from 'react';
 // import { Stack } from '@mui/joy';
-import Grid from '@mui/joy/Grid';
-import PendingActionsIcon from '@mui/icons-material/PendingActions';
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/app/Store/store';
-import { DefaultColorPalette } from '@mui/joy/styles/types';
-import ReviewsIcon from '@mui/icons-material/Reviews';
-import ReportProblemIcon from '@mui/icons-material/ReportProblem';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import DashboardChart from '@/app/components/dashboard/dashboardchart';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/app/hooks/useAuth';
-import { AppDispatch } from '@/app/Store/store';
-import { useDispatch } from 'react-redux';
+import {useDispatch} from 'react-redux';
+import {AppDispatch} from '@/app/Store/store';
+import {DefaultColorPalette} from '@mui/joy/styles/types';
+import {useRouter} from 'next/navigation';
+import {useAuth} from '@/app/hooks/useAuth';
 import TrendSelectorComponent from '@/app/components/ParameterTrending/TrendSelectorComponent';
-import TrendChartComponent from '@/app/components/ParameterTrending/TrendChartComponent';
 
 
 interface ChartType {
@@ -61,6 +49,7 @@ export default function ParameterTrend() {
       {auth ? (
         <>
           <TrendSelectorComponent/>
+
 
           {/* <TrendChart /> */}
         </>

@@ -142,6 +142,7 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
         inputElement = (
           <Textarea
             placeholder={fieldValue}
+            minRows={20}
             required
             onChange={(e) =>
               updateValue(

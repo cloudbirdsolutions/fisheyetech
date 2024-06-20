@@ -21,10 +21,21 @@ import 'react-toastify/dist/ReactToastify.css';
 import TableSection from './Common/TableSection';
 import {stableSort, getComparator} from '@/app/helper/sorting';
 import { useAuth } from '../hooks/useAuth';
+import { User } from '../types';
 
 type Order = "asc" | "desc";
 
-export default function OrderTable(props:any) {
+interface UserTableProps {
+    open:boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    label:string;
+    setLabel:React.Dispatch<React.SetStateAction<string>>;
+    setRow:React.Dispatch<(prevState: never) => never>;
+    userList:User[];
+    fetchUers:Function;
+}
+
+export default function UserTable(props:UserTableProps) {
   const createuser = useSelector((state:RootState) => state?.createusers?.data);
   const deleteusers = useSelector((state:RootState) => state?.deleteusers?.data);
   const edituser = useSelector((state:RootState) => state?.editusers?.data);
@@ -60,38 +71,12 @@ export default function OrderTable(props:any) {
   const auth = useAuth();
 
   React.useEffect(() => {
-    const getData = async () => {
-      try {
-
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/users/get`, {
-          method: 'GET',
-          headers: {
-            Accept: "application/json",
-            'Content-Type': 'application/json',
-            Authorization: "Bearer "  + auth,
-          }
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          toast.error(errorData.message)
-        }
-
-        const data = await response.json();
-
-        setRows(data.data);
-      } catch (error) {
-        console.error('Error fetching user details:', error);
-      }
-    };
-
-    getData();
-
+   props.fetchUers()
   }, [createuser, deleteusers, edituser])
 
   const headers = [ "Name", "User Name", "Status", "Password"];
 
-  const tablerows = stableSort(rows, getComparator(order, "id")).map(
+  const tablerows = stableSort(props.userList, getComparator(order, "id")).map(
     (row: any) => (
       <tr key={row?.id}>
       <td>

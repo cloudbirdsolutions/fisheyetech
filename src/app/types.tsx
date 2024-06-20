@@ -149,6 +149,17 @@ export type SheetRaw = {
   "description": string
 }
 
+export type Sheet = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "sheetName": string,
+  "sheetId":number
+  "sheetMaster":  {
+    "sheetName":string
+  }
+}
+
 export type GroupRaw =  {
   "id": number,
   "createdAt": string,
@@ -229,6 +240,14 @@ export type Department = {
   "updatedAt": string,
   "departmentName": string
 }
+
+export type Entity = {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  sheetName: string;
+  description: string;
+};
 
 export type Designation = {
   "id": number,
@@ -402,6 +421,22 @@ export type ChartAttributes = {
     "id": number
   }
 }
+export type ForceCloseSheet ={
+
+  id: number,
+  createdAt: string;
+  updatedAt: string;
+  sheetId: number,
+  userId: number,
+  transitionId: number,
+  sheetMaster: {
+    sheetName: string;
+  },
+  users: {
+    userName: string;
+  }
+
+}
 export type ChartFieldValue =  {
   "id": number,
   "createdAt": string,
@@ -436,4 +471,21 @@ export type FilterItem = {
   startDecoration: React.ReactElement,
   handleChange: Function,
   filterType : 'INPUT' | 'DATE_PICKER' | 'DROP_DOWN'
+}
+export type departmentnames ={
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  departmentName: string;
+  remarks: Remark[];
+}
+
+export type Remarks = {
+  "departments": {
+    "createdAt": string,
+    "departmentName": string,
+    "id": number,
+    "remarks": Remark[],
+    "updatedAt": string
+  }
 }

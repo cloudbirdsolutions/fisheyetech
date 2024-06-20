@@ -19,6 +19,10 @@ import { useAuth } from '@/app/hooks/useAuth';
 import { AppDispatch } from '@/app/Store/store';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import {Department, FilterItem} from "@/app/types";
+import {useApi} from "@/app/api/hooks/useApi";
+import SearchIcon from "@mui/icons-material/Search";
+import {SearchComponent} from "@/app/components/Common/search";
 
 export default function DepartmentList() {
   const [label, setLabel] = React.useState<string>('');
@@ -27,8 +31,28 @@ export default function DepartmentList() {
   const loadingState = useSelector((state:any) => state?.createdepartments?.status === 'loading' || state?.deletedepartments?.status === 'loading' || state?.editdepartments?.status === 'loading' ? 'loading' : '');
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-const auth =  useAuth();
-useEffect(() => {
+  const auth =  useAuth();
+
+  const [endPoint, setEndPoint] = React.useState<string>('/departments/get');
+  const {data,isLoading,error,fetchData} = useApi<Department>(endPoint,{method:'GET'})
+
+  const userFilterItems:FilterItem[] = [
+    {
+      searchLabel : 'Search',
+      filterType : 'INPUT',
+      handleChange : (value:string)=>{
+        setEndPoint(`/departments/get?departmentName=${value}`);
+      },
+      placeholder : "Search user by department name",
+      startDecoration : <SearchIcon/>
+    }
+  ]
+
+  useEffect(() => {
+    fetchData()
+  }, [endPoint]);
+
+  useEffect(() => {
   !auth ? (
   localStorage.removeItem('accessToken'),
   dispatch({ type: "USER_LOGOUT" }),
@@ -67,7 +91,8 @@ useEffect(() => {
             </Stack>
 
           </Box>
-          <DepartmentTable open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
+              <SearchComponent filterItems={userFilterItems}/>
+          <DepartmentTable open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow} departmentList={data} fetchDepartments={fetchData}/>
           <DepartmentLists open={open} setOpen={setOpen} label={label} setLabel={setLabel} setRow={setRow}/>
     
           <modalContext.Provider value={row}>

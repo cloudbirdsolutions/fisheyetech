@@ -13,7 +13,8 @@ import Button from "@mui/joy/Button";
 
 
 interface UserListProps {
-    userJobs : UserJob[]
+    userJobs : UserJob[];
+    // jobAllocationLists:UserJob[];
 }
 
 type Order = "asc" | "desc";
