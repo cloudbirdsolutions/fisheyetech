@@ -126,19 +126,20 @@ export default function Log() {
 
 
   const RowMenu = (props: any) => {
+    const isDisabled = props.transitionId === 5;
     return (
     <>
       <Button 
       slots={{ root: IconButton }}
-      slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
+      slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm',disabled:isDisabled } }}
     >
-      <EditIcon onClick={() => router.push(`/tasks/sheet/${props.sheetId}/${props.documentId}`)}/>
+      <EditIcon onClick={() => !isDisabled && router.push(`/tasks/sheet/${props.sheetId}/${props.documentId}`)}/>
     </Button>
     <Button 
       slots={{ root: IconButton }}
-      slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
+      slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm'} }}
     >
-      <DownloadIcon onClick={() => downloadfn(props.documentId)}/>
+      <DownloadIcon onClick={() =>  downloadfn(props.documentId)}/>
     </Button>
     </>
     )
@@ -153,7 +154,11 @@ export default function Log() {
       <td><Typography level="body-xs">{o?.users.userName}</Typography></td>
       <td><Typography level="body-xs">{o?.transitionMaster.transitionName}</Typography></td>
       <td>
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}><RowMenu sheetId={o.sheetId} documentId={o.id} /></Box>
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+          {/* <RowMenu sheetId={o.sheetId} documentId={o.id} /> */}
+          <RowMenu sheetId={o.sheetId} documentId={o.id} transitionId={o.transitionId} />
+
+          </Box>
       </td>
     </tr>
 

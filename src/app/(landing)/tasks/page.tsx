@@ -53,7 +53,7 @@ export default function Task() {
         const separator = baseurl.includes('?')?'&':'?';
         setEndPoint(`${baseurl}${separator}designationMaster_designationName=${value}`);
       },
-      placeholder : "Search user by assignee",
+      placeholder : "Search user by designation",
       startDecoration : <SearchIcon/>
     },
   ]

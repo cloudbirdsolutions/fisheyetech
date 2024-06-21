@@ -44,7 +44,7 @@ const [endPoint, setEndPoint] = React.useState<string>('/sheetMaster/get');
       handleChange : (value:string)=>{
         setEndPoint(`/sheetmaster/get?sheetName=${value}`);
       },
-      placeholder : "Search user by Entity name",
+      placeholder : "add search by entity",
       startDecoration : <SearchIcon/>
     }
   ]

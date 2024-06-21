@@ -39,7 +39,9 @@ const [endPoint, setEndPoint] = React.useState<string>(baseurl);
       searchLabel : 'Search',
       filterType : 'INPUT',
       handleChange : (value:string)=>{
-        setEndPoint(`/joballocation/get-user-departments?departmentName=${value}`);
+        // setEndPoint(`/joballocation/get-user-departments?departmentName=${value}`);
+        setEndPoint(`/joballocation/get-user-departments?userId=${logintype.data.id}&departments_departmentName=${value}`);
+
       },
       placeholder : "Search user by department name",
       startDecoration : <SearchIcon/>
