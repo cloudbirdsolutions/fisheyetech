@@ -250,22 +250,22 @@ export default function TrendSelectorComponent(props: any) {
                     setSelectedFieldId(newValue)
             }
         },
-        {
-            formHead: 'Reading',
-            name: 'Reading',
-            selectList: readingList,
-            valueId: 'readingId',
-            optionLabel: 'readingName',
-            selected: selectedReadingId,
-            multiple:true,
-            handleChange: (
-                event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element> | React.FocusEvent<Element, Element> | null,
-                newValue: number | null,
-            ) => {
-                if (newValue)
-                    setSelectedReadingId(newValue)
-            }
-        },
+        // {
+        //     formHead: 'Reading',
+        //     name: 'Reading',
+        //     selectList: readingList,
+        //     valueId: 'readingId',
+        //     optionLabel: 'readingName',
+        //     selected: selectedReadingId,
+        //     multiple:true,
+        //     handleChange: (
+        //         event: React.MouseEvent<Element, MouseEvent> | React.KeyboardEvent<Element> | React.FocusEvent<Element, Element> | null,
+        //         newValue: number | null,
+        //     ) => {
+        //         if (newValue)
+        //             setSelectedReadingId(newValue)
+        //     }
+        // },
        
         
     ]
@@ -290,26 +290,30 @@ export default function TrendSelectorComponent(props: any) {
     }, [chartStartDate, chartEndDate]);
 
     useEffect(() => {
-        let recordMasterFirst = jmespath.search(fieldAttributeList, '[].recordMaster[].{date:updatedAt,value:fieldValue}');
-        recordMasterFirst = recordMasterFirst.map((r: any) => ({ date: moment(r.date).format('YYYY-MM-DD'), value: r.value }));
-    
-        
+        let recordMasterFirst = jmespath.search(fieldAttributeList, '[].recordMaster[].{date:updatedAt,value:fieldValue,readingId:readingId}');
+        recordMasterFirst = recordMasterFirst.map((r: any) => ({ date: moment(r.date).format('YYYY-MM-DD'), value: r.value,readingId:r.readingId }));
+
         let dataset = chartRange.map((date, indx) => {
-            let itemFirst = recordMasterFirst.find((r: any) => r.date === date);
-            let valueFirst = itemFirst ? Number.isInteger(parseInt(itemFirst.value)) ? parseInt(itemFirst.value) : 0 : 0;
-    
-           
-            return { a: valueFirst,  date: date };
+            let dataSetObject = {date: date}
+            readingList.map((reading:{readingId:number,readingName:string})=>{
+                let eachDataSetProp = recordMasterFirst.find((r: any) => r.date === date && r.readingId === reading.readingId);
+                let value = eachDataSetProp ? Number.isInteger(parseInt(eachDataSetProp.value)) ? parseInt(eachDataSetProp.value) : 0 : 0;
+                dataSetObject  = Object.assign(dataSetObject,{[reading.readingId]:value})
+            })
+
+           return dataSetObject;
         });
-    
+        // console.log(dataset);
         setChartDataSet(dataset);
-    }, [chartRange, fieldAttributeList, ]);
+    }, [chartRange, fieldAttributeList ]);
     
-    const series: SeriesType[] = Array.from({ length: fieldList.length }, (_, index) => ({
-        type: "line",
-        dataKey: String.fromCharCode(97 + index), // Assuming 'a', 'b', 'c', ... based on index
-        label: chartSeriesLabel
-    }));
+    // const series: SeriesType[] = Array.from({ length: fieldList.length }, (_, index) => ({
+    //     type: "line",
+    //     dataKey: String.fromCharCode(97 + index), // Assuming 'a', 'b', 'c', ... based on index
+    //     label: chartSeriesLabel
+    // }));
+
+    const series:SeriesType[] = readingList.map((reading:{readingId:number,readingName:string})=> ({type: "line",dataKey: reading.readingId, label: reading.readingName}));
     
     const xAxis = [
         {
