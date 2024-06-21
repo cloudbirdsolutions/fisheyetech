@@ -398,7 +398,7 @@ export default function Log() {
       // setCurrentShift((shiftResp.data[0]?.shiftId))
       // setSheetPermissionId(permissionData.data[0]?.permissionType.id)
       setSheetName(sheetdet.data);
-      setReivews(reviewResp.data ? reviewResp.data : []);
+      setReivews(reviewResp.data);
       setDocumentTransistionId(documentTransitioResp.data[0]);
       decideShowReview();
     };
@@ -647,6 +647,7 @@ export default function Log() {
                         documentTransitionState={
                           documentTransitionId.transitionId
                         }
+                        documentDetails={documentDetails}
                         fieldMapping={fieldRecord}
                         sheetPermissionId={sheetPermissionId}
                         isInputDisabled={isUserInputDisabled}

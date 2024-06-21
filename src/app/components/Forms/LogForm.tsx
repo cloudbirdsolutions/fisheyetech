@@ -21,7 +21,7 @@ import {
   Textarea,
   Option,
 } from "@mui/joy";
-import { FormData, Reccod, RecordReading } from "@/app/types";
+import { FormData, Reccod, RecordReading, SheetDocId } from "@/app/types";
 
 interface LogFormProps {
   formData: FormData[];
@@ -31,6 +31,7 @@ interface LogFormProps {
   fieldMapping: RecordReading[];
   sheetPermissionId: number;
   isInputDisabled: boolean;
+  documentDetails: SheetDocId[];
 }
 
 const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
@@ -50,7 +51,8 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
         rec.parameterId === parameterId
     );
   };
-
+  console.log(props.documentDetails[0]?.transitionId);
+  console.log(props.documentDetails[0]?.users.userName);
   const updateValue = (
     e: React.ChangeEvent<HTMLInputElement>,
     groupId: number,
@@ -158,10 +160,14 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
         );
         break;
 
-      case "dropdown_user":
+      case "dropdown_user" :
         inputElement = (
           <Select
-            defaultValue={props.documentTransitionState && 1 ? "vds":null}
+            defaultValue={
+              props.documentDetails[0]?.transitionId && 1
+                ? props.documentDetails[0]?.users.userName
+                : fieldValue
+            }
             onChange={(e) =>
               updateValue(
                 e as unknown as React.ChangeEvent<HTMLInputElement>,
@@ -173,14 +179,28 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
             }
             disabled={props.isInputDisabled}
           >
-            <Option value="Draft">Draft</Option>
+            <Option
+              value={
+                props.documentDetails[0]?.transitionId && 1
+                  ? props.documentDetails[0]?.users.userName
+                  : fieldValue
+              }
+            >
+              {props.documentDetails[0]?.transitionId && 1
+                ? props.documentDetails[0]?.users.userName
+                : fieldValue}
+            </Option>
           </Select>
         );
         break;
-      case "dropdown_reviewer":
+      case "dropdown_reviewer"  :
         inputElement = (
           <Select
-            defaultValue="Reviewer"
+            defaultValue={
+              props.documentDetails[0]?.transitionId == 2
+                ? props.documentDetails[0]?.users.userName
+                : fieldValue
+            }
             onChange={(e) =>
               updateValue(
                 e as unknown as React.ChangeEvent<HTMLInputElement>,
@@ -192,7 +212,17 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
             }
             disabled={props.isInputDisabled}
           >
-            <Option value="Reviewer">Reviewer</Option>
+            <Option
+              value={
+                props.documentDetails[0]?.transitionId == 2
+                  ? props.documentDetails[0]?.users.userName
+                  : fieldValue
+              }
+            >
+              {props.documentDetails[0]?.transitionId == 2
+                ? props.documentDetails[0]?.users.userName
+                : fieldValue}
+            </Option>
           </Select>
         );
         break;
