@@ -398,6 +398,30 @@ export type AllowedTransitionAction = {
   }
 }
 
+export type AllowedTransitionAudit = {
+  "id": 1647,
+  "createdAt": "2024-06-17T08:16:32.002Z",
+  "updatedAt": "2024-06-17T08:16:32.002Z",
+  "docId": 553,
+  "shiftId": 3,
+  "transitionId": 1,
+  "updatedBy": 117,
+  "sheetDocumentId": {
+      "sheetMaster": {
+          "sheetName": "VIBRATING SCREEN A FIELD LOG SHEET"
+      }
+  },
+  "shiftMaster": {
+      "shiftType": "Shift C"
+  },
+  "transitionMaster": {
+      "transitionName": "Draft"
+  },
+  "users": {
+      "name": "CHP field operator"
+  }
+}
+
 export type ChartAttributes = {
   "groupId": number,
   "sheetId": number,

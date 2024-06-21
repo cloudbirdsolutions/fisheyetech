@@ -35,7 +35,7 @@ interface LogFormProps {
 
 const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
   const [expandIndex, setExpandIndex] = React.useState<number | null>(0);
-
+  console.log(props.documentTransitionState);
   const getMatchedFieldRecord = (
     groupId: number,
     parameterId: number,
@@ -158,10 +158,10 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
         );
         break;
 
-      case "dropdown_approver":
+      case "dropdown_user":
         inputElement = (
-          <Select           
-            defaultValue="dropdown approver"
+          <Select
+            defaultValue={props.documentTransitionState && 1 ? "vds":null}
             onChange={(e) =>
               updateValue(
                 e as unknown as React.ChangeEvent<HTMLInputElement>,
@@ -173,7 +173,45 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
             }
             disabled={props.isInputDisabled}
           >
-            <Option value="dropdown approver">dropdown approver</Option>
+            <Option value="Draft">Draft</Option>
+          </Select>
+        );
+        break;
+      case "dropdown_reviewer":
+        inputElement = (
+          <Select
+            defaultValue="Reviewer"
+            onChange={(e) =>
+              updateValue(
+                e as unknown as React.ChangeEvent<HTMLInputElement>,
+                group.groupId,
+                groupParam.parameterId,
+                paramField.fieldId,
+                fieldReading.readingId
+              )
+            }
+            disabled={props.isInputDisabled}
+          >
+            <Option value="Reviewer">Reviewer</Option>
+          </Select>
+        );
+        break;
+      case "dropdown_approver":
+        inputElement = (
+          <Select
+            defaultValue="Approver"
+            onChange={(e) =>
+              updateValue(
+                e as unknown as React.ChangeEvent<HTMLInputElement>,
+                group.groupId,
+                groupParam.parameterId,
+                paramField.fieldId,
+                fieldReading.readingId
+              )
+            }
+            disabled={props.isInputDisabled}
+          >
+            <Option value="Approver">Approver</Option>
           </Select>
         );
         break;
