@@ -55,7 +55,8 @@ export default function DepartmentTable(props: ForceSheetTableProps) {
   }
 
    const RowMenu = (props:any) => {
-    return <Button onClick={()=>{remarksfn(props.row)}} color='success'>Resolve</Button>
+    return (<><Button onClick={()=>{remarksfn(props.row)}} color='success'>Resolve</Button>
+    <Button onClick={()=>{remarksfn(props.row)}} color='primary'>Reopen</Button></>)
   }
 
   // const data = await getData()

@@ -17,10 +17,20 @@ import "react-toastify/dist/ReactToastify.css";
 import TableSection from "@/app/components/Common/TableSection";
 import { stableSort, getComparator } from "@/app/helper/sorting";
 import { useAuth } from "@/app/hooks/useAuth";
+import { TransitionAudit } from "@/app/types";
 
 type Order = "asc" | "desc";
 
-export default function OrderTable(props: any) {
+interface TransitionAuditProps {
+  transitionAudit: TransitionAudit[];
+  docId: number;
+}
+
+const OrderTable: React.FC<TransitionAuditProps> = (
+  props: TransitionAuditProps
+) => {
+  // const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
+
   const [rows, setRows] = React.useState([
     { id: "", name: "", userName: "", status: "", password: "", action: "" },
   ]);
@@ -28,6 +38,7 @@ export default function OrderTable(props: any) {
   const [order, setOrder] = React.useState<Order>("desc");
 
   const router = useRouter();
+  console.log(props.transitionAudit);
 
   const auth = useAuth();
 
@@ -70,34 +81,37 @@ export default function OrderTable(props: any) {
     "Updated Date",
   ];
 
-  const tablerows = stableSort(rows, getComparator(order, "id")).map(
-    (row: any) => (
-      <tr key={row?.id}>
-        <td>
-          <Typography level="body-xs">{row?.id}</Typography>
-        </td>
-        <td>
-          <Typography level="body-xs">{row?.docId}</Typography>
-        </td>
-        <td>
-          <Typography level="body-xs">{row?.shiftMaster?.shiftType}</Typography>
-        </td>
-        <td>
-          <Typography level="body-xs">
-            {row?.transitionMaster?.transitionName}
-          </Typography>
-        </td>
-        <td>
-          <Typography level="body-xs">{row?.users?.name}</Typography>
-        </td>
-        <td>
-          <Typography level="body-xs">{row?.createdAt}</Typography>
-        </td>
-      </tr>
-    )
-  );
+  const tablerows = stableSort(
+    props.transitionAudit,
+    getComparator(order, "id")
+  ).map((row: any) => (
+    <tr key={row?.id}>
+      <td>
+        <Typography level="body-xs">{row?.id}</Typography>
+      </td>
+      <td>
+        <Typography level="body-xs">{row?.docId}</Typography>
+      </td>
+      <td>
+        <Typography level="body-xs">{row?.shiftMaster?.shiftType}</Typography>
+      </td>
+      <td>
+        <Typography level="body-xs">
+          {row?.transitionMaster?.transitionName}
+        </Typography>
+      </td>
+      <td>
+        <Typography level="body-xs">{row?.users?.name}</Typography>
+      </td>
+      <td>
+        <Typography level="body-xs">{row?.createdAt}</Typography>
+      </td>
+    </tr>
+  ));
 
   return (
     <TableSection tableHeaders={headers} tableRows={tablerows} action={false} />
   );
-}
+};
+
+export default OrderTable;

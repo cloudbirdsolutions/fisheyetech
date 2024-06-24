@@ -79,7 +79,7 @@ export default function EntityTable(props:EntityTableProps) {
         <Typography level="body-xs">{row?.id}</Typography>
       </td>
       <td>
-        <Typography level="body-xs">{row?.sheetName}ddd</Typography>
+        <Typography level="body-xs">{row?.sheetName}</Typography>
       </td>
       
       <td>
