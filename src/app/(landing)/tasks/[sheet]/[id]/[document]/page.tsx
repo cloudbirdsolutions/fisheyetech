@@ -254,7 +254,7 @@ export default function Log() {
       "createdBy": 2,
       "summary": "Pls check temperature limit",
       "users": {
-        "userName": "Bharani1"
+        "userName": ""
       },
       "comments": [
         {

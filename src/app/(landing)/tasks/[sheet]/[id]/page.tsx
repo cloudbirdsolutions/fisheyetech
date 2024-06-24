@@ -21,7 +21,8 @@ import {useApi} from "@/app/api/hooks/useApi";
 import {SheetRaw} from "@/app/types";
 import {Document, JobAllocationDesignation,DesignationAction} from "@/app/types";
 import {log} from "node:util";
-
+import DateControlSearch from '@/app/components/Tasks/Dateseaerch';
+import moment from "moment";
 
 export default function Log() {
   const auth =  useAuth();
@@ -36,6 +37,8 @@ export default function Log() {
   const {data:designationList, fetchData:fetchDesignationList } = useApi<JobAllocationDesignation>(`/joballocation/designation?userId=${logintype.data.id}&sheetId=${parseInt(params.id)}`,{method:"GET"})
   const {data:actionList, fetchData:fetchActionList } = useApi<DesignationAction>(`/designation/actions?sheetId=${parseInt(params.id)}&designationId=${designationId}`,{method:"GET"})
 
+  const [searchStartDate,setSearchStartDate]=React.useState<string>(moment().format("YYYY-MM-DD"))
+  const [searchEndDate,setSearchEndDate]=React.useState<string>(moment().format("YYYY-MM-DD"))
 
   const actionArray = actionList.map(i=> (i.actionMaster.actionName))
   const dispatch:any = useDispatch<AppDispatch>();
@@ -174,6 +177,11 @@ export default function Log() {
       <Box marginTop={2}>
         <ToastContainer />
         <Typography level='title-lg' color='warning'>Document List</Typography>
+
+        <Stack marginBottom={2}>
+        <DateControlSearch setSearchStartDate={setSearchStartDate} setSearchEndDate={setSearchEndDate} />
+        </Stack>
+        
         <Divider/>
         <Stack direction={'row'}  justifyContent="space-between"  spacing={3} marginBottom={2} marginTop={2}>
         <Stack>
