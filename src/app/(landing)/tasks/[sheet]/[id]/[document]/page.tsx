@@ -342,7 +342,6 @@ export default function Log() {
   const dispatch = useDispatch<AppDispatch>();
 
   const auth = useAuth();
-
   useEffect(() => {
     !auth
       ? (localStorage.removeItem("accessToken"),
@@ -379,6 +378,7 @@ export default function Log() {
     fetchDesignationList();
     fetchDocumentDetails();
     fetchAllowedTransitions();
+    fetchTransitionAudit();
 
     let fetchFromServer = async () => {
       let reviewResp = await getDocumentReviews(params.document, currentShift);
@@ -408,7 +408,7 @@ export default function Log() {
 
   React.useEffect(() => {
     setCurrentShift(shiftDetails[0]?.shiftId);
-  }, [shiftDetails]);
+  }, [shiftDetails, currentShift]);
 
   const decideDisable = () => {
     return (
@@ -651,6 +651,7 @@ export default function Log() {
                         fieldMapping={fieldRecord}
                         sheetPermissionId={sheetPermissionId}
                         isInputDisabled={isUserInputDisabled}
+                        transitionAudit={transitionAudit}
                       />
                     </TabPanel>
                   </Tabs>
@@ -745,7 +746,10 @@ export default function Log() {
                     <TabPanel value={1}>
                       {
                         <>
-                          <TransitionTable docId={parseInt(params.document)} />
+                          <TransitionTable
+                            docId={parseInt(params.document)}
+                            transitionAudit={transitionAudit}
+                          />
                           <TransitionList docId={parseInt(params.document)} />
                         </>
                       }

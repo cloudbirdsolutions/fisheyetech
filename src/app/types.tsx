@@ -513,3 +513,27 @@ export type Remarks = {
     "updatedAt": string
   }
 }
+
+export type TransitionAudit = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "docId": number,
+  "shiftId": number,
+  "transitionId": number,
+  "updatedBy": number,
+  "sheetDocumentId": {
+      "sheetMaster": {
+          "sheetName": string
+      }
+  },
+  "shiftMaster": {
+      "shiftType": string
+  },
+  "transitionMaster": {
+      "transitionName": string
+  },
+  "users": {
+      "name": string
+  }
+}

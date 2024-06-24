@@ -21,7 +21,15 @@ import {
   Textarea,
   Option,
 } from "@mui/joy";
-import { FormData, Reccod, RecordReading, SheetDocId } from "@/app/types";
+import {
+  FormData,
+  Reccod,
+  RecordReading,
+  SheetDocId,
+  TransitionAudit,
+} from "@/app/types";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/Store/store";
 
 interface LogFormProps {
   formData: FormData[];
@@ -32,6 +40,7 @@ interface LogFormProps {
   sheetPermissionId: number;
   isInputDisabled: boolean;
   documentDetails: SheetDocId[];
+  transitionAudit: TransitionAudit[];
 }
 
 const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
@@ -51,8 +60,8 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
         rec.parameterId === parameterId
     );
   };
-  console.log(props.documentDetails[0]?.transitionId);
-  console.log(props.documentDetails[0]?.users.userName);
+  const userdetails = useSelector((state: RootState) => state?.user?.data);
+
   const updateValue = (
     e: React.ChangeEvent<HTMLInputElement>,
     groupId: number,
@@ -104,6 +113,30 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
         m.readingId === readingId
     );
   };
+
+  const filteredOperator = props.transitionAudit.filter(
+    (doc) => doc.transitionId === 2
+  );
+  const sortedOperator = filteredOperator.sort(
+    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+  );
+  console.log(sortedOperator, "operator");
+  const latestDraft = sortedOperator[0];
+  console.log(latestDraft, "latest operator");
+
+  const filteredReviewer = props.transitionAudit.filter(
+    (doc) => doc.transitionId === 3
+  );
+  const sortedReviewer = filteredReviewer.sort(
+    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+  );
+  const latestReviewer = sortedReviewer[0];
+  console.log(latestReviewer, "latestReviewer");
+
+  if (latestDraft && latestReviewer) {
+    const latestDraftDate = new Date(latestDraft.updatedAt).getTime();
+    const latestReviewerDate = new Date(latestReviewer.updatedAt).getTime();
+  }
 
   const renderInputField = (
     paramField: any,
@@ -160,14 +193,10 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
         );
         break;
 
-      case "dropdown_user" :
+      case "dropdown_user":
         inputElement = (
           <Select
-            defaultValue={
-              props.documentDetails[0]?.transitionId && 1
-                ? props.documentDetails[0]?.users.userName
-                : fieldValue
-            }
+            defaultValue={latestDraft ? latestDraft.users.name : fieldValue}
             onChange={(e) =>
               updateValue(
                 e as unknown as React.ChangeEvent<HTMLInputElement>,
@@ -179,27 +208,17 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
             }
             disabled={props.isInputDisabled}
           >
-            <Option
-              value={
-                props.documentDetails[0]?.transitionId && 1
-                  ? props.documentDetails[0]?.users.userName
-                  : fieldValue
-              }
-            >
-              {props.documentDetails[0]?.transitionId && 1
-                ? props.documentDetails[0]?.users.userName
-                : fieldValue}
+            <Option value={latestDraft ? latestDraft.users.name : fieldValue}>
+              {latestDraft ? latestDraft.users.name : fieldValue}
             </Option>
           </Select>
         );
         break;
-      case "dropdown_reviewer"  :
+      case "dropdown_reviewer":
         inputElement = (
           <Select
             defaultValue={
-              props.documentDetails[0]?.transitionId == 2
-                ? props.documentDetails[0]?.users.userName
-                : fieldValue
+              latestReviewer ? latestReviewer.users.name : fieldValue
             }
             onChange={(e) =>
               updateValue(
@@ -213,15 +232,9 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
             disabled={props.isInputDisabled}
           >
             <Option
-              value={
-                props.documentDetails[0]?.transitionId == 2
-                  ? props.documentDetails[0]?.users.userName
-                  : fieldValue
-              }
+              value={latestReviewer ? latestReviewer.users.name : fieldValue}
             >
-              {props.documentDetails[0]?.transitionId == 2
-                ? props.documentDetails[0]?.users.userName
-                : fieldValue}
+              {latestReviewer ? latestReviewer.users.name : fieldValue}
             </Option>
           </Select>
         );
@@ -229,7 +242,7 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
       case "dropdown_approver":
         inputElement = (
           <Select
-            defaultValue="Approver"
+            defaultValue={latestReviewer ? userdetails.data.name : fieldValue}
             onChange={(e) =>
               updateValue(
                 e as unknown as React.ChangeEvent<HTMLInputElement>,
@@ -241,7 +254,9 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
             }
             disabled={props.isInputDisabled}
           >
-            <Option value="Approver">Approver</Option>
+            <Option value={latestReviewer ? userdetails.data.name : fieldValue}>
+              {latestReviewer ? userdetails.data.name : fieldValue}
+            </Option>
           </Select>
         );
         break;

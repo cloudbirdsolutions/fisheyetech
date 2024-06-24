@@ -338,7 +338,7 @@ export default function Followups(props: DepartmentTable) {
             <FormLabel>Department</FormLabel>
             <Select placeholder="Select a department" onChange={handleChange}>
               {DepartmentOnly.map((dep) => (
-                <Option key={dep?.id} value={dep?.id}>
+                <Option key={dep?.id} value={dep?.departmentId}>
                   {dep?.departments?.departmentName}
                 </Option>
               ))}
