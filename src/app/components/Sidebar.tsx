@@ -153,7 +153,7 @@ const sidebarItems = [
     label: 'Paremeter Trend',
     navPath: "/parametertrend",
     icon: <TrendingUpIcon/>,
-    roles: ['admin','superadmin']
+    roles: ['admin','superadmin','user']
   },
   // {
   //   label: 'Comments',
