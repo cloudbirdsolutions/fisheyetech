@@ -13,6 +13,7 @@ import TrendChartComponent from "@/app/components/ParameterTrending/TrendChartCo
 import {Card, CardContent} from "@mui/joy";
 import Grid from "@mui/joy/Grid";
 import moment from "moment";
+import DatasetTable from "@/app/components/ParameterTrending/DatasetTable";
 let twix = require('twix');
 
 var jmespath = require("jmespath");
@@ -373,7 +374,7 @@ export default function TrendSelectorComponent(props: any) {
             {/*<Button type="submit"> Generate Trend</Button>*/}
 
             <TrendChartComponent chartTitle={chartTitle} dataset={chartDataSet} series={series} xAxis={xAxis} yAxis={yAxis} setChartStartDate={setChartStartDate} setChartEndDate={setChartEndDate}/>
-
+            <DatasetTable Dataset={chartDataSet} Series={series}/>
         </>
     )
 }
