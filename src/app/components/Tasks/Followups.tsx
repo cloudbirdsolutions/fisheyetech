@@ -21,7 +21,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Inter } from "next/font/google";
 const jmespath = require("jmespath");
-import {Department, User} from "@/app/types";
+import { Department, User } from "@/app/types";
 
 import FollowUpsModalForm from "../followUpsModelForm/followupsmodel";
 import { useState } from "react";
@@ -31,11 +31,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import FollowupModalForm from "../followUpsModelForm/followupsmodel";
 import { useAuth } from "@/app/hooks/useAuth";
 import { departmentnames } from "@/app/types";
-import { Remarks,Remark } from "@/app/types";
+import { Remarks, Remark } from "@/app/types";
 import { editfollowupstatus } from "@/app/Reducers/editFolloupsstatusSlice";
 
 interface DepartmentTable {
-  departmentList:Remarks[];
+  departmentList: Remarks[];
 }
 
 export default function Followups(props: DepartmentTable) {
@@ -245,7 +245,6 @@ export default function Followups(props: DepartmentTable) {
     "UpdatedBy",
     "Remarks",
     "Status",
-    
   ];
 
   const followUpRow = props.departmentList?.map((dep) =>
@@ -256,7 +255,9 @@ export default function Followups(props: DepartmentTable) {
             <Typography level="body-xs">{rem.id}</Typography>
           </td>
           <td>
-            <Typography level="body-xs">{dep.departments.departmentName}</Typography>
+            <Typography level="body-xs">
+              {dep.departments.departmentName}
+            </Typography>
           </td>
           <td>
             <Typography level="body-xs">{rem.createdAt}</Typography>
@@ -298,7 +299,6 @@ export default function Followups(props: DepartmentTable) {
       </tr>
     )
   );
-  
 
   React.useEffect(() => {
     const fetchRemarks = async () => {
@@ -365,7 +365,11 @@ export default function Followups(props: DepartmentTable) {
         </Stack>
       </Box>
 
-      <TableSection tableHeaders={followUpHeader} tableRows={followUpRow} action={true}/>
+      <TableSection
+        tableHeaders={followUpHeader}
+        tableRows={followUpRow}
+        action={true}
+      />
 
       <Modal
         aria-labelledby="modal-title"

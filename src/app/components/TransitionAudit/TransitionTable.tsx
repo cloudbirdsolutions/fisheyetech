@@ -43,28 +43,34 @@ const OrderTable: React.FC<TransitionAuditProps> = (
   const auth = useAuth();
 
   React.useEffect(() => {
-    // setRows(props.transitionAudit);
-    // const getData = async () => {
-    //   try {
-    //     const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/transitionaudit?docId=${props.docId}`, {
-    //       method: 'GET',
-    //       headers: {
-    //         Accept: "application/json",
-    //         'Content-Type': 'application/json',
-    //         Authorization: "Bearer "  + auth,
-    //       }
-    //     });
-    //     if (!response.ok) {
-    //       const errorData = await response.json();
-    //       toast.error(errorData.message)
-    //     }
-    //     const data = await response.json();
-    //     setRows(data.data);
-    //   } catch (error) {
-    //     console.error('Error fetching user details:', error);
-    //   }
-    // };
-    // getData();
+    const getData = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_HOST}/transitionaudit?docId=${props.docId}`,
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + auth,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          toast.error(errorData.message);
+        }
+
+        const data = await response.json();
+
+        setRows(data.data);
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+
+    getData();
   }, []);
 
   const headers = [
