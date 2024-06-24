@@ -63,7 +63,7 @@ useEffect(() => {
         <>
         {auth ? (
             <>
-                    <SearchComponent filterItems={userFilterItems}></SearchComponent>
+                    <SearchComponent filterItems={userFilterItems}></SearchComponent>z
 
             <Followups departmentList={data} />
             </>

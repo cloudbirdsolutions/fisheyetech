@@ -314,14 +314,15 @@ export default function Log() {
 
   const [reviews, setReivews] = useState<ChatProps[]>([
     {
-      id: "1",
-      createdAt: "2024-04-26T05:26:59.637Z",
-      updatedAt: "2024-04-26T05:26:59.637Z",
-      docId: 232,
-      createdBy: 2,
-      summary: "Pls check temperature limit",
-      users: {
-        userName: "Bharani1",
+
+      "id": "1",
+      "createdAt": "2024-04-26T05:26:59.637Z",
+      "updatedAt": "2024-04-26T05:26:59.637Z",
+      "docId": 232,
+      "createdBy": 2,
+      "summary": "Pls check temperature limit",
+      "users": {
+        "userName": ""
       },
       comments: [
         {
