@@ -45,7 +45,7 @@ interface LogFormProps {
 
 const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
   const [expandIndex, setExpandIndex] = React.useState<number | null>(0);
-  console.log(props.documentTransitionState);
+  // console.log(props.documentTransitionState);
   const getMatchedFieldRecord = (
     groupId: number,
     parameterId: number,
@@ -117,12 +117,19 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
   const filteredOperator = props.transitionAudit.filter(
     (doc) => doc.transitionId === 2
   );
+  const filteredOperatorDraft = props.transitionAudit.filter(
+    (doc) => doc.transitionId === 1
+  );
+  const sortedOperatorDraft = filteredOperatorDraft.sort(
+    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+  );
   const sortedOperator = filteredOperator.sort(
     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
   );
-  console.log(sortedOperator, "operator");
+  const latestOperator = sortedOperatorDraft[0];
+
   const latestDraft = sortedOperator[0];
-  console.log(latestDraft, "latest operator");
+  // console.log(latestDraft, latestOperator, "latest operator");
 
   const filteredReviewer = props.transitionAudit.filter(
     (doc) => doc.transitionId === 3
@@ -131,12 +138,7 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
   );
   const latestReviewer = sortedReviewer[0];
-  console.log(latestReviewer, "latestReviewer");
-
-  if (latestDraft && latestReviewer) {
-    const latestDraftDate = new Date(latestDraft.updatedAt).getTime();
-    const latestReviewerDate = new Date(latestReviewer.updatedAt).getTime();
-  }
+  // console.log(latestReviewer, "latestReviewer");
 
   const renderInputField = (
     paramField: any,
@@ -188,15 +190,22 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
                 fieldReading.readingId
               )
             }
+            disabled={props.isInputDisabled}
             sx={{ mb: 1 }}
           />
         );
         break;
 
       case "dropdown_user":
+        let fieldValues = latestDraft
+          ? latestDraft.users.name
+          : latestOperator
+          ? latestOperator.users.name
+          : fieldValue;
         inputElement = (
           <Select
-            defaultValue={latestDraft ? latestDraft.users.name : fieldValue}
+            defaultValue={fieldValues}
+            disabled={props.isInputDisabled}
             onChange={(e) =>
               updateValue(
                 e as unknown as React.ChangeEvent<HTMLInputElement>,
@@ -206,20 +215,29 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
                 fieldReading.readingId
               )
             }
-            disabled={props.isInputDisabled}
           >
-            <Option value={latestDraft ? latestDraft.users.name : fieldValue}>
-              {latestDraft ? latestDraft.users.name : fieldValue}
-            </Option>
+            <Option value={fieldValues}>{fieldValues}</Option>
           </Select>
         );
         break;
       case "dropdown_reviewer":
+        let fieldValueReviewer = latestReviewer
+          ? latestReviewer.users.name
+          : fieldValue;
+        let newDocumentRecord = props.recordMasterData.map((rec: Reccod) =>
+      rec.fieldId ===  paramField.fieldId &&
+      rec.readingId === fieldReading.readingId &&
+      rec.groupId === group.groupId &&
+      rec.parameterId === groupParam.parameterId
+        ? { ...rec, fieldValue: fieldValueReviewer }
+        : rec
+    );
+    // props.setDocumentRecord(newDocumentRecord);
+
         inputElement = (
           <Select
-            defaultValue={
-              latestReviewer ? latestReviewer.users.name : fieldValue
-            }
+            defaultValue={fieldValueReviewer}
+            disabled={props.isInputDisabled}
             onChange={(e) =>
               updateValue(
                 e as unknown as React.ChangeEvent<HTMLInputElement>,
@@ -229,20 +247,19 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
                 fieldReading.readingId
               )
             }
-            disabled={props.isInputDisabled}
           >
-            <Option
-              value={latestReviewer ? latestReviewer.users.name : fieldValue}
-            >
-              {latestReviewer ? latestReviewer.users.name : fieldValue}
-            </Option>
+            <Option value={fieldValueReviewer}>{fieldValueReviewer}</Option>
           </Select>
         );
         break;
       case "dropdown_approver":
+        let fieldValueapprover = latestReviewer
+          ? userdetails.data.name
+          : fieldValue;
+
         inputElement = (
           <Select
-            defaultValue={latestReviewer ? userdetails.data.name : fieldValue}
+            defaultValue={fieldValueapprover}
             onChange={(e) =>
               updateValue(
                 e as unknown as React.ChangeEvent<HTMLInputElement>,
@@ -254,9 +271,7 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
             }
             disabled={props.isInputDisabled}
           >
-            <Option value={latestReviewer ? userdetails.data.name : fieldValue}>
-              {latestReviewer ? userdetails.data.name : fieldValue}
-            </Option>
+            <Option value={fieldValueapprover}>{fieldValueapprover}</Option>
           </Select>
         );
         break;
@@ -338,7 +353,7 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
                                         {paramField.fieldMaster.fieldValue}
                                       </td>
                                       {paramField.fieldMaster.fieldReading.map(
-                                        (fieldReading) =>
+                                        (fieldReading, findex) =>
                                           checkGroupParamFieldReadingExistence(
                                             group.groupId,
                                             groupParam.parameterId,
@@ -350,14 +365,14 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
                                               style={{ width: 200 }}
                                             >
                                               <FormControl>
-                                                {pfindex === 0 && (
-                                                  <FormLabel>
-                                                    {
-                                                      fieldReading.readingMaster
-                                                        .readingName
-                                                    }
-                                                  </FormLabel>
-                                                )}
+                                                {/* {pfindex === 0 && ( */}
+                                                <FormLabel>
+                                                  {
+                                                    fieldReading.readingMaster
+                                                      .readingName
+                                                  }
+                                                </FormLabel>
+                                                {/* )}  */}
                                                 {renderInputField(
                                                   paramField,
                                                   group,

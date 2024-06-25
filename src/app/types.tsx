@@ -377,6 +377,9 @@ export type AllowedTransitionAction = {
   "updatedAt": string,
   "sheetId": number,
   "userId": number,
+  "docId": number,
+  "shiftId": number,
+  "shiftStatus": string,
   "transitionId": number,
   "transitionMaster": {
     "transitionActions": [
@@ -386,16 +389,12 @@ export type AllowedTransitionAction = {
           "actionName": string,
           "buttonName": string
         }
-      },
-      {
-        "actionMaster": {
-          "id": number,
-          "actionName": string,
-          "buttonName": string
-        }
       }
     ]
-  }
+  },
+  "shiftMaster": {
+    "shiftType": string
+},
 }
 
 export type AllowedTransitionAudit = {
