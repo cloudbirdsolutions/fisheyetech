@@ -156,7 +156,7 @@ export default function Home() {
               <IconButton variant="soft" color="primary" size="sm">
                 <BadgeRoundedIcon />
               </IconButton>
-              <Typography level="title-lg">Fisheyeteche</Typography>
+              <Typography level="title-lg">Fisheyetech</Typography>
             </Box>
             <ColorSchemeToggle />
           </Box>
