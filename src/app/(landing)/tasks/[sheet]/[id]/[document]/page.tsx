@@ -256,8 +256,8 @@ export default function Log() {
     );
 
   const [index, setIndex] = React.useState(0);
-  const allowedActionPerTransition = allowedTransition[0]
-    ? allowedTransition[0].transitionMaster.transitionActions.map(
+  const allowedActionPerTransition = allowedTransition[index]
+    ? allowedTransition[index].transitionMaster.transitionActions.map(
         (action) => action.actionMaster.actionName
       )
     : [];
@@ -409,7 +409,7 @@ export default function Log() {
 
   React.useEffect(() => {
     setCurrentShift(shiftDetails[0]?.shiftId);
-  }, [shiftDetails, currentShift]);
+  }, [shiftDetails]);
 
   const decideDisable = () => {
     return (
@@ -439,9 +439,9 @@ export default function Log() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shiftDetails, index]);
 
-  React.useEffect(() => {
+    React.useEffect(() => {
     const fetchData = async () => {
-      let documentRecordResp = await getDocumentRecords(
+        let documentRecordResp = await getDocumentRecords(
         params.document,
         currentShift
       );
@@ -471,12 +471,13 @@ export default function Log() {
         );
         return finalFiledDocumentRecord;
       });
-      // console.log(fieldRecord);
+      // console.log(documentRecordResp);
       setDocumentRecord(mergedFiledDocumentRecord);
       setReivews(reviewResp.data);
       decideShowReview();
     };
-    if (currentShift) fetchData();
+    fetchData()
+    // if (currentShift) fetchData();
     // setIsInputDisabled(decideDisable())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentShift, fieldRecord]);
@@ -490,6 +491,24 @@ export default function Log() {
 
     setIsUserInoutDisabled(!inputDisabled);
   }, [allowedTransition, actionList]);
+
+  React.useEffect(()=>{
+    // fetchAllowedTransitions()
+    const allowedActionPerTransition = allowedTransition.find(t=>t.shiftId == selectedShift.shiftId)
+    ?.transitionMaster.transitionActions.map(
+        (action) => action.actionMaster.actionName
+      )
+    || [];
+
+    let inputDisabled =
+    allowedActionPerTransition.includes("SAVE_DRAFT") &&
+    actionList
+      .map((action) => action.actionMaster.actionName)
+      .includes("SAVE_DRAFT");
+
+  setIsUserInoutDisabled(!inputDisabled);
+
+  },[selectedShift])
 
   const saveRecordChnages = async (transistionId: number) => {
     try {
