@@ -10,48 +10,51 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/app/Store/store';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {createdocument} from '@/app/Reducers/CreateDocumentSlice';
+import { createdocument } from '@/app/Reducers/CreateDocumentSlice';
 import IconButton from '@mui/joy/IconButton';
 import DownloadIcon from '@mui/icons-material/Download';
 import EditIcon from '@mui/icons-material/Edit';
 import { saveAs } from 'file-saver';
-import {useAuth} from '@/app/hooks/useAuth';
-import { useState,useEffect } from 'react';
-import {useApi} from "@/app/api/hooks/useApi";
-import {SheetRaw} from "@/app/types";
-import {Document, JobAllocationDesignation,DesignationAction} from "@/app/types";
-import {log} from "node:util";
+import { useAuth } from '@/app/hooks/useAuth';
+import { useState, useEffect } from 'react';
+import { useApi } from "@/app/api/hooks/useApi";
+import { SheetRaw } from "@/app/types";
+import { Document, JobAllocationDesignation, DesignationAction } from "@/app/types";
+import { log } from "node:util";
 import DateControlSearch from '@/app/components/Tasks/Dateseaerch';
 import moment from "moment";
 
 export default function Log() {
-  const auth =  useAuth();
+  const auth = useAuth();
   const params = useParams<{ sheet: string, id: string }>()
   const logintype = useSelector((state: RootState) => state?.user.data);
   const [designationId, setDesignationId] = useState(0)
 
-  const createdocuments = useSelector((state:any) => state?.createdocuments?.data);
+  const createdocuments = useSelector((state: any) => state?.createdocuments?.data);
 
-  const {data:sheetMaster, isLoading, fetchData:fetchSheetMaster } = useApi<SheetRaw>(`/sheetmaster/get-sheets?id=${parseInt(params.id)}`,{method:"GET"})
-  
+  const { data: sheetMaster, isLoading, fetchData: fetchSheetMaster } = useApi<SheetRaw>(`/sheetmaster/get-sheets?id=${parseInt(params.id)}`, { method: "GET" })
+
   // const {data:documentList, fetchData:fetchDocumentList } = useApi<Document>(`/sheetdocid/get-user-docs?sheetId=${parseInt(params.id)}`, {method:"GET"})
-  const {data:designationList, fetchData:fetchDesignationList } = useApi<JobAllocationDesignation>(`/joballocation/designation?userId=${logintype.data.id}&sheetId=${parseInt(params.id)}`,{method:"GET"})
-  const {data:actionList, fetchData:fetchActionList } = useApi<DesignationAction>(`/designation/actions?sheetId=${parseInt(params.id)}&designationId=${designationId}`,{method:"GET"})
+  const { data: designationList, fetchData: fetchDesignationList } = useApi<JobAllocationDesignation>(`/joballocation/designation?userId=${logintype.data.id}&sheetId=${parseInt(params.id)}`, { method: "GET" })
+  const { data: actionList, fetchData: fetchActionList } = useApi<DesignationAction>(`/designation/actions?sheetId=${parseInt(params.id)}&designationId=${designationId}`, { method: "GET" })
 
   // const [searchStartDate,setSearchStartDate]=React.useState<string>(moment().format("YYYY-MM-DD"))
   // const [searchEndDate,setSearchEndDate]=React.useState<string>(moment().format("YYYY-MM-DD"))
 
 
-  const [searchStartDate, setSearchStartDate] = useState<string>('');
-  const [searchEndDate, setSearchEndDate] = useState<string>('');
+  const [createdStartDate, setCreatedStartDate] = useState<string>('');
+  const [updatedStartDate, setUpdatedStartDate] = useState<string>('');
+  const [createdEndDate, setCreatedEnddate] = useState<string>('')
+  const [updatedEndDate,setUpdatedEndDate] = useState<string>('')
+  
 
   const { data: documentList, fetchData: fetchDocumentList } = useApi<Document>(
-    `/sheetdocid/get-user-docs?sheetId=${parseInt(params.id)}${searchStartDate ? `&createdAt=${searchStartDate}` : ''}${searchEndDate ? `&updatedAt=${searchEndDate}` : ''}`,
+    `/sheetdocid/get-user-docs?sheetId=${parseInt(params.id)}${createdStartDate ? `&createdStartDate=${createdStartDate}` : ''}${createdEndDate ? `&createdEndDate=${createdEndDate}` : ''}${updatedStartDate ? `&updatedStartDate=${updatedStartDate}` : ''}${updatedEndDate ? `&updatedEndDate=${updatedEndDate}` : ''}`,
     { method: "GET" }
-);
-
-  const actionArray = actionList.map(i=> (i.actionMaster.actionName))
-  const dispatch:any = useDispatch<AppDispatch>();
+  );
+  //  sheetdocid/get-user-docs?sheetId
+  const actionArray = actionList.map(i => (i.actionMaster.actionName))
+  const dispatch: any = useDispatch<AppDispatch>();
 
 
   const router = useRouter()
@@ -60,10 +63,10 @@ export default function Log() {
 
   useEffect(() => {
     !auth ? (
-    localStorage.removeItem('accessToken'),
-    dispatch({ type: "USER_LOGOUT" }),
-    //setuser('')
-    router.push("/", { scroll: false }) ): ( '' )
+      localStorage.removeItem('accessToken'),
+      dispatch({ type: "USER_LOGOUT" }),
+      //setuser('')
+      router.push("/", { scroll: false })) : ('')
   }, [])
 
 
@@ -72,14 +75,14 @@ export default function Log() {
     fetchSheetMaster()
     fetchDocumentList()
     fetchDesignationList()
-        //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params, searchStartDate, searchEndDate])
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params, createdStartDate, createdEndDate,updatedStartDate,updatedEndDate])
 
 
-  React.useEffect(()=>{
-    if(designationList.length > 0)
-    setDesignationId(designationList[0].designationId)
-  },[designationList])
+  React.useEffect(() => {
+    if (designationList.length > 0)
+      setDesignationId(designationList[0].designationId)
+  }, [designationList])
 
   useEffect(() => {
     fetchActionList()
@@ -88,11 +91,11 @@ export default function Log() {
 
   async function createDocument(sheetId: string, userId: number, transitionId: number) {
     const passData = {
-      'sheetId' : sheetId,
-      'userId' : userId,
-      'transitionId' : transitionId
+      'sheetId': sheetId,
+      'userId': userId,
+      'transitionId': transitionId
     }
-    dispatch(createdocument(passData)).then((res:any) => {
+    dispatch(createdocument(passData)).then((res: any) => {
 
       res.payload.status == 200 ? (
         toast.success(res.payload.message),
@@ -106,7 +109,7 @@ export default function Log() {
   }
 
 
-  const downloadfn = async(documentId:any) => {
+  const downloadfn = async (documentId: any) => {
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/downloadexcel?documentId=${documentId}`, {
@@ -116,10 +119,10 @@ export default function Log() {
         //   'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         // },
         headers: {
-          
-          Authorization: "Bearer "  + auth,
+
+          Authorization: "Bearer " + auth,
         }
-      
+
       });
 
       if (!response.ok) {
@@ -137,30 +140,32 @@ export default function Log() {
     }
   }
 
-  const handleReset=()=>{
-    setSearchEndDate('');
-      setSearchStartDate('');
-      fetchDocumentList();
-    
+  const handleReset = () => {
+    setCreatedStartDate('');
+    setCreatedEnddate('');
+    setUpdatedStartDate('');
+    setUpdatedEndDate('');
+    fetchDocumentList();
+
   }
 
   const RowMenu = (props: any) => {
     const isDisabled = props.transitionId === 5;
     return (
-    <>
-      <Button 
-      slots={{ root: IconButton }}
-      slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm',disabled:isDisabled } }}
-    >
-      <EditIcon onClick={() => !isDisabled && router.push(`/tasks/sheet/${props.sheetId}/${props.documentId}`)}/>
-    </Button>
-    <Button 
-      slots={{ root: IconButton }}
-      slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm'} }}
-    >
-      <DownloadIcon onClick={() =>  downloadfn(props.documentId)}/>
-    </Button>
-    </>
+      <>
+        <Button
+          slots={{ root: IconButton }}
+          slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm', disabled: isDisabled } }}
+        >
+          <EditIcon onClick={() => !isDisabled && router.push(`/tasks/sheet/${props.sheetId}/${props.documentId}`)} />
+        </Button>
+        <Button
+          slots={{ root: IconButton }}
+          slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
+        >
+          <DownloadIcon onClick={() => downloadfn(props.documentId)} />
+        </Button>
+      </>
     )
   }
 
@@ -177,7 +182,7 @@ export default function Log() {
           {/* <RowMenu sheetId={o.sheetId} documentId={o.id} /> */}
           <RowMenu sheetId={o.sheetId} documentId={o.id} transitionId={o.transitionId} />
 
-          </Box>
+        </Box>
       </td>
     </tr>
 
@@ -188,48 +193,48 @@ export default function Log() {
 
   return (
     <>
-    {auth ? (
-      <>
-      <Box marginTop={2}>
-        <ToastContainer />
-        <Typography level='title-lg' color='warning'>Document List</Typography>
+      {auth ? (
+        <>
+          <Box marginTop={2}>
+            <ToastContainer />
+            <Typography level='title-lg' color='warning'>Document List</Typography>
 
-        <Stack marginBottom={2}>
-        <DateControlSearch setSearchStartDate={setSearchStartDate} setSearchEndDate={setSearchEndDate} handleReset={handleReset}/>
-        </Stack>
-       
-        <Divider/>
-        <Stack direction={'row'}  justifyContent="space-between"  spacing={3} marginBottom={2} marginTop={2}>
-        <Stack>
-          {sheetMaster.length > 0 && <Typography level='title-sm' component="h1">{sheetMaster[0].sheetName}</Typography>}
-          {designationList.length > 0 && <Chip variant={'solid'} size={'sm'} color={'primary'}> {designationList[0].designationMaster.designationName}</Chip>}
-        </Stack>
-        <Stack direction={'row'} spacing={2} justifyContent={'flex-end'} alignItems={'flex-end'}>
-        { actionArray.includes('SAVE_DRAFT') && <Button size='sm' color='primary' startDecorator={<Add />} onClick={() => createDocument(params.id, logintype.data.id, 1)}>
-            Create New Document
-          </Button>}
-          <Link
-            underline="hover"
-            color="primary"
-            href="/tasks"
-            fontSize={14}
-            fontWeight={500}
-            sx={{ ml: 'auto' }} 
-          >
-            Go Back to Task List
-          </Link>
+            <Stack marginBottom={2}>
+              <DateControlSearch setCreatedStartDate={setCreatedStartDate} setUpdatedStartDate={setUpdatedStartDate} setCreatedEndDate={setCreatedEnddate} setUpdatedEndDate={setUpdatedEndDate} handleReset={handleReset} />
+            </Stack>
 
-        </Stack>
-        </Stack>
-        <Divider/>
-      </Box>
-      <TableSection tableHeaders={headers} tableRows={rows} action={true}/>
-      </>
-    )
-    : 
-    ('Session Timed Out')
-    }
+            <Divider />
+            <Stack direction={'row'} justifyContent="space-between" spacing={3} marginBottom={2} marginTop={2}>
+              <Stack>
+                {sheetMaster.length > 0 && <Typography level='title-sm' component="h1">{sheetMaster[0].sheetName}</Typography>}
+                {designationList.length > 0 && <Chip variant={'solid'} size={'sm'} color={'primary'}> {designationList[0].designationMaster.designationName}</Chip>}
+              </Stack>
+              <Stack direction={'row'} spacing={2} justifyContent={'flex-end'} alignItems={'flex-end'}>
+                {actionArray.includes('SAVE_DRAFT') && <Button size='sm' color='primary' startDecorator={<Add />} onClick={() => createDocument(params.id, logintype.data.id, 1)}>
+                  Create New Document
+                </Button>}
+                <Link
+                  underline="hover"
+                  color="primary"
+                  href="/tasks"
+                  fontSize={14}
+                  fontWeight={500}
+                  sx={{ ml: 'auto' }}
+                >
+                  Go Back to Task List
+                </Link>
+
+              </Stack>
+            </Stack>
+            <Divider />
+          </Box>
+          <TableSection tableHeaders={headers} tableRows={rows} action={true} />
+        </>
+      )
+        :
+        ('Session Timed Out')
+      }
     </>
-    
+
   );
 }

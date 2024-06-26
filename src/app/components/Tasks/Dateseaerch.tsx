@@ -4,83 +4,121 @@ import { Button, Grid, Typography } from '@mui/joy';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
 import FormControl from '@mui/joy/FormControl';
-import moment from 'moment';
 import Box from "@mui/joy/Box";
 
 interface DateControlProps {
-    setSearchEndDate: Function;
-    setSearchStartDate: Function;
-    handleReset:Function;
+    setCreatedStartDate: Function;
+    setCreatedEndDate: Function;
+    setUpdatedStartDate: Function;
+    setUpdatedEndDate: Function;
+    handleReset: Function;
 }
 
 const DateControlSearch = (props: DateControlProps) => {
-    // const [startDate, setStartDate] = useState<string>(moment().format("YYYY-MM-DD"));
-    // const [endDate, setEndDate] = useState<string>(moment().format("YYYY-MM-DD"));
-    const[endDate,setEndDate]=useState('')
-    const[startDate,setStartDate]=useState('')
-    const [startSelected, setStartSelected] = useState(false);
-    const [endSelected, setEndSelected] = useState(false);
+    const [createdStartDate, setCreatedStartDate] = useState('');
+    const [createdEndDate, setCreatedEndDate] = useState('');
+    const [updatedStartDate, setUpdatedStartDate] = useState('');
+    const [updatedEndDate, setUpdatedEndDate] = useState('');
+    
+    const [createdStartSelected, setCreatedStartSelected] = useState(false);
+    const [createdEndSelected, setCreatedEndSelected] = useState(false);
+    const [updatedStartSelected, setUpdatedStartSelected] = useState(false);
+    const [updatedEndSelected, setUpdatedEndSelected] = useState(false);
 
     useEffect(() => {
-        if (startSelected) {
-            props.setSearchStartDate(startDate);
+        if (createdStartSelected) {
+            props.setCreatedStartDate(createdStartDate);
         }
-    }, [startDate]);
+    }, [createdStartDate]);
 
     useEffect(() => {
-        if (endSelected) {
-            props.setSearchEndDate(endDate);
+        if (createdEndSelected) {
+            props.setCreatedEndDate(createdEndDate);
         }
-    }, [endDate]);
+    }, [createdEndDate]);
+
+    useEffect(() => {
+        if (updatedStartSelected) {
+            props.setUpdatedStartDate(updatedStartDate);
+        }
+    }, [updatedStartDate]);
+
+    useEffect(() => {
+        if (updatedEndSelected) {
+            props.setUpdatedEndDate(updatedEndDate);
+        }
+    }, [updatedEndDate]);
 
     const handleButtonClick = () => {
-        // Implement functionality for button click here
-       setStartDate('')
-       setEndDate('')
-       setEndSelected(false)
-       setStartSelected(false)
-       props.handleReset();
+        setCreatedStartDate('');
+        setCreatedEndDate('');
+        setUpdatedStartDate('');
+        setUpdatedEndDate('');
+        
+        setCreatedStartSelected(false);
+        setCreatedEndSelected(false);
+        setUpdatedStartSelected(false);
+        setUpdatedEndSelected(false);
+        
+        props.handleReset();
     };
 
     const customFilters = [
         {
-            filterName: "Search Created Date",
+            filterName: "Search Created Start Date",
             filterType: "DATE_PICKER",
-            filterValue: startDate,
+            filterValue: createdStartDate,
             filterHandleChange: (newValue: any) => {
-                setStartDate(newValue);
-                setStartSelected(true);
+                setCreatedStartDate(newValue);
+                setCreatedStartSelected(true);
             }
         },
         {
-            filterName: "Search Updated Date",
+            filterName: "Search Created End Date",
             filterType: "DATE_PICKER",
-            filterValue: endDate,
+            filterValue: createdEndDate,
             filterHandleChange: (newValue: any) => {
-                setEndDate(newValue);
-                setEndSelected(true);
+                setCreatedEndDate(newValue);
+                setCreatedEndSelected(true);
             }
         },
-        
+        {
+            filterName: "Search Updated Start Date",
+            filterType: "DATE_PICKER",
+            filterValue: updatedStartDate,
+            filterHandleChange: (newValue: any) => {
+                setUpdatedStartDate(newValue);
+                setUpdatedStartSelected(true);
+            }
+        },
+        {
+            filterName: "Search Updated End Date",
+            filterType: "DATE_PICKER",
+            filterValue: updatedEndDate,
+            filterHandleChange: (newValue: any) => {
+                setUpdatedEndDate(newValue);
+                setUpdatedEndSelected(true);
+            }
+        },
     ];
 
     return (
         <Grid container spacing={2} sx={{ flexGrow: 1 }} justifyContent={'flex-end'}>
-        {customFilters.map((c, idx) => (
-            <Grid key={idx + c.filterName}>
-                <FormControl>
-                    <FormLabel>{c.filterName}</FormLabel>
-                    <Input type={"date"} size={"sm"} value={c.filterValue} onChange={(e) => c.filterHandleChange(e.target.value)} />
-                </FormControl>
+            {customFilters.map((c, idx) => (
+                <Grid key={idx + c.filterName}>
+                    <FormControl>
+                        <FormLabel>{c.filterName}</FormLabel>
+                        <Input type={"date"} size={"sm"} value={c.filterValue} onChange={(e) => c.filterHandleChange(e.target.value)} />
+                    </FormControl>
+                </Grid>
+            ))}
+            <Grid>
+                <Typography level='title-sm'>Clear Date</Typography>
+                <Button color="primary" onClick={handleButtonClick}>
+                    Reset
+                </Button>
             </Grid>
-        ))}
-        <Grid>
-            <Typography  level='title-sm'>Clear Date</Typography>
-            <Button color="primary" onClick={handleButtonClick}>
-                Reset
-            </Button>
         </Grid>
-    </Grid>
     );
 }
 
