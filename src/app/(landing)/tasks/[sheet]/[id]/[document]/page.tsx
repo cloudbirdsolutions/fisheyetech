@@ -43,9 +43,14 @@ import TransitionList from "@/app/components/TransitionAudit/TransitionList";
 import { useApi } from "@/app/api/hooks/useApi";
 // var _array = require('lodash/array');
 
-// var jmespath = require("jmespath");
+var jmespath = require("jmespath");
 
 const accessToken = window.localStorage.getItem("accessToken");
+
+interface Operator {
+  id: number;
+  type: string;
+}
 
 async function getsheetName(documentId: string) {
   try {
@@ -314,15 +319,14 @@ export default function Log() {
 
   const [reviews, setReivews] = useState<ChatProps[]>([
     {
-
-      "id": "1",
-      "createdAt": "2024-04-26T05:26:59.637Z",
-      "updatedAt": "2024-04-26T05:26:59.637Z",
-      "docId": 232,
-      "createdBy": 2,
-      "summary": "Pls check temperature limit",
-      "users": {
-        "userName": ""
+      id: "1",
+      createdAt: "2024-04-26T05:26:59.637Z",
+      updatedAt: "2024-04-26T05:26:59.637Z",
+      docId: 232,
+      createdBy: 2,
+      summary: "Pls check temperature limit",
+      users: {
+        userName: "",
       },
       comments: [
         {
@@ -439,9 +443,9 @@ export default function Log() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shiftDetails, index]);
 
-    React.useEffect(() => {
+  React.useEffect(() => {
     const fetchData = async () => {
-        let documentRecordResp = await getDocumentRecords(
+      let documentRecordResp = await getDocumentRecords(
         params.document,
         currentShift
       );
@@ -476,7 +480,7 @@ export default function Log() {
       setReivews(reviewResp.data);
       decideShowReview();
     };
-    fetchData()
+    fetchData();
     // if (currentShift) fetchData();
     // setIsInputDisabled(decideDisable())
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -492,32 +496,65 @@ export default function Log() {
     setIsUserInoutDisabled(!inputDisabled);
   }, [allowedTransition, actionList]);
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     // fetchAllowedTransitions()
-    const allowedActionPerTransition = allowedTransition.find(t=>t.shiftId == selectedShift.shiftId)
-    ?.transitionMaster.transitionActions.map(
-        (action) => action.actionMaster.actionName
-      )
-    || [];
+    const allowedActionPerTransition =
+      allowedTransition
+        .find((t) => t.shiftId == selectedShift.shiftId)
+        ?.transitionMaster.transitionActions.map(
+          (action) => action.actionMaster.actionName
+        ) || [];
 
     let inputDisabled =
-    allowedActionPerTransition.includes("SAVE_DRAFT") &&
-    actionList
-      .map((action) => action.actionMaster.actionName)
-      .includes("SAVE_DRAFT");
+      allowedActionPerTransition.includes("SAVE_DRAFT") &&
+      actionList
+        .map((action) => action.actionMaster.actionName)
+        .includes("SAVE_DRAFT");
 
-  setIsUserInoutDisabled(!inputDisabled);
-
-  },[selectedShift])
-
+    setIsUserInoutDisabled(!inputDisabled);
+  }, [selectedShift]);
+  const latestOperator = jmespath.search(
+    formData,
+    `[].groupMaster.groupParameters[].parameterMaster.paramterFields[].fieldMaster[]|[?filedValueType=='dropdown_user']|[].{id:id,type:filedValueType}`
+  );
+  const latestReviewer = jmespath.search(
+    formData,
+    `[].groupMaster.groupParameters[].parameterMaster.paramterFields[].fieldMaster[]|[?filedValueType=='dropdown_approver']|[].{id:id,type:filedValueType}`
+  );
+  const latestApprover = jmespath.search(
+    formData,
+    `[].groupMaster.groupParameters[].parameterMaster.paramterFields[].fieldMaster[]|[?filedValueType=='dropdown_reviewer']|[].{id:id,type:filedValueType}`
+  );
+  console.log(latestOperator, "document");
   const saveRecordChnages = async (transistionId: number) => {
     try {
-      let setDocumentRecordTransitionState = documentRecord.map((rec) =>
-        Object.assign({}, rec, {
+      let setDocumentRecordTransitionState = documentRecord.map((rec) => {
+        let matchingOperator = latestOperator.find(
+          (op: Operator) => op.id === rec.fieldId
+        );
+  
+        let matchingReviewer = latestReviewer.find(
+          (reviewer: Operator) => reviewer.id === rec.fieldId
+        );
+  
+        let matchingApprover = latestApprover.find(
+          (approver: Operator) => approver.id === rec.fieldId
+        );
+  
+        if (matchingOperator) {
+          rec.fieldValue = matchingOperator.fieldValue;
+        } else if (matchingReviewer) {
+          rec.fieldValue = matchingReviewer.fieldValue;
+        } else if (matchingApprover) {
+          rec.fieldValue = matchingApprover.fieldValue;
+        }
+  
+        return Object.assign({}, rec, {
           transitionId: transistionId,
           updatedBy: logintype.data.id,
-        })
-      );
+        });
+      });
+  
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_HOST}/forms/save`,
         {
@@ -530,22 +567,60 @@ export default function Log() {
           body: JSON.stringify({ data: setDocumentRecordTransitionState }),
         }
       );
-
-      toast.success("Record Changes Saved Successfully");
-      router.push("/tasks", { scroll: false });
-
+  
       if (!response.ok) {
         throw new Error(
           "Failed to save record changes: " + response.statusText
         );
       }
-
+  
       const data = await response.json();
+      toast.success("Record Changes Saved Successfully");
+      router.push("/tasks", { scroll: false });
       return data;
     } catch (error) {
-      console.error("Error fetching user details:", error);
+      console.error("Error saving record changes:", error);
+      toast.error("Error saving record changes");
     }
   };
+  
+
+  // const saveRecordChnages = async (transistionId: number) => {
+  //   try {
+  //     let setDocumentRecordTransitionState = documentRecord.map((rec) =>
+  //       Object.assign({}, rec, {
+  //         transitionId: transistionId,
+  //         updatedBy: logintype.data.id,
+  //       })
+  //     );
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_API_HOST}/forms/save`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           Accept: "application/json",
+  //           "Content-Type": "application/json",
+  //           Authorization: "Bearer " + accessToken,
+  //         },
+  //         body: JSON.stringify({ data: setDocumentRecordTransitionState }),
+  //       }
+  //     );
+
+  //     toast.success("Record Changes Saved Successfully");
+  //     router.push("/tasks", { scroll: false });
+
+  //     if (!response.ok) {
+  //       throw new Error(
+  //         "Failed to save record changes: " + response.statusText
+  //       );
+  //     }
+
+  //     const data = await response.json();
+  //     return data;
+  //   } catch (error) {
+  //     console.error("Error fetching user details:", error);
+  //   }
+  // };
   const sendForApproval = async (transitionId: number) => {
     saveRecordChnages(transitionId).then(async () => {
       try {

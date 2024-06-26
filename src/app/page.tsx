@@ -92,8 +92,10 @@ export default function Home() {
           
 
           res.payload?.statusCode === 200 ? (
+            toast.success("Login Successfully") &&
             res.payload.data?.roles?.roleName === 'admin' ? (    
-              router.push('/users', { scroll: false })
+              router.push('/users', { scroll: false }) 
+              
             ) : 
             (
             router.push('/tasks', { scroll: false })
