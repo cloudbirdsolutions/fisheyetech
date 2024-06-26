@@ -137,6 +137,12 @@ export default function Log() {
     }
   }
 
+  const handleReset=()=>{
+    setSearchEndDate('');
+      setSearchStartDate('');
+      fetchDocumentList();
+    
+  }
 
   const RowMenu = (props: any) => {
     const isDisabled = props.transitionId === 5;
@@ -189,7 +195,7 @@ export default function Log() {
         <Typography level='title-lg' color='warning'>Document List</Typography>
 
         <Stack marginBottom={2}>
-        <DateControlSearch setSearchStartDate={setSearchStartDate} setSearchEndDate={setSearchEndDate} />
+        <DateControlSearch setSearchStartDate={setSearchStartDate} setSearchEndDate={setSearchEndDate} handleReset={handleReset}/>
         </Stack>
        
         <Divider/>
