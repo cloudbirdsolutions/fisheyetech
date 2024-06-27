@@ -577,7 +577,7 @@ export default function Log() {
             rec.fieldValue = latestReviewers ? latestReviewers.users.name : "";
           }
         } else if (matchingApprover) {
-          if (transistionId == 3) {
+          if (transistionId == 3 || 4) {
             rec.fieldValue = fieldValueapprover;
           }
         }
