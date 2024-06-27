@@ -29,6 +29,7 @@ import {
   JobAllocationDesignation,
   AllowedTransitionAction,
   AllowedTransitionAudit,
+  TransitionAudit,
 } from "@/app/types";
 import LogForm from "@/app/components/Forms/LogForm";
 import { FormData, Reccod, RecordReading, SheetDocId } from "@/app/types";
@@ -50,6 +51,7 @@ const accessToken = window.localStorage.getItem("accessToken");
 interface Operator {
   id: number;
   type: string;
+  value: string;
 }
 
 async function getsheetName(documentId: string) {
@@ -217,6 +219,7 @@ export default function Log() {
   const router = useRouter();
   const logintype = useSelector((state: RootState) => state?.user.data);
   const [designationId, setDesignationId] = useState(0);
+  // const userdetails = useSelector((state: RootState) => state?.user?.data);
 
   const [sheetPermissionId, setSheetPermissionId] = React.useState<number>(0);
 
@@ -255,7 +258,7 @@ export default function Log() {
       { method: "GET" }
     );
   const { data: transitionAudit, fetchData: fetchTransitionAudit } =
-    useApi<AllowedTransitionAudit>(
+    useApi<TransitionAudit>(
       `/transitionaudit?docId=${parseInt(params.document)}`,
       { method: "GET" }
     );
@@ -515,46 +518,76 @@ export default function Log() {
   }, [selectedShift]);
   const latestOperator = jmespath.search(
     formData,
-    `[].groupMaster.groupParameters[].parameterMaster.paramterFields[].fieldMaster[]|[?filedValueType=='dropdown_user']|[].{id:id,type:filedValueType}`
+    `[].groupMaster.groupParameters[].parameterMaster.paramterFields[].fieldMaster[]|[?filedValueType=='dropdown_user']|[].{id:id,type:filedValueType,value:fieldName}`
   );
   const latestReviewer = jmespath.search(
     formData,
-    `[].groupMaster.groupParameters[].parameterMaster.paramterFields[].fieldMaster[]|[?filedValueType=='dropdown_approver']|[].{id:id,type:filedValueType}`
+    `[].groupMaster.groupParameters[].parameterMaster.paramterFields[].fieldMaster[]|[?filedValueType=='dropdown_approver']|[].{id:id,type:filedValueType,value:fieldName}`
   );
   const latestApprover = jmespath.search(
     formData,
-    `[].groupMaster.groupParameters[].parameterMaster.paramterFields[].fieldMaster[]|[?filedValueType=='dropdown_reviewer']|[].{id:id,type:filedValueType}`
+    `[].groupMaster.groupParameters[].parameterMaster.paramterFields[].fieldMaster[]|[?filedValueType=='dropdown_reviewer']|[].{id:id,type:filedValueType,value:fieldName}`
   );
   console.log(latestOperator, "document");
+
+  const filteredOperator = transitionAudit.filter(
+    (doc) => doc.transitionId === 2
+  );
+  const filteredOperatorDraft = transitionAudit.filter(
+    (doc) => doc.transitionId === 1
+  );
+  const sortedOperatorDraft = filteredOperatorDraft.sort(
+    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+  );
+  const sortedOperator = filteredOperator.sort(
+    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+  );
+  const latestOperators = sortedOperatorDraft[0];
+
+  const latestDraft = sortedOperator[0];
+  // console.log(latestDraft, latestOperator, "latest operator");
+
+  const filteredReviewer = transitionAudit.filter(
+    (doc) => doc.transitionId === 3
+  );
+  const sortedReviewer = filteredReviewer.sort(
+    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+  );
+  const latestReviewers = sortedReviewer[0];
+  let fieldValueapprover = latestReviewer ? logintype.data.name : "";
   const saveRecordChnages = async (transistionId: number) => {
     try {
       let setDocumentRecordTransitionState = documentRecord.map((rec) => {
         let matchingOperator = latestOperator.find(
           (op: Operator) => op.id === rec.fieldId
         );
-  
+
         let matchingReviewer = latestReviewer.find(
           (reviewer: Operator) => reviewer.id === rec.fieldId
         );
-  
+
         let matchingApprover = latestApprover.find(
           (approver: Operator) => approver.id === rec.fieldId
         );
-  
+
         if (matchingOperator) {
-          rec.fieldValue = matchingOperator.fieldValue;
+          rec.fieldValue = latestOperators ? latestOperators.users.name : "";
         } else if (matchingReviewer) {
-          rec.fieldValue = matchingReviewer.fieldValue;
+          if (transistionId == 2) {
+            rec.fieldValue = latestReviewers ? latestReviewers.users.name : "";
+          }
         } else if (matchingApprover) {
-          rec.fieldValue = matchingApprover.fieldValue;
+          if (transistionId == 3) {
+            rec.fieldValue = fieldValueapprover;
+          }
         }
-  
+
         return Object.assign({}, rec, {
           transitionId: transistionId,
           updatedBy: logintype.data.id,
         });
       });
-  
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_HOST}/forms/save`,
         {
@@ -567,13 +600,13 @@ export default function Log() {
           body: JSON.stringify({ data: setDocumentRecordTransitionState }),
         }
       );
-  
+
       if (!response.ok) {
         throw new Error(
           "Failed to save record changes: " + response.statusText
         );
       }
-  
+
       const data = await response.json();
       toast.success("Record Changes Saved Successfully");
       router.push("/tasks", { scroll: false });
@@ -583,7 +616,6 @@ export default function Log() {
       toast.error("Error saving record changes");
     }
   };
-  
 
   // const saveRecordChnages = async (transistionId: number) => {
   //   try {
