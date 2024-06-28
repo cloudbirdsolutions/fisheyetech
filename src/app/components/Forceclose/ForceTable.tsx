@@ -26,6 +26,7 @@ interface ForceSheetTableProps {
   setRow:React.Dispatch<(prevState: never) => never>;
   sheetList:ForceCloseSheet[];
   fetchSheets:Function;
+  setAction:React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function DepartmentTable(props: ForceSheetTableProps) {
@@ -48,15 +49,16 @@ export default function DepartmentTable(props: ForceSheetTableProps) {
   ]);
 
 
-  function remarksfn(row: any): void {
+  function remarksfn(row: any,action:string): void {
     props.setOpen(true);
     props.setLabel('Edit');
     props.setRow(row);
+    props.setAction(action)
   }
 
    const RowMenu = (props:any) => {
-    return (<><Button onClick={()=>{remarksfn(props.row)}} color='success'>Resolve</Button>
-    <Button onClick={()=>{remarksfn(props.row)}} color='primary'>Reopen</Button></>)
+    return (<><Button onClick={()=>{remarksfn(props.row,"forcecomplete")}} color='success'>Resolve</Button>
+    <Button onClick={()=>{remarksfn(props.row,"forcedraft")}} color='primary'>Reopen</Button></>)
   }
 
   // const data = await getData()

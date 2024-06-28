@@ -44,7 +44,8 @@ export default function TasksTable(props:TasksTableProps) {
           size="sm"
           onClick={() => {
 
-              router.push(`/tasks/sheet/${props.sheetid}`)}}
+              router.push(`/tasks/sheet/${props.sheetid}`)
+          }}
 
         >
           {/* Documents */} <AssignmentIcon />
