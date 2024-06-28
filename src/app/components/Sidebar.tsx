@@ -92,31 +92,31 @@ const sidebarItems = [
     label: 'Users',
     navPath: '/users',
     icon: <PeopleIcon />,
-    roles: ['admin','superadmin']
+    roles: ['superadmin']
   },
   {
     label: 'Department List',
     navPath: '/departmentlist',
     icon: <ApartmentIcon />,
-    roles: ['admin','superadmin']
+    roles: ['superadmin']
   },
   {
     label: 'Entities',
     navPath: '/entities',
     icon: <SupportRoundedIcon />,
-    roles: ['admin','superadmin']
+    roles: ['superadmin']
   },
   {
     label: 'Role List',
     navPath: '/rolelist',
     icon: <AdminPanelSettingsIcon />,
-    roles: ['admin','superadmin']
+    roles: ['superadmin']
   },
   {
     label: 'Job Allocation',
     navPath: '/new-job-allocation',
     icon: <AssignmentRoundedIcon />,
-    roles: ['admin','superadmin']
+    roles: ['superadmin']
   },
   {
     label: 'Tasks',
