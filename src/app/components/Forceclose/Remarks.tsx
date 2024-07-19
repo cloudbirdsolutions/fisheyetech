@@ -40,7 +40,7 @@ const auth = useAuth();
     const resolvefn = async (e:any) => {
         e = {...e, "docId": row.id, "createdBy": logintype?.data?.id}
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_HOST}/sheetdocid/forcecomplete`,
+          `${process.env.NEXT_PUBLIC_API_HOST}/sheetdocid/${props.action}`,
           {
             // const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/departments/get`, {
             method: "POST",
@@ -59,7 +59,7 @@ const auth = useAuth();
         } else {
             props.setOpen(false);
             window.location.reload();
-        }
+        } 
       }
     return (
           
