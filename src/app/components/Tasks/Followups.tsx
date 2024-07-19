@@ -10,7 +10,7 @@ import Option from "@mui/joy/Option";
 import IconButton from "@mui/joy/IconButton";
 import { Box, Button } from "@mui/joy";
 import EditIcon from "@mui/icons-material/Edit";
-
+import Textarea from '@mui/joy/Textarea';
 import Typography from "@mui/joy/Typography";
 import { API_BASE_URL } from "@/app/config";
 import { Stack } from "@mui/joy";
@@ -239,64 +239,65 @@ export default function Followups(props: DepartmentTable) {
 
   const followUpHeader = [
     "Department",
+    "Remarks",
     "CreatedAt",
     "UpdatedAt",
     "CreatedBy",
     "UpdatedBy",
-    "Remarks",
-    "Status",
+   "Status",
   ];
 
   const followUpRow = props.departmentList?.map((dep) =>
     dep?.departments?.remarks.length > 0 ? (
       dep.departments.remarks.map((rem) => (
-        <tr key={`document_id_${rem.id}`}>
-          <td>
-            <Typography level="body-xs">{rem.id}</Typography>
-          </td>
-          <td>
-            <Typography level="body-xs">
-              {dep.departments.departmentName}
-            </Typography>
-          </td>
-          <td>
-            <Typography level="body-xs">{rem.createdAt}</Typography>
-          </td>
-          <td>
-            <Typography level="body-xs">{rem.updatedAt}</Typography>
-          </td>
-          <td>
-            <Typography level="body-xs">{rem.createdUser?.userName}</Typography>
-          </td>
-          <td>
-            <Typography level="body-xs">{rem.updatedUser?.userName}</Typography>
-          </td>
-          <td>
-            <Typography level="body-xs">{rem.remarks}</Typography>
-          </td>
-          <td>
-            <Typography level="body-xs">{rem.status}</Typography>
-          </td>
-          <td>
-            <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-              <Box>
-                <Button
-                  slots={{ root: IconButton }}
-                  slotProps={{
-                    root: { variant: "plain", color: "neutral", size: "sm" },
-                  }}
-                >
-                  <EditIcon onClick={() => handleEditClick(rem)} />
-                </Button>
+          <tr key={`document_id_${rem.id}`}>
+            <td>
+              <Typography level="body-xs">{rem.id}</Typography>
+            </td>
+            <td>
+              <Typography level="body-xs">
+                {dep.departments.departmentName}
+              </Typography>
+            </td>
+            <td>
+              <Typography level="body-xs">{rem.remarks}</Typography>
+            </td>
+            <td>
+              <Typography level="body-xs">{rem.createdAt}</Typography>
+            </td>
+            <td>
+              <Typography level="body-xs">{rem.updatedAt}</Typography>
+            </td>
+            <td>
+              <Typography level="body-xs">{rem.createdUser?.userName}</Typography>
+            </td>
+            <td>
+              <Typography level="body-xs">{rem.updatedUser?.userName}</Typography>
+            </td>
+
+            <td>
+              <Typography level="body-xs">{rem.status}</Typography>
+            </td>
+            <td>
+              <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
+                <Box>
+                  <Button
+                      slots={{root: IconButton}}
+                      slotProps={{
+                        root: {variant: "plain", color: "neutral", size: "sm"},
+                      }}
+                  >
+                    <EditIcon onClick={() => handleEditClick(rem)}/>
+                  </Button>
+                </Box>
               </Box>
-            </Box>
-          </td>
-        </tr>
+            </td>
+          </tr>
       ))
     ) : (
-      <tr key="no_data_found">
-        <td colSpan={9}>No data found</td>
-      </tr>
+        <tr key="no_data_found">
+          <td colSpan={9}>No data found</td>
+        </tr>
     )
   );
 
@@ -333,7 +334,7 @@ export default function Followups(props: DepartmentTable) {
         <ToastContainer />
 
         {/* <Typography level="title-sm" >Add New Remarks</Typography> */}
-        <Stack gap={2} flexDirection={"row"}>
+        <Stack gap={2} flexDirection={"column"}>
           <FormControl orientation="horizontal">
             <FormLabel>Department</FormLabel>
             <Select placeholder="Select a department" onChange={handleChange}>
@@ -344,24 +345,30 @@ export default function Followups(props: DepartmentTable) {
               ))}
             </Select>
           </FormControl>
-          <FormControl orientation="horizontal">
+          <FormControl orientation="vertical">
             <FormLabel>Remarks</FormLabel>
-            <Input
+            <Textarea
+                placeholder="Type anything…"
               value={userRemarks}
               onChange={(e) => {
                 setUserRemarks(e.target.value);
               }}
-            ></Input>
-            <Button
+            ></Textarea>
+
+          </FormControl>
+
+        </Stack>
+        <Stack>
+          <Button
               variant="solid"
-              sx={{ ml: 2 }}
+              size={"sm"}
+              sx={{ mt: 2 }}
               onClick={(e) => {
                 savedepartmentRemarks();
               }}
-            >
-              Add New Remarks
-            </Button>
-          </FormControl>
+          >
+            Add New Remarks
+          </Button>
         </Stack>
       </Box>
 
