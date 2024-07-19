@@ -536,3 +536,16 @@ export type TransitionAudit = {
       "name": string
   }
 }
+
+export type FormFieldType = {
+  "id": number,
+  "createdAt": string,
+  "updatedAt": string,
+  "sheetId": number,
+  "groupId": number,
+  "parameterId": number,
+  "fieldId": number,
+  "fieldColName": string,
+  "fieldValue": string,
+  "fieldValueColName": string
+}

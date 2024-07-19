@@ -22,7 +22,7 @@ import {
   Option,
 } from "@mui/joy";
 import {
-  FormData,
+  FormData, FormFieldType,
   Reccod,
   RecordReading,
   SheetDocId,
@@ -41,6 +41,7 @@ interface LogFormProps {
   isInputDisabled: boolean;
   documentDetails: SheetDocId[];
   transitionAudit: TransitionAudit[];
+  formFields : FormFieldType[];
 }
 
 const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
@@ -162,6 +163,7 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
         inputElement = (
           <Input
             value={fieldValue}
+
             onChange={(e) =>
               updateValue(
                 e,
@@ -336,55 +338,83 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
                             color="primary"
                             size="sm"
                             hoverRow
+                            // sx={{
+                            //   '& tr > *:first-child': {
+                            //     position: 'sticky',
+                            //     left: 0,
+                            //     boxShadow: '1px 0 var(--TableCell-borderColor)',
+                            //     bgcolor: 'background.surface',
+                            //   }
+                            // }}
                           >
+
                             <tbody>
-                              {groupParam.parameterMaster.paramterFields.map(
-                                (paramField, pfindex) =>
+                              {groupParam.parameterMaster.paramterFields.filter(
+                                (paramField, pfIndex) =>
                                   checkGroupParamFieldExistence(
                                     group.groupId,
                                     groupParam.parameterId,
                                     paramField.fieldId
-                                  ) && (
-                                    <tr key={`trow_id_${pfindex}`}>
-                                      <td style={{ width: 200 }}>
-                                        {paramField.fieldMaster.fieldName}
-                                      </td>
-                                      <td style={{ width: 200 }}>
-                                        {paramField.fieldMaster.fieldValue}
-                                      </td>
-                                      {paramField.fieldMaster.fieldReading.map(
-                                        (fieldReading, findex) =>
-                                          checkGroupParamFieldReadingExistence(
-                                            group.groupId,
-                                            groupParam.parameterId,
-                                            paramField.fieldId,
-                                            fieldReading.readingId
-                                          ) && (
-                                            <td
-                                              key={`td_id_${fieldReading.readingId}`}
-                                              style={{ width: 200 }}
-                                            >
-                                              <FormControl>
-                                                {/* {pfindex === 0 && ( */}
-                                                <FormLabel>
-                                                  {
-                                                    fieldReading.readingMaster
-                                                      .readingName
-                                                  }
-                                                </FormLabel>
-                                                {/* )}  */}
-                                                {renderInputField(
-                                                  paramField,
-                                                  group,
-                                                  groupParam,
-                                                  fieldReading,
-                                                  pfindex
-                                                )}
-                                              </FormControl>
-                                            </td>
-                                          )
-                                      )}
-                                    </tr>
+                                  )).map( (paramField, pfIndex) => (
+                                        <>
+                                          { pfIndex == 0 &&
+                                            <tr>
+                                              {props.formFields.filter(item => item.groupId == group.groupId && item.parameterId == groupParam.parameterId && item.fieldId == paramField.fieldId)
+                                                    .map((field, index) => {
+                                                      return <> {index == 0 &&
+                                                          <th style={{width:200}} scope={'row'} key={'field__' + field.fieldId}>{field.fieldColName}</th>}
+                                                        <th  style={{width:200}} scope={'row'} key={'field' + field.fieldId}>{field.fieldValueColName}</th>
+                                                                {paramField.fieldMaster.fieldReading.filter(
+                                                                    (fieldReading, findex) => checkGroupParamFieldReadingExistence(
+                                                                        group.groupId,
+                                                                        groupParam.parameterId,
+                                                                        paramField.fieldId,
+                                                                        fieldReading.readingId
+                                                                    )).map( (fieldReading, findex) =>(
+                                                                    <th style={{width:200}} key={`header+key_${findex}`} > {fieldReading.readingMaster
+                                                                          .readingName}</th>))}
+                                                      </>
+                                              })}
+                                            </tr>
+                                          }
+
+                                          <tr key={`trow_id_${pfIndex}`}>
+                                            <th  scope={'row'}>
+                                              {paramField.fieldMaster.fieldName}
+                                            </th>
+                                            {/*<td style={{ width: 200 }}>*/}
+                                            {/*  {paramField.fieldMaster.fieldValue}*/}
+                                            {/*</td>*/}
+                                            {props.formFields.filter(item => item.groupId == group.groupId && item.parameterId == groupParam.parameterId && item.fieldId == paramField.fieldId)
+                                                .map(field => (<th scope={'row'} key={'field' + field.fieldId}>{field.fieldValue}</th>))}
+                                            {paramField.fieldMaster.fieldReading.filter(
+                                                (fieldReading, findex) => checkGroupParamFieldReadingExistence(
+                                                    group.groupId,
+                                                    groupParam.parameterId,
+                                                    paramField.fieldId,
+                                                    fieldReading.readingId
+                                                )).map( (fieldReading, findex) =>(
+                                                <>
+                                                  <td
+                                                      key={`td_id_${fieldReading.readingId}`}
+                                                      style={{ width: 400 }}
+                                                  >
+                                                    <FormControl >
+                                                      {renderInputField(
+                                                          paramField,
+                                                          group,
+                                                          groupParam,
+                                                          fieldReading,
+                                                          pfIndex
+                                                      )}
+                                                    </FormControl>
+                                                  </td>
+                                                </>
+                                                )
+                                            )}
+                                          </tr>
+                                        </>
+
                                   )
                               )}
                             </tbody>
