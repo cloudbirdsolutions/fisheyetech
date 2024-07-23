@@ -364,17 +364,18 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
                                                       return <> {index == 0 &&
                                                           <th style={{width:200}} scope={'row'} key={'field__' + field.fieldId}>{field.fieldColName}</th>}
                                                         <th  style={{width:200}} scope={'row'} key={'field' + field.fieldId}>{field.fieldValueColName}</th>
-                                                                {paramField.fieldMaster.fieldReading.filter(
-                                                                    (fieldReading, findex) => checkGroupParamFieldReadingExistence(
-                                                                        group.groupId,
-                                                                        groupParam.parameterId,
-                                                                        paramField.fieldId,
-                                                                        fieldReading.readingId
-                                                                    )).map( (fieldReading, findex) =>(
-                                                                    <th style={{width:200}} key={`header+key_${findex}`} > {fieldReading.readingMaster
-                                                                          .readingName}</th>))}
+
                                                       </>
                                               })}
+                                              {paramField.fieldMaster.fieldReading.filter(
+                                                  (fieldReading, findex) => checkGroupParamFieldReadingExistence(
+                                                      group.groupId,
+                                                      groupParam.parameterId,
+                                                      paramField.fieldId,
+                                                      fieldReading.readingId
+                                                  )).map( (fieldReading, findex) =>(
+                                                  <th style={{width:200}} key={`header+key_${findex}`} > {fieldReading.readingMaster
+                                                      .readingName}</th>))}
                                             </tr>
                                           }
 
