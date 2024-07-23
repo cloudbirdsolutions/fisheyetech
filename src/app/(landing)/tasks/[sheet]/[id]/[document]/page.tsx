@@ -32,7 +32,7 @@ import {
   TransitionAudit,
 } from "@/app/types";
 import LogForm from "@/app/components/Forms/LogForm";
-import { FormData, Reccod, RecordReading, SheetDocId } from "@/app/types";
+import { FormData, Reccod, RecordReading, SheetDocId, FormFieldType } from "@/app/types";
 import {
   fieldMappingInitialState,
   recordMasterInitialState,
@@ -228,6 +228,9 @@ export default function Log() {
   const { data: formData, fetchData: fetchFormData } = useApi<FormData>(
     `/forms/get?id=${parseInt(params.id)}`,
     { method: "GET" }
+  );  const { data: formFields, fetchData: fetchFormFields } = useApi<FormFieldType>(
+    `/fieldcolunits?sheetId=${parseInt(params.id)}`,
+    { method: "GET" }
   );
   const { data: shiftDetails, fetchData: fetchShiftDetails } = useApi<DocShift>(
     `/docshiftstate/get?id=${parseInt(params.document)}`,
@@ -382,6 +385,7 @@ export default function Log() {
 
   React.useEffect(() => {
     fetchFormData();
+    fetchFormFields();
     fetchShiftDetails();
     fetchDesignationList();
     fetchDocumentDetails();
@@ -779,6 +783,7 @@ export default function Log() {
                         sheetPermissionId={sheetPermissionId}
                         isInputDisabled={isUserInputDisabled}
                         transitionAudit={transitionAudit}
+                        formFields={formFields}
                       />
                     </TabPanel>
                   </Tabs>
