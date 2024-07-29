@@ -367,7 +367,7 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
 
                                                       </>
                                               })}
-                                              {paramField.fieldMaster.fieldReading.filter(
+                                              {paramField.fieldMaster.filedValueType !=='none' && paramField.fieldMaster.fieldReading.filter(
                                                   (fieldReading, findex) => checkGroupParamFieldReadingExistence(
                                                       group.groupId,
                                                       groupParam.parameterId,
@@ -387,8 +387,18 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
                                             {/*  {paramField.fieldMaster.fieldValue}*/}
                                             {/*</td>*/}
                                             {props.formFields.filter(item => item.groupId == group.groupId && item.parameterId == groupParam.parameterId && item.fieldId == paramField.fieldId)
-                                                .map(field => (<th scope={'row'} key={'field' + field.fieldId}>{field.fieldValue}</th>))}
-                                            {paramField.fieldMaster.fieldReading.filter(
+                                                .map(field => (
+                                                <th scope={'row'} key={'field' + field.fieldId} 
+                                                style={{
+                                                  whiteSpace: 'normal',  
+                                                  overflow: 'visible',   
+                                                  wordWrap: 'break-word', 
+                                                  // padding: '8px',        
+                                                  // border: '1px solid #ddd' 
+                                                }}
+                                                >{field.fieldValue}</th>
+                                                ))}
+                                            {paramField.fieldMaster.filedValueType !=='none' && paramField.fieldMaster.fieldReading.filter(
                                                 (fieldReading, findex) => checkGroupParamFieldReadingExistence(
                                                     group.groupId,
                                                     groupParam.parameterId,
