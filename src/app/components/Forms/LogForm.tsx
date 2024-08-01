@@ -75,7 +75,7 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
       rec.readingId === readingId &&
       rec.groupId === groupId &&
       rec.parameterId === parameterId
-        ? { ...rec, fieldValue: e.target.value }
+        ? { ...rec, fieldValue: e?.target.value }
         : rec
     );
     props.setDocumentRecord(newDocumentRecord);
