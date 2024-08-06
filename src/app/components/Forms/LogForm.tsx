@@ -380,7 +380,13 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
                                           }
 
                                           <tr key={`trow_id_${pfIndex}`}>
-                                            <th  scope={'row'}>
+                                            <th  scope={'row'}   style={{
+                                                  whiteSpace: 'normal',  
+                                                  overflow: 'visible',   
+                                                  wordWrap: 'break-word', 
+                                                  // padding: '8px',        
+                                                  // border: '1px solid #ddd' 
+                                                }}>
                                               {paramField.fieldMaster.fieldName}
                                             </th>
                                             {/*<td style={{ width: 200 }}>*/}
