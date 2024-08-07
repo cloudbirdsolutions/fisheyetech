@@ -374,7 +374,9 @@ const LogForm: React.FC<LogFormProps> = (props: LogFormProps) => {
                                                       paramField.fieldId,
                                                       fieldReading.readingId
                                                   )).map( (fieldReading, findex) =>(
-                                                  <th style={{width:200}} key={`header+key_${findex}`} > {fieldReading.readingMaster
+                                                  <th style={{width:200,whiteSpace: 'normal',  
+                                                    overflow: 'visible',   
+                                                    wordWrap: 'break-word',  }} key={`header+key_${findex}`} > {fieldReading.readingMaster
                                                       .readingName}</th>))}
                                             </tr>
                                           }
